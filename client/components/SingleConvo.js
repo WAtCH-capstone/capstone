@@ -1,12 +1,51 @@
-// this can be deleted
-
 import React from "react";
 import { Text, View } from "react-native";
+import { GiftedChat } from "react-native-gifted-chat";
 
-const SingleConvo = ({ navigation }) => (
-  <View>
-    <Text>SingleConvo goes here</Text>
-  </View>
-);
+class SingleConvo extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      messages: []
+    };
+    this.onSend = this.onSend.bind(this);
+  }
+
+  componentWillMount() {
+    this.setState({
+      messages: [
+        {
+          _id: 1,
+          text: "Hello developer",
+          createdAt: new Date(),
+          user: {
+            _id: 2,
+            name: "React Native",
+            avatar: "https://placeimg.com/140/140/any"
+          }
+        }
+      ]
+    });
+  }
+
+  onSend(messages = []) {
+    this.setState(previousState => ({
+      messages: GiftedChat.append(previousState.messages, messages)
+    }));
+  }
+
+  render() {
+    return (
+      <GiftedChat
+        style={{ backgroundColor: "white" }}
+        messages={this.state.messages}
+        onSend={messages => this.onSend(messages)}
+        user={{
+          _id: 1
+        }}
+      />
+    );
+  }
+}
 
 export default SingleConvo;
