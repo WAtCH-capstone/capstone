@@ -1,6 +1,6 @@
-import React, { Component } from "react";
-import { Text, View, Button } from "react-native";
-import styles from "./Styles";
+import React, { Component } from 'react';
+import { Text, View, Button } from 'react-native';
+import styles from './Styles';
 
 export default class Home extends Component {
   render() {
@@ -12,31 +12,31 @@ export default class Home extends Component {
         </View>
         <View>
           <Button
-            onPress={() => this.props.navigation.navigate("LogIn")}
+            onPress={() => this.props.navigation.navigate('LogIn')}
             title="Log in"
           />
         </View>
         <View>
           <Button
-            onPress={() => this.props.navigation.navigate("SignUp")}
+            onPress={() => this.props.navigation.navigate('SignUp')}
             title="Sign Up"
           />
         </View>
         <View>
           <Button
-            onPress={() => this.props.navigation.navigate("SingleConvo")}
+            onPress={() => this.props.navigation.navigate('SingleConvo')}
             title="Single Conversation"
           />
         </View>
         <View>
           <Button
-            onPress={() => this.props.navigation.navigate("Convos")}
+            onPress={() => this.props.navigation.navigate('Convos')}
             title="Conversations"
           />
         </View>
         <View>
           <Button
-            onPress={() => this.props.navigation.navigate("Settings")}
+            onPress={() => this.props.navigation.navigate('Settings')}
             title="Settings"
           />
         </View>
