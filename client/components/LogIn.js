@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, Text } from "react-native";
 import { Container, Form, Input, Item, Button, Label } from "native-base";
 
 import styles from "./Styles";
@@ -20,12 +20,16 @@ class Login extends React.Component {
               autoCapitalize="none"
               clearButtonMode="always"
             />
-            <Input
-              autoCorrect={false}
-              autoCapitalize="none"
-              clearButtonMode="always"
-            />
           </Item>
+          <Item>
+            <Label>Password</Label>
+            <Input autoCorrect={false} autoCapitalize="none" />
+          </Item>
+          <Input
+            autoCorrect={false}
+            autoCapitalize="none"
+            clearButtonMode="always"
+          />
           <Button>
             <Text>Login</Text>
           </Button>
@@ -45,4 +49,4 @@ class Login extends React.Component {
 //   </View>
 // );
 
-// export default LogIn;
+export default Login;
