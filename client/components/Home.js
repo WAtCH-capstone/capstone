@@ -1,16 +1,14 @@
-import React from "react";
-import { StyleSheet, Text, View, Button, Image } from "react-native";
-import { StackNavigator } from "react-navigation";
+import React, { Component } from "react";
+import { Text, View } from "react-native";
+import styles from "./Styles";
 
-const Home = ({ navigation }) => (
-  <View style={styles.container}>
-    <View style={styles.button}>
-      <Button
-        onPress={() => navigation.navigate("SignIn")}
-        title="Join Classroom"
-      />
-    </View>
-  </View>
-);
-
-export default Home;
+export default class Home extends Component {
+  render() {
+    const navigation = this.props.navigation;
+    return (
+      <View style={styles.container}>
+        <Text style={styles.welcome}>You're home!</Text>
+      </View>
+    );
+  }
+}
