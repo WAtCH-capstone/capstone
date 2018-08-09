@@ -3,6 +3,7 @@ import { Container, Form, Item, Label, Input, Button } from 'native-base';
 import { Text } from 'react-native';
 const firebase = require('firebase');
 import db from '../../firestore';
+import CameraRollPicker from 'react-native-camera-roll-picker';
 
 class SignUp extends React.Component {
   constructor() {
@@ -12,6 +13,7 @@ class SignUp extends React.Component {
       userName: '',
       email: '',
       password: '',
+      selected: [],
     };
     this.signUpUser = this.signUpUser.bind(this);
     this.createUser = this.createUser.bind(this);
@@ -38,12 +40,36 @@ class SignUp extends React.Component {
       });
   }
 
+  getSelectedImages(images, current) {
+    var num = images.length;
+    this.setState({
+      num: num,
+      selected: images,
+    });
+    console.log(current);
+    console.log(this.state.selected);
+  }
+
   render() {
     const navigation = this.props.navigation;
     return (
       <Container>
         <Form>
           <Item floatingLabel>
+            <CameraRollPicker
+              scrollRenderAheadDistance={500}
+              initialListSize={1}
+              pageSize={3}
+              removeClippedSubviews={false}
+              groupTypes="SavedPhotos"
+              batchSize={5}
+              maximum={3}
+              selected={this.state.selected}
+              assetType="Photos"
+              imagesPerRow={3}
+              imageMargin={5}
+              callback={this.getSelectedImages.bind(this)}
+            />
             <Label>Display Name</Label>
             <Input
               autoCorrect={false}
