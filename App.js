@@ -6,7 +6,8 @@ import {
   Settings,
   SignUp,
   SingleConvo,
-} from './client/components';
+  Messages
+} from "./client/components";
 
 const RootNavigator = createStackNavigator({
   Home: {
@@ -42,9 +43,15 @@ const RootNavigator = createStackNavigator({
   SingleConvo: {
     screen: SingleConvo,
     navigationOptions: {
-      headerTitle: 'Single Conversation',
-    },
+      headerTitle: "Single Conversation"
+    }
   },
+  Messages: {
+    screen: Messages,
+    navigationOptions: {
+      headerTitle: "Messages"
+    }
+  }
 });
 
 export default RootNavigator;
