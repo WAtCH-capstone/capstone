@@ -3,7 +3,7 @@ import { Image } from 'react-native';
 import { Container, Form, Input, Item, Button, Label, Text } from 'native-base';
 
 const firebase = require('firebase');
-import db from '../firestore';
+import db from '../../firestore';
 
 class LogIn extends React.Component {
   constructor(props) {

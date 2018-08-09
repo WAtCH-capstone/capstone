@@ -2,7 +2,7 @@ import React from 'react';
 import { Container, Form, Item, Label, Input, Button } from 'native-base';
 import { Text } from 'react-native';
 const firebase = require('firebase');
-import db from '../firestore';
+import db from '../../firestore';
 
 class SignUp extends React.Component {
   constructor() {
