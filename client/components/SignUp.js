@@ -12,9 +12,9 @@ class SignUp extends React.Component {
       userName: '',
       email: '',
       password: '',
-      confirmPassword: '',
     };
     this.signUpUser = this.signUpUser.bind(this);
+    this.createUser = this.createUser.bind(this);
   }
 
   signUpUser(email, password) {
@@ -30,7 +30,16 @@ class SignUp extends React.Component {
     }
   }
 
+  createUser() {
+    db.collection('users')
+      .add(this.state)
+      .then(ref => {
+        console.log('Added document with ID: ', ref.id);
+      });
+  }
+
   render() {
+    const navigation = this.props.navigation;
     return (
       <Container>
         <Form>
@@ -71,18 +80,6 @@ class SignUp extends React.Component {
               onChangeText={password => this.setState({ password })}
             />
           </Item>
-          <Item floatingLabel>
-            <Label>Confirm Password</Label>
-            <Input
-              autoCorrect={false}
-              autoCapitalize="none"
-              clearButtonMode="always"
-              secureTextEntry={true}
-              onChangeText={confirmPassword =>
-                this.setState({ confirmPassword })
-              }
-            />
-          </Item>
           <Button
             style={{ marginTop: 10 }}
             full
@@ -90,7 +87,8 @@ class SignUp extends React.Component {
             primary
             onPress={() => {
               this.signUpUser(this.state.email, this.state.password);
-              // also need to make a user entry in our database with other info
+              this.createUser();
+              navigation.navigate('LogIn');
             }}
           >
             <Text style={{ color: 'white' }}>Sign up</Text>
