@@ -1,4 +1,4 @@
-import { createStackNavigator } from 'react-navigation';
+import { createStackNavigator } from "react-navigation";
 import {
   Home,
   Convos,
@@ -6,39 +6,40 @@ import {
   Settings,
   SignUp,
   SingleConvo,
-  Messages
+  Messages,
+  Navbar
 } from "./client/components";
 
 const RootNavigator = createStackNavigator({
   Home: {
     screen: Home,
     navigationOptions: {
-      headerTitle: 'Home',
-    },
+      headerTitle: "Home"
+    }
   },
   Convos: {
     screen: Convos,
     navigationOptions: {
-      headerTitle: 'Conversations',
-    },
+      headerTitle: "Conversations"
+    }
   },
   LogIn: {
     screen: LogIn,
     navigationOptions: {
-      headerTitle: 'Log In',
-    },
+      headerTitle: "Log In"
+    }
   },
   Settings: {
     screen: Settings,
     navigationOptions: {
-      headerTitle: 'Settings',
-    },
+      headerTitle: "Settings"
+    }
   },
   SignUp: {
     screen: SignUp,
     navigationOptions: {
-      headerTitle: 'SignUp',
-    },
+      headerTitle: "SignUp"
+    }
   },
   SingleConvo: {
     screen: SingleConvo,
@@ -50,6 +51,12 @@ const RootNavigator = createStackNavigator({
     screen: Messages,
     navigationOptions: {
       headerTitle: "Messages"
+    }
+  },
+  Navbar: {
+    screen: Navbar,
+    navigationOptions: {
+      headerTitle: "Navbar"
     }
   }
 });
