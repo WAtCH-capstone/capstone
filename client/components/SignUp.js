@@ -30,9 +30,6 @@ class SignUp extends React.Component {
   render() {
     return (
       <Container>
-        <Header>
-          <Title>Sign up</Title>
-        </Header>
         <Form>
           <Item floatingLabel>
             <Label>Display Name</Label>

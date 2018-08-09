@@ -1,8 +1,6 @@
 import React from 'react';
-import { StyleSheet, View, Image } from 'react-native';
+import { Image } from 'react-native';
 import { Container, Form, Input, Item, Button, Label, Text } from 'native-base';
-
-import styles from './Styles';
 
 class LogIn extends React.Component {
   constructor() {
@@ -26,9 +24,6 @@ class LogIn extends React.Component {
   render() {
     return (
       <Container>
-        <Header>
-          <Title>Log in</Title>
-        </Header>
         <Image
           source={{
             uri:
