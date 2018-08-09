@@ -1,10 +1,10 @@
 import React from "react";
-import { StyleSheet, View, Text } from "react-native";
+import { StyleSheet, View, Image } from "react-native";
 import { Container, Form, Input, Item, Button, Label } from "native-base";
 
 import styles from "./Styles";
 
-class Login extends React.Component {
+class LogIn extends React.Component {
   constructor() {
     super();
     this.state = {};
@@ -12,6 +12,13 @@ class Login extends React.Component {
   render() {
     return (
       <Container>
+        <Image
+          source={{
+            uri:
+              "https://lh3.googleusercontent.com/vgv0EDmcYrsy-o7ZjRzKPbJzW2fC7uqSKsnMhrGcTaMImLIKM-1ePl0Gy-n-8SFmCYJKWUf-wu4ChBkJAQ"
+          }}
+          style={{ height: 100, width: null, flex: 1 }}
+        />
         <Form>
           <Item>
             <Label>E-mail</Label>
@@ -23,7 +30,12 @@ class Login extends React.Component {
           </Item>
           <Item>
             <Label>Password</Label>
-            <Input autoCorrect={false} autoCapitalize="none" />
+            <Input
+              autoCorrect={false}
+              autoCapitalize="none"
+              clearButtonMode="always"
+              secureTextEntry={true}
+            />
           </Item>
           <Input
             autoCorrect={false}
@@ -31,7 +43,7 @@ class Login extends React.Component {
             clearButtonMode="always"
           />
           <Button>
-            <Text>Login</Text>
+            <Label>Sign up</Label>
           </Button>
         </Form>
       </Container>
@@ -49,4 +61,4 @@ class Login extends React.Component {
 //   </View>
 // );
 
-export default Login;
+export default LogIn;
