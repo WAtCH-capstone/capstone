@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { TouchableOpacity } from 'react-native';
 import {
   Container,
   Header,
@@ -16,6 +17,25 @@ import {
 } from 'native-base';
 
 export default class Settings extends Component {
+  constructor() {
+    super();
+    this.editProfile = this.editProfile.bind(this);
+    this.changePassword = this.changePassword.bind(this);
+    this.logout = this.logout.bind(this);
+  }
+
+  editProfile() {
+    console.log('this will allow the user to edit their profile');
+  }
+
+  changePassword() {
+    console.log('this will allow the user to change their password');
+  }
+
+  logout() {
+    console.log('this will allow the user to logout');
+  }
+
   render() {
     const navigation = this.props.navigation;
     return (
@@ -42,25 +62,36 @@ export default class Settings extends Component {
               </Left>
             </CardItem>
           </Card>
-
-          {/* <ListItem>
-            <Text>Username</Text>
-          </ListItem>
-          <ListItem last>
-            <Text>Email</Text>
-          </ListItem> */}
           <Separator bordered>
             <Text>Options</Text>
           </Separator>
           <List>
-            <ListItem selected>
-              <Text>Edit your profile</Text>
+            <ListItem>
+              <TouchableOpacity
+                onPress={() => {
+                  this.editProfile();
+                }}
+              >
+                <Text>Edit your profile</Text>
+              </TouchableOpacity>
             </ListItem>
-            <ListItem selected>
-              <Text>Change your password</Text>
+            <ListItem>
+              <TouchableOpacity
+                onPress={() => {
+                  this.changePassword();
+                }}
+              >
+                <Text>Change your password</Text>
+              </TouchableOpacity>
             </ListItem>
-            <ListItem selected last>
-              <Text>Logout</Text>
+            <ListItem last>
+              <TouchableOpacity
+                onPress={() => {
+                  this.logout();
+                }}
+              >
+                <Text>Logout</Text>
+              </TouchableOpacity>
             </ListItem>
           </List>
         </Content>
