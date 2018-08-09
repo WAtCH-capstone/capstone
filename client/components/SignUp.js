@@ -39,6 +39,7 @@ class SignUp extends React.Component {
   }
 
   render() {
+    const navigation = this.props.navigation;
     return (
       <Container>
         <Form>
@@ -87,7 +88,7 @@ class SignUp extends React.Component {
             onPress={() => {
               this.signUpUser(this.state.email, this.state.password);
               this.createUser();
-              // also need to make a user entry in our database with other info
+              navigation.navigate('LogIn');
             }}
           >
             <Text style={{ color: 'white' }}>Sign up</Text>
