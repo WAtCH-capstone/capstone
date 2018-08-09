@@ -12,6 +12,7 @@ class SignUp extends React.Component {
       userName: '',
       email: '',
       password: '',
+      selected: [],
     };
     this.signUpUser = this.signUpUser.bind(this);
     this.createUser = this.createUser.bind(this);

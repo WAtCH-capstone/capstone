@@ -1,9 +1,7 @@
 import React from 'react';
 import { Image } from 'react-native';
 import { Container, Form, Input, Item, Button, Label, Text } from 'native-base';
-
 const firebase = require('firebase');
-import db from '../../firestore';
 
 const convos = [
   {
@@ -30,7 +28,10 @@ class LogIn extends React.Component {
       firebase
         .auth()
         .signInWithEmailAndPassword(email, password)
-        .then(user => console.log(user));
+        .then(user => console.log(user))
+        .then(() =>
+          this.props.navigation.navigate('Convos', { convos: convos })
+        );
     } catch (err) {
       console.log(err.toString());
     }
@@ -79,7 +80,6 @@ class LogIn extends React.Component {
             primary
             onPress={() => {
               this.loginUser(this.state.email, this.state.password);
-              navigation.navigate('Convos', { convos: convos });
             }}
           >
             <Text style={{ color: 'white' }}>Log in</Text>
