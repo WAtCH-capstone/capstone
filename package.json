@@ -12,6 +12,7 @@
     "nodemon": "^1.18.3",
     "react": "16.4.1",
     "react-native": "0.56.0",
+    "react-native-gifted-chat": "^0.4.3",
     "react-navigation": "^2.11.2"
   },
   "devDependencies": {
