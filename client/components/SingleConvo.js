@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import React from "react";
 import {
   Text,
@@ -51,10 +50,6 @@ const styles = StyleSheet.create({
     height: 50
   }
 });
-=======
-import React from 'react';
-import { Text, View } from 'react-native';
->>>>>>> master
 
 // console.disableYellowBox = true;
 
