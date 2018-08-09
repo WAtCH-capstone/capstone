@@ -1,5 +1,4 @@
-import React from "react";
-import { createStackNavigator } from "react-navigation";
+import { createStackNavigator } from 'react-navigation';
 import {
   Home,
   Convos,
@@ -14,32 +13,32 @@ const RootNavigator = createStackNavigator({
   Home: {
     screen: Home,
     navigationOptions: {
-      headerTitle: "Home"
-    }
+      headerTitle: 'Home',
+    },
   },
   Convos: {
     screen: Convos,
     navigationOptions: {
-      headerTitle: "Conversations"
-    }
+      headerTitle: 'Conversations',
+    },
   },
   LogIn: {
     screen: LogIn,
     navigationOptions: {
-      headerTitle: "Log In"
-    }
+      headerTitle: 'Log In',
+    },
   },
   Settings: {
     screen: Settings,
     navigationOptions: {
-      headerTitle: "Settings"
-    }
+      headerTitle: 'Settings',
+    },
   },
   SignUp: {
     screen: SignUp,
     navigationOptions: {
-      headerTitle: "SignUp"
-    }
+      headerTitle: 'SignUp',
+    },
   },
   SingleConvo: {
     screen: SingleConvo,
