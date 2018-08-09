@@ -1,12 +1,12 @@
-import React from "react";
-import { Text, View } from "react-native";
-import { GiftedChat } from "react-native-gifted-chat";
+import React from 'react';
+import { Text, View } from 'react-native';
+import { GiftedChat } from 'react-native-gifted-chat';
 
 class Messages extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      messages: []
+      messages: [],
     };
     this.onSend = this.onSend.bind(this);
   }
@@ -16,21 +16,21 @@ class Messages extends React.Component {
       messages: [
         {
           _id: 1,
-          text: "Hello developer",
+          text: 'Hello developer',
           createdAt: new Date(),
           user: {
             _id: 2,
-            name: "React Native",
-            avatar: "https://placeimg.com/140/140/any"
-          }
-        }
-      ]
+            name: 'React Native',
+            avatar: 'https://placeimg.com/140/140/any',
+          },
+        },
+      ],
     });
   }
 
   onSend(messages = []) {
     this.setState(previousState => ({
-      messages: GiftedChat.append(previousState.messages, messages)
+      messages: GiftedChat.append(previousState.messages, messages),
     }));
   }
 
@@ -40,7 +40,7 @@ class Messages extends React.Component {
         messages={this.state.messages}
         onSend={messages => this.onSend(messages)}
         user={{
-          _id: 1
+          _id: 1,
         }}
       />
     );
