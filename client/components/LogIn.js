@@ -1,10 +1,10 @@
 import React from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, Text } from "react-native";
 import { Container, Form, Input, Item, Button, Label } from "native-base";
 
 import styles from "./Styles";
 
-class Login extends React.Component {
+class LogIn extends React.Component {
   constructor() {
     super();
     this.state = {};
@@ -36,13 +36,4 @@ class Login extends React.Component {
 }
 // this can be deleted
 
-// import React from "react";
-// import { Text, View } from "react-native";
-
-// const LogIn = ({ navigation }) => (
-//   <View>
-//     <Text>Login goes here</Text>
-//   </View>
-// );
-
-// export default LogIn;
+export default LogIn;
