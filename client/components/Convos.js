@@ -11,26 +11,49 @@ import {
   Text,
 } from 'native-base';
 import db from '../../firestore';
+import firebase from 'firebase';
 
 export default class Convos extends React.Component {
   constructor() {
     super();
-    this.state = { convos: null };
+    this.state = {
+      convos: [],
+    };
   }
 
-  componentDidMount() {
-    db.collection('conversations')
-      .doc('ZtaxF3W255TD6CdjB144')
-      .get()
-      .then(snapshot => this.setState({ convos: snapshot.data() }));
+  // const loggedInUser = db.collections('users').doc(userId).get()
+  // loggedInUser.data().conversations (array of IDs)
+  // arr.forEach(convo => db.collections('conversations').doc(convo).get())
+
+  async componentDidMount() {
+    const email = firebase.auth().currentUser.email;
+    const snapshot = await db
+      .collection('users')
+      .where('email', '==', email)
+      .get();
+
+    const userData = snapshot.docs.map(doc => doc.data());
+
+    let convos = [];
+
+    await userData[0].conversations.forEach(async id => {
+      const convo = await db
+        .collection('conversations')
+        .doc(id)
+        .get();
+      convos.push(convo.data());
+    });
+    console.log(convos);
+
+    this.setState({ convos: convos });
   }
 
   render() {
-    console.log(this.state.convos);
     const navigation = this.props.navigation;
-    if (this.state.convos) {
-      const convos = this.state.convos;
-      const firstMessage = convos.messages[0];
+    const convo = this.state.convos['0'];
+    console.log('rendering:', convo);
+    if (convo) {
+      const firstMessage = convo.messages[0];
       return (
         <Container>
           <Content>
@@ -38,7 +61,7 @@ export default class Convos extends React.Component {
               <ListItem
                 key={1}
                 avatar
-                onPress={() => navigation.navigate('SingleConvo', { convos })}
+                onPress={() => navigation.navigate('SingleConvo', { convo })}
               >
                 <Left>
                   <Thumbnail
@@ -46,7 +69,7 @@ export default class Convos extends React.Component {
                   />
                 </Left>
                 <Body>
-                  <Text>{convos.users[0].name}</Text>
+                  <Text>{convo.users[0]}</Text>
                   <Text note>{firstMessage.text}.</Text>
                 </Body>
                 <Right>
@@ -60,7 +83,7 @@ export default class Convos extends React.Component {
     } else {
       return (
         <Container>
-          <Text>Getting data...</Text>
+          <Text>No conversations</Text>
         </Container>
       );
     }
