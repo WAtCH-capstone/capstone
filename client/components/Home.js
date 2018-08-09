@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Text, View, Button } from "react-native";
+import { Text, View, Button, ScrollView } from "react-native";
 import styles from "./Styles";
 import Navbar from "./Navbar";
 
@@ -21,41 +21,43 @@ export default class Home extends Component {
     const navigation = this.props.navigation;
     return (
       <View>
-        <View style={styles.container}>
-          <Text style={styles.welcome}>You're home!</Text>
-        </View>
-        <View>
-          <Button
-            onPress={() => this.props.navigation.navigate("LogIn")}
-            title="Log in"
-          />
-        </View>
-        <View>
-          <Button
-            onPress={() => this.props.navigation.navigate("SignUp")}
-            title="Sign up"
-          />
-        </View>
-        <View>
-          <Button
-            onPress={() => this.props.navigation.navigate("SingleConvo")}
-            title="Single Conversation"
-          />
-        </View>
-        <View>
-          <Button
-            onPress={() =>
-              this.props.navigation.navigate("Convos", { convos: convos })
-            }
-            title="Conversations"
-          />
-        </View>
-        <View>
-          <Button
-            onPress={() => this.props.navigation.navigate("Settings")}
-            title="Settings"
-          />
-        </View>
+        <ScrollView>
+          <View style={styles.container}>
+            <Text style={styles.welcome}>You're home!</Text>
+          </View>
+          <View>
+            <Button
+              onPress={() => this.props.navigation.navigate("LogIn")}
+              title="Log in"
+            />
+          </View>
+          <View>
+            <Button
+              onPress={() => this.props.navigation.navigate("SignUp")}
+              title="Sign up"
+            />
+          </View>
+          <View>
+            <Button
+              onPress={() => this.props.navigation.navigate("SingleConvo")}
+              title="Single Conversation"
+            />
+          </View>
+          <View>
+            <Button
+              onPress={() =>
+                this.props.navigation.navigate("Convos", { convos: convos })
+              }
+              title="Conversations"
+            />
+          </View>
+          <View>
+            <Button
+              onPress={() => this.props.navigation.navigate("Settings")}
+              title="Settings"
+            />
+          </View>
+        </ScrollView>
         <Navbar />
       </View>
     );

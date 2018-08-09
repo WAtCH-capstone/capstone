@@ -1,7 +1,7 @@
 // this can be deleted
 
 import React from "react";
-import { Image } from "react-native";
+import { Image, StyleSheet, View } from "react-native";
 import {
   Container,
   Header,
@@ -20,25 +20,20 @@ const profilePic = {
 };
 const messagesPic = {
   uri:
-    "https://mash.ie/wp-content/uploads/2017/09/4-2-speech-bubble-png-images-800x800.png"
+    "https://cdn.icon-icons.com/icons2/935/PNG/512/speech-bubble-oval-symbol-with-three-dots_icon-icons.com_73151.png"
 };
 
 class Navbar extends React.Component {
-  // <View>
-  //   <Text>Navbar goes here</Text>
-  // </View>
   render() {
     return (
       <Container>
-        <Header />
-        <Content />
-        <Footer>
+        <Footer style={{ paddingTop: 15 }}>
           <FooterTab>
-            {/* <Button full>
-              <Text>Footer</Text>
-            </Button> */}
-            <Button full>
-              <Image source={messagesPic} style={{ width: 80, height: 60 }} />
+            <Button
+              onPress={() => this.props.navigation.navigate("Convos")}
+              full
+            >
+              <Image source={messagesPic} style={{ width: 60, height: 60 }} />
             </Button>
             <Button full>
               <Image source={profilePic} style={{ width: 60, height: 60 }} />
@@ -53,6 +48,14 @@ class Navbar extends React.Component {
   }
 }
 
-// const styles = StyleSheet
+const styles = StyleSheet.create({
+  footer: {
+    position: "absolute",
+    // paddingTop: 100,
+    bottom: 0,
+    left: 0,
+    right: 0
+  }
+});
 
 export default Navbar;
