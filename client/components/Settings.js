@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { TouchableOpacity } from 'react-native';
 import {
   Container,
-  Header,
   Content,
   ListItem,
   Text,
@@ -12,7 +11,6 @@ import {
   Thumbnail,
   Left,
   Body,
-  Button,
   List,
 } from 'native-base';
 
@@ -40,10 +38,9 @@ export default class Settings extends Component {
     const navigation = this.props.navigation;
     return (
       <Container>
-        <Header />
         <Content>
           <Separator bordered>
-            <Text>Your Profile</Text>
+            <Text>My Profile</Text>
           </Separator>
           <Card>
             <CardItem>

@@ -1,17 +1,17 @@
 // this can be deleted
-import React from "react";
-import { Container, Form, Item, Label, Input, Button } from "native-base";
-import { Text } from "react-native";
+import React from 'react';
+import { Container, Form, Item, Label, Input, Button } from 'native-base';
+import { Text } from 'react-native';
 
 class SignUp extends React.Component {
   constructor() {
     super();
     this.state = {
-      displayName: "",
-      userName: "",
-      email: "",
-      password: "",
-      confirmPassword: ""
+      displayName: '',
+      userName: '',
+      email: '',
+      password: '',
+      confirmPassword: '',
     };
     this.handleSubmit = this.handleSubmit.bind(this);
   }
@@ -31,7 +31,7 @@ class SignUp extends React.Component {
     return (
       <Container>
         <Form>
-          <Item>
+          <Item floatingLabel>
             <Label>Display Name</Label>
             <Input
               autoCorrect={false}
@@ -40,7 +40,7 @@ class SignUp extends React.Component {
               onChangeText={displayName => this.setState({ displayName })}
             />
           </Item>
-          <Item>
+          <Item floatingLabel>
             <Label>Username</Label>
             <Input
               autoCorrect={false}
@@ -49,7 +49,7 @@ class SignUp extends React.Component {
               onChangeText={userName => this.setState({ userName })}
             />
           </Item>
-          <Item>
+          <Item floatingLabel>
             <Label>E-mail</Label>
             <Input
               autoCorrect={false}
@@ -58,7 +58,7 @@ class SignUp extends React.Component {
               onChangeText={email => this.setState({ email })}
             />
           </Item>
-          <Item>
+          <Item floatingLabel>
             <Label>Password</Label>
             <Input
               autoCorrect={false}
@@ -68,7 +68,7 @@ class SignUp extends React.Component {
               onChangeText={password => this.setState({ password })}
             />
           </Item>
-          <Item>
+          <Item floatingLabel>
             <Label>Confirm Password</Label>
             <Input
               autoCorrect={false}
@@ -81,11 +81,15 @@ class SignUp extends React.Component {
             />
           </Item>
           <Button
+            style={{ marginTop: 10 }}
+            full
+            rounded
+            primary
             onPress={() => {
               this.handleSubmit();
             }}
           >
-            <Text>Login</Text>
+            <Text style={{ color: 'white' }}>Sign up</Text>
           </Button>
         </Form>
       </Container>
