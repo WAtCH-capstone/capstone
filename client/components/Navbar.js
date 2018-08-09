@@ -11,6 +11,21 @@ import {
   Button,
   Text
 } from "native-base";
+// import { StackNavigator, NavigationActions } from "react-navigation";
+
+const convos = [
+  {
+    id: 1,
+    name: "Mom",
+    messages: [{ id: 1, time: "3:30pm", text: "Hello World" }]
+  },
+  {
+    id: 2,
+    name: "Jack",
+    messages: [{ id: 1, time: "11:17am", text: "Dlrow Olleh" }]
+  }
+];
+
 const settingsPic = {
   uri:
     "https://cdn0.iconfinder.com/data/icons/thin-essentials/57/thin-053_settings_gear_preferences-512.png"
@@ -30,16 +45,24 @@ class Navbar extends React.Component {
         <Footer style={{ paddingTop: 15 }}>
           <FooterTab>
             <Button
-              onPress={() => this.props.navigation.navigate("Convos")}
+              onPress={() =>
+                this.props.navigation.navigate("Convos", { convos: convos })
+              }
               full
             >
-              <Image source={messagesPic} style={{ width: 60, height: 60 }} />
+              <Image source={messagesPic} style={{ width: 50, height: 50 }} />
             </Button>
-            <Button full>
-              <Image source={profilePic} style={{ width: 60, height: 60 }} />
+            <Button
+              onPress={() => this.props.navigation.navigate("Settings")}
+              full
+            >
+              <Image source={profilePic} style={{ width: 50, height: 50 }} />
             </Button>
-            <Button full>
-              <Image source={settingsPic} style={{ width: 60, height: 60 }} />
+            <Button
+              onPress={() => this.props.navigation.navigate("Settings")}
+              full
+            >
+              <Image source={settingsPic} style={{ width: 50, height: 50 }} />
             </Button>
           </FooterTab>
         </Footer>

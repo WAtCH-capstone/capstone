@@ -1,7 +1,17 @@
 import React, { Component } from "react";
-import { Text, View, Button, ScrollView } from "react-native";
+import { Text, View, ScrollView, Image, Button as Button1 } from "react-native";
 import styles from "./Styles";
 import Navbar from "./Navbar";
+// import { Image, StyleSheet, View } from "react-native";
+import {
+  Container,
+  Header,
+  Content,
+  Footer,
+  FooterTab,
+  Button
+  // Text
+} from "native-base";
 
 const convos = [
   {
@@ -26,25 +36,25 @@ export default class Home extends Component {
             <Text style={styles.welcome}>You're home!</Text>
           </View>
           <View>
-            <Button
+            <Button1
               onPress={() => this.props.navigation.navigate("LogIn")}
               title="Log in"
             />
           </View>
           <View>
-            <Button
+            <Button1
               onPress={() => this.props.navigation.navigate("SignUp")}
               title="Sign up"
             />
           </View>
           <View>
-            <Button
+            <Button1
               onPress={() => this.props.navigation.navigate("SingleConvo")}
               title="Single Conversation"
             />
           </View>
           <View>
-            <Button
+            <Button1
               onPress={() =>
                 this.props.navigation.navigate("Convos", { convos: convos })
               }
@@ -52,13 +62,13 @@ export default class Home extends Component {
             />
           </View>
           <View>
-            <Button
+            <Button1
               onPress={() => this.props.navigation.navigate("Settings")}
               title="Settings"
             />
           </View>
         </ScrollView>
-        <Navbar />
+        <Navbar navigation={navigation} />
       </View>
     );
   }
