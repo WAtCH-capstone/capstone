@@ -1,7 +1,8 @@
-// this can be deleted
 import React from 'react';
 import { Container, Form, Item, Label, Input, Button } from 'native-base';
 import { Text } from 'react-native';
+const firebase = require('firebase');
+import db from '../../firestore';
 
 class SignUp extends React.Component {
   constructor() {
@@ -13,20 +14,22 @@ class SignUp extends React.Component {
       password: '',
       confirmPassword: '',
     };
-    this.handleSubmit = this.handleSubmit.bind(this);
+    this.signUpUser = this.signUpUser.bind(this);
   }
-  handleSubmit() {
-    const displayName = this.state.displayName;
-    const userName = this.state.userName;
-    const email = this.state.email;
-    const password = this.state.password;
-    const confirmPassword = this.state.confirmPassword;
+
+  signUpUser(email, password) {
     try {
+      if (this.state.password.length < 6) {
+        alert('Please enter at least 6 characters');
+        return;
+      }
       firebase.auth().createUserWithEmailAndPassword(email, password);
-    } catch (error) {
-      console.log(error);
+      alert(`Account created for ${email}. Now you may login.`);
+    } catch (err) {
+      console.log(err.toString());
     }
   }
+
   render() {
     return (
       <Container>
@@ -86,7 +89,8 @@ class SignUp extends React.Component {
             rounded
             primary
             onPress={() => {
-              this.handleSubmit();
+              this.signUpUser(this.state.email, this.state.password);
+              // also need to make a user entry in our database with other info
             }}
           >
             <Text style={{ color: 'white' }}>Sign up</Text>
@@ -99,12 +103,3 @@ class SignUp extends React.Component {
 export default SignUp;
 
 console.disableYellowBox = true;
-
-// import React from "react";
-// import { Text, View } from "react-native";
-
-// const SignUp = ({ navigation }) => (
-//   <View>
-//     <Text>SignUp goes here</Text>
-//   </View>
-// );
