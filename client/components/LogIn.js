@@ -1,15 +1,15 @@
-import React from "react";
-import { StyleSheet, View, Image } from "react-native";
-import { Container, Form, Input, Item, Button, Label } from "native-base";
+import React from 'react';
+import { StyleSheet, View, Image } from 'react-native';
+import { Container, Form, Input, Item, Button, Label, Text } from 'native-base';
 
-import styles from "./Styles";
+import styles from './Styles';
 
 class LogIn extends React.Component {
   constructor() {
     super();
     this.state = {
-      email: "",
-      password: ""
+      email: '',
+      password: '',
     };
     this.handleSubmit = this.handleSubmit.bind(this);
   }
@@ -29,12 +29,12 @@ class LogIn extends React.Component {
         <Image
           source={{
             uri:
-              "https://lh3.googleusercontent.com/vgv0EDmcYrsy-o7ZjRzKPbJzW2fC7uqSKsnMhrGcTaMImLIKM-1ePl0Gy-n-8SFmCYJKWUf-wu4ChBkJAQ"
+              'https://lh3.googleusercontent.com/vgv0EDmcYrsy-o7ZjRzKPbJzW2fC7uqSKsnMhrGcTaMImLIKM-1ePl0Gy-n-8SFmCYJKWUf-wu4ChBkJAQ',
           }}
           style={{ height: 100, width: null, flex: 1 }}
         />
         <Form>
-          <Item>
+          <Item floatingLabel>
             <Label>E-mail</Label>
             <Input
               autoCorrect={false}
@@ -43,7 +43,7 @@ class LogIn extends React.Component {
               onChangeText={email => this.setState({ email })}
             />
           </Item>
-          <Item>
+          <Item floatingLabel>
             <Label>Password</Label>
             <Input
               autoCorrect={false}
@@ -53,17 +53,21 @@ class LogIn extends React.Component {
               onChangeText={password => this.setState({ password })}
             />
           </Item>
-          <Input
+          {/* <Input
             autoCorrect={false}
             autoCapitalize="none"
             clearButtonMode="always"
-          />
+          /> */}
           <Button
+            style={{ marginTop: 10 }}
+            full
+            rounded
+            primary
             onPress={() => {
               this.handleSubmit(this.state.email, this.state.password);
             }}
           >
-            <Label>Sign up</Label>
+            <Text style={{ color: 'white' }}>Login</Text>
           </Button>
         </Form>
       </Container>
