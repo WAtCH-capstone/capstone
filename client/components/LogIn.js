@@ -5,6 +5,19 @@ import { Container, Form, Input, Item, Button, Label, Text } from 'native-base';
 const firebase = require('firebase');
 import db from '../../firestore';
 
+const convos = [
+  {
+    id: 1,
+    name: 'Mom',
+    messages: [{ id: 1, time: '3:30pm', text: 'Hello World' }],
+  },
+  {
+    id: 2,
+    name: 'Jack',
+    messages: [{ id: 1, time: '11:17am', text: 'Dlrow Olleh' }],
+  },
+];
+
 class LogIn extends React.Component {
   constructor(props) {
     super(props);
@@ -24,6 +37,7 @@ class LogIn extends React.Component {
   }
 
   render() {
+    const navigation = this.props.navigation;
     return (
       <Container>
         <Image
@@ -65,7 +79,7 @@ class LogIn extends React.Component {
             primary
             onPress={() => {
               this.loginUser(this.state.email, this.state.password);
-              navigation.navigate('Convos');
+              navigation.navigate('Convos', { convos: convos });
             }}
           >
             <Text style={{ color: 'white' }}>Log in</Text>
