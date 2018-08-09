@@ -6,6 +6,22 @@ import { Text } from "react-native";
 class SignUp extends React.Component {
   constructor() {
     super();
+    this.state = {
+      displayName: "",
+      userName: "",
+      email: "",
+      password: "",
+      confirmPassword: ""
+    };
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+  handleSubmit() {
+    const displayName = this.state.displayName;
+    const userName = this.state.userName;
+    const email = this.state.email;
+    const password = this.state.password;
+    const confirmPassword = this.state.confirmPassword;
+    console.log("testing");
   }
   render() {
     return (
@@ -17,6 +33,7 @@ class SignUp extends React.Component {
               autoCorrect={false}
               autoCapitalize="none"
               clearButtonMode="always"
+              onChangeText={displayName => this.setState({ displayName })}
             />
           </Item>
           <Item>
@@ -25,6 +42,7 @@ class SignUp extends React.Component {
               autoCorrect={false}
               autoCapitalize="none"
               clearButtonMode="always"
+              onChangeText={userName => this.setState({ userName })}
             />
           </Item>
           <Item>
@@ -33,6 +51,7 @@ class SignUp extends React.Component {
               autoCorrect={false}
               autoCapitalize="none"
               clearButtonMode="always"
+              onChangeText={email => this.setState({ email })}
             />
           </Item>
           <Item>
@@ -42,6 +61,7 @@ class SignUp extends React.Component {
               autoCapitalize="none"
               clearButtonMode="always"
               secureTextEntry={true}
+              onChangeText={password => this.setState({ password })}
             />
           </Item>
           <Item>
@@ -51,9 +71,16 @@ class SignUp extends React.Component {
               autoCapitalize="none"
               clearButtonMode="always"
               secureTextEntry={true}
+              onChangeText={confirmPassword =>
+                this.setState({ confirmPassword })
+              }
             />
           </Item>
-          <Button>
+          <Button
+            onPress={() => {
+              this.handleSubmit();
+            }}
+          >
             <Text>Login</Text>
           </Button>
         </Form>
@@ -62,6 +89,8 @@ class SignUp extends React.Component {
   }
 }
 export default SignUp;
+
+console.disableYellowBox = true;
 
 // import React from "react";
 // import { Text, View } from "react-native";

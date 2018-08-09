@@ -7,7 +7,16 @@ import styles from "./Styles";
 class LogIn extends React.Component {
   constructor() {
     super();
-    this.state = {};
+    this.state = {
+      email: "",
+      password: ""
+    };
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  handleSubmit() {
+    const email = this.state.email;
+    const password = this.state.password;
   }
   render() {
     return (
@@ -26,6 +35,11 @@ class LogIn extends React.Component {
               autoCorrect={false}
               autoCapitalize="none"
               clearButtonMode="always"
+              onChangeText={email =>
+                this.setState({ email }, () => {
+                  console.log("mail", email);
+                })
+              }
             />
           </Item>
           <Item>
@@ -35,6 +49,7 @@ class LogIn extends React.Component {
               autoCapitalize="none"
               clearButtonMode="always"
               secureTextEntry={true}
+              onChangeText={password => this.setState({ password })}
             />
           </Item>
           <Input
@@ -42,7 +57,11 @@ class LogIn extends React.Component {
             autoCapitalize="none"
             clearButtonMode="always"
           />
-          <Button>
+          <Button
+            onPress={() => {
+              this.handleSubmit();
+            }}
+          >
             <Label>Sign up</Label>
           </Button>
         </Form>
