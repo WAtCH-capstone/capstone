@@ -21,7 +21,11 @@ class SignUp extends React.Component {
     const email = this.state.email;
     const password = this.state.password;
     const confirmPassword = this.state.confirmPassword;
-    console.log("testing");
+    try {
+      firebase.auth().createUserWithEmailAndPassword(email, password);
+    } catch (error) {
+      console.log(error);
+    }
   }
   render() {
     return (

@@ -17,6 +17,11 @@ class LogIn extends React.Component {
   handleSubmit() {
     const email = this.state.email;
     const password = this.state.password;
+    try {
+      firebase.auth().signInWithEmailAndPassword(email, password);
+    } catch (error) {
+      console.log(error);
+    }
   }
   render() {
     return (
@@ -35,11 +40,7 @@ class LogIn extends React.Component {
               autoCorrect={false}
               autoCapitalize="none"
               clearButtonMode="always"
-              onChangeText={email =>
-                this.setState({ email }, () => {
-                  console.log("mail", email);
-                })
-              }
+              onChangeText={email => this.setState({ email })}
             />
           </Item>
           <Item>
@@ -59,7 +60,7 @@ class LogIn extends React.Component {
           />
           <Button
             onPress={() => {
-              this.handleSubmit();
+              this.handleSubmit(this.state.email, this.state.password);
             }}
           >
             <Label>Sign up</Label>
