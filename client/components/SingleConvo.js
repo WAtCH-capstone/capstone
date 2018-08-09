@@ -2,10 +2,10 @@ import React from 'react';
 import {
   Text,
   View,
-  Button,
   KeyboardAvoidingView,
   StyleSheet,
   Image,
+  Button,
 } from 'react-native';
 import Messages from './Messages';
 
