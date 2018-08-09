@@ -2,25 +2,27 @@ import React from 'react';
 import { Image } from 'react-native';
 import { Container, Form, Input, Item, Button, Label, Text } from 'native-base';
 
+const firebase = require('firebase');
+import db from '../firestore';
+
 class LogIn extends React.Component {
-  constructor() {
-    super();
-    this.state = {
-      email: '',
-      password: '',
-    };
-    this.handleSubmit = this.handleSubmit.bind(this);
+  constructor(props) {
+    super(props);
+    this.state = { email: '', password: '' };
+    this.loginUser = this.loginUser.bind(this);
   }
 
-  handleSubmit() {
-    const email = this.state.email;
-    const password = this.state.password;
+  loginUser(email, password) {
     try {
-      firebase.auth().signInWithEmailAndPassword(email, password);
-    } catch (error) {
-      console.log(error);
+      firebase
+        .auth()
+        .signInWithEmailAndPassword(email, password)
+        .then(user => console.log(user));
+    } catch (err) {
+      console.log(err.toString());
     }
   }
+
   render() {
     return (
       <Container>
@@ -62,7 +64,8 @@ class LogIn extends React.Component {
             rounded
             primary
             onPress={() => {
-              this.handleSubmit(this.state.email, this.state.password);
+              this.loginUser(this.state.email, this.state.password);
+              navigation.navigate('Convos');
             }}
           >
             <Text style={{ color: 'white' }}>Log in</Text>
