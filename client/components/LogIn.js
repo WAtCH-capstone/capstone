@@ -31,7 +31,12 @@ class LogIn extends React.Component {
             uri:
               'https://lh3.googleusercontent.com/vgv0EDmcYrsy-o7ZjRzKPbJzW2fC7uqSKsnMhrGcTaMImLIKM-1ePl0Gy-n-8SFmCYJKWUf-wu4ChBkJAQ',
           }}
-          style={{ height: 100, width: null, flex: 1 }}
+          style={{
+            width: '100%',
+            height: '60%',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
         />
         <Form>
           <Item floatingLabel>
@@ -53,11 +58,6 @@ class LogIn extends React.Component {
               onChangeText={password => this.setState({ password })}
             />
           </Item>
-          {/* <Input
-            autoCorrect={false}
-            autoCapitalize="none"
-            clearButtonMode="always"
-          /> */}
           <Button
             style={{ marginTop: 10 }}
             full
