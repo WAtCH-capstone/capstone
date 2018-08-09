@@ -32,7 +32,7 @@ export default class Home extends Component {
         <View>
           <Button
             onPress={() => this.props.navigation.navigate('SignUp')}
-            title="Sign Up"
+            title="Sign up"
           />
         </View>
         <View>

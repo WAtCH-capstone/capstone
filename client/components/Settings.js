@@ -40,10 +40,12 @@ export default class Settings extends Component {
     const navigation = this.props.navigation;
     return (
       <Container>
-        <Header />
+        <Header>
+          <Title>Settings</Title>
+        </Header>
         <Content>
           <Separator bordered>
-            <Text>Your Profile</Text>
+            <Text>My Profile</Text>
           </Separator>
           <Card>
             <CardItem>

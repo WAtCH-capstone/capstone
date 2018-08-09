@@ -26,6 +26,9 @@ class LogIn extends React.Component {
   render() {
     return (
       <Container>
+        <Header>
+          <Title>Log in</Title>
+        </Header>
         <Image
           source={{
             uri:
@@ -67,7 +70,7 @@ class LogIn extends React.Component {
               this.handleSubmit(this.state.email, this.state.password);
             }}
           >
-            <Text style={{ color: 'white' }}>Login</Text>
+            <Text style={{ color: 'white' }}>Log in</Text>
           </Button>
         </Form>
       </Container>
