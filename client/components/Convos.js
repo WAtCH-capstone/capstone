@@ -26,7 +26,7 @@ export default class Convos extends React.Component {
   // arr.forEach(convo => db.collections('conversations').doc(convo).get())
 
   async componentDidMount() {
-    const email = firebase.auth().currentUser.email;
+    const email = await firebase.auth().currentUser.email;
     const snapshot = await db
       .collection('users')
       .where('email', '==', email)
@@ -36,24 +36,23 @@ export default class Convos extends React.Component {
 
     let convos = [];
 
-    await userData[0].conversations.forEach(async id => {
-      const convo = await db
+    for (let id of userData[0].conversations) {
+      let convo = await db
         .collection('conversations')
         .doc(id)
         .get();
       convos.push(convo.data());
-    });
-    console.log(convos);
+    }
 
-    this.setState({ convos: convos });
+    this.setState({ convos });
   }
 
   render() {
     const navigation = this.props.navigation;
-    const convo = this.state.convos['0'];
-    console.log('rendering:', convo);
-    if (convo) {
-      const firstMessage = convo.messages[0];
+    const convosOnState = this.state.convos;
+    const firstConvo = convosOnState[0];
+    if (convosOnState && convosOnState.length) {
+      const firstMessage = firstConvo.messages[0];
       return (
         <Container>
           <Content>
@@ -61,7 +60,11 @@ export default class Convos extends React.Component {
               <ListItem
                 key={1}
                 avatar
-                onPress={() => navigation.navigate('SingleConvo', { convo })}
+                onPress={() =>
+                  navigation.navigate('Singleconvo', {
+                    convos: firstConvo,
+                  })
+                }
               >
                 <Left>
                   <Thumbnail
@@ -69,7 +72,7 @@ export default class Convos extends React.Component {
                   />
                 </Left>
                 <Body>
-                  <Text>{convo.users[0]}</Text>
+                  <Text>{firstConvo.users[0]}</Text>
                   <Text note>{firstMessage.text}.</Text>
                 </Body>
                 <Right>
