@@ -84,7 +84,7 @@ export default class Convos extends React.Component {
                 key={1}
                 avatar
                 onPress={() =>
-                  navigation.navigate('Singleconvo', {
+                  navigation.navigate('SingleConvo', {
                     convos: firstConvo,
                   })
                 }
