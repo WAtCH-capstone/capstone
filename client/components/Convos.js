@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import {
   Container,
   Content,
@@ -9,6 +9,10 @@ import {
   Right,
   Thumbnail,
   Text,
+  Header,
+  Item,
+  Input,
+  Button,
 } from 'native-base';
 import db from '../../firestore';
 import firebase from 'firebase';
@@ -18,12 +22,16 @@ export default class Convos extends React.Component {
     super();
     this.state = {
       convos: [],
+      search: '',
     };
   }
 
-  // const loggedInUser = db.collections('users').doc(userId).get()
-  // loggedInUser.data().conversations (array of IDs)
-  // arr.forEach(convo => db.collections('conversations').doc(convo).get())
+  enterSearch(search) {
+    console.log('search: ', search);
+    console.log(
+      'this would filter the messages and only return ones relevant to the search'
+    );
+  }
 
   async componentDidMount() {
     const email = await firebase.auth().currentUser.email;
@@ -55,6 +63,21 @@ export default class Convos extends React.Component {
       const firstMessage = firstConvo.messages[0];
       return (
         <Container>
+          <Header searchBar rounded>
+            <Item>
+              <Input
+                clearButtonMode="always"
+                onChangeText={search => this.setState({ search })}
+                placeholder="Search"
+              />
+            </Item>
+            <Button
+              transparent
+              onPress={() => this.enterSearch(this.state.search)}
+            >
+              <Text>Search</Text>
+            </Button>
+          </Header>
           <Content>
             <List>
               <ListItem
