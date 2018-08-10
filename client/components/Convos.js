@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 import {
   Container,
   Content,
@@ -12,32 +12,35 @@ import {
   Header,
   Item,
   Input,
-  Button,
-} from 'native-base';
-import db from '../../firestore';
-import firebase from 'firebase';
+  Button
+} from "native-base";
+import db from "../../firestore";
+import firebase from "firebase";
 
 export default class Convos extends React.Component {
   constructor() {
     super();
     this.state = {
       convos: [],
-      search: '',
+      name: "",
+      search: ""
     };
+    this.getUserName = this.getUserName.bind(this);
   }
 
   enterSearch(search) {
-    console.log('search: ', search);
+    console.log("search: ", search);
     console.log(
-      'this would filter the messages and only return ones relevant to the search'
+      "this would filter the messages and only return ones relevant to the search"
     );
   }
 
   async componentDidMount() {
+    this.getUserName();
     const email = await firebase.auth().currentUser.email;
     const snapshot = await db
-      .collection('users')
-      .where('email', '==', email)
+      .collection("users")
+      .where("email", "==", email)
       .get();
 
     const userData = snapshot.docs.map(doc => doc.data());
@@ -46,13 +49,30 @@ export default class Convos extends React.Component {
 
     for (let id of userData[0].conversations) {
       let convo = await db
-        .collection('conversations')
+        .collection("conversations")
         .doc(id)
         .get();
       convos.push(convo.data());
     }
-
     this.setState({ convos });
+  }
+
+  async getUserName() {
+    const userRef = await db
+      .collection("users")
+      .doc("REQv5MZj0mRHUnZkVfOGm8uVsyo2"); // need to change this
+    const getDoc = userRef
+      .get()
+      .then(doc => {
+        if (!doc.exists) {
+          console.log("No such document!");
+        } else {
+          this.setState({ name: doc.data().displayName });
+        }
+      })
+      .catch(err => {
+        console.log("Error getting document", err);
+      });
   }
 
   render() {
@@ -84,18 +104,19 @@ export default class Convos extends React.Component {
                 key={1}
                 avatar
                 onPress={() =>
-                  navigation.navigate('Singleconvo', {
-                    convos: firstConvo,
+                  navigation.navigate("SingleConvo", {
+                    convos: firstConvo
                   })
                 }
               >
                 <Left>
                   <Thumbnail
-                    source={{ uri: 'https://placeimg.com/140/140/any' }}
+                    source={{ uri: "https://placeimg.com/140/140/any" }}
                   />
                 </Left>
                 <Body>
-                  <Text>{firstConvo.users[0]}</Text>
+                  {/* {firstConvo.users[1]} */}
+                  <Text>{this.state.name}</Text>
                   <Text note>{firstMessage.text}.</Text>
                 </Body>
                 <Right>
