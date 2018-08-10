@@ -20,7 +20,7 @@ import PushNotification from 'react-native-push-notification';
 import db from '../../firestore';
 import firebase from 'firebase';
 
-export default class Convos extends React.Component {
+export default class Convos extends Component {
   constructor() {
     super();
     this.state = { convos: [], search: '' };
