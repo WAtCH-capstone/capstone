@@ -24,6 +24,8 @@ export default class Convos extends React.Component {
       convos: [],
       search: '',
     };
+
+    this.user = firebase.auth().currentUser
   }
 
   enterSearch(search) {
@@ -39,7 +41,6 @@ export default class Convos extends React.Component {
       .collection('users')
       .where('email', '==', email)
       .get();
-
     const userData = snapshot.docs.map(doc => doc.data());
 
     let convos = [];
@@ -50,15 +51,20 @@ export default class Convos extends React.Component {
         .doc(id)
         .get();
       convos.push(convo.data());
+      convos.push(id)
     }
 
     this.setState({ convos });
   }
 
+  async getRef (id) {
+    return db.collection('conversations').doc(id)
+  }
+
   render() {
     const navigation = this.props.navigation;
     const convosOnState = this.state.convos;
-    const firstConvo = convosOnState[0];
+    const convo = convosOnState[0];
     if (convosOnState && convosOnState.length) {
       const firstMessage = firstConvo.messages[0];
       return (
@@ -83,19 +89,21 @@ export default class Convos extends React.Component {
               <ListItem
                 key={1}
                 avatar
-                onPress={() =>
-                  navigation.navigate('Singleconvo', {
-                    convos: firstConvo,
+                onPress={() => {
+                  const friend = convo.users.filter(id => id !== this.user.uid)
+                  const ref = this.getRef(convosOnState[1])
+                  navigation.navigate('SingleConvo', {
+                    convo, ref, user: this.user, friend
                   })
-                }
-              >
+                }}
+              />
                 <Left>
                   <Thumbnail
                     source={{ uri: 'https://placeimg.com/140/140/any' }}
                   />
                 </Left>
                 <Body>
-                  <Text>{firstConvo.users[0]}</Text>
+                  <Text>{convo.users[0]}</Text>
                   <Text note>{firstMessage.text}.</Text>
                 </Body>
                 <Right>
