@@ -1,5 +1,4 @@
 import React from 'react';
-import { Text, View, AppState } from 'react-native';
 import { GiftedChat } from 'react-native-gifted-chat';
 
 class Messages extends React.Component {
@@ -9,7 +8,6 @@ class Messages extends React.Component {
       messages: [],
     };
     this.onSend = this.onSend.bind(this);
-    this.handleAppStateChange = this.handleAppStateChange.bind(this);
     // this.observeAuth()
   }
 
@@ -28,20 +26,6 @@ class Messages extends React.Component {
         },
       ],
     });
-  }
-
-  handleAppStateChange(appState) {
-    if (appState === 'background') {
-      console.log('app state is background. here is state', this.state);
-    }
-  }
-
-  componentDidMount() {
-    AppState.addEventListener('change', this.handleAppStateChange);
-  }
-
-  componentWillUnmount() {
-    AppState.removeEventListener('change', this.handleAppStateChange);
   }
 
   onSend(messages = []) {

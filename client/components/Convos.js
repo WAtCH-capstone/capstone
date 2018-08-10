@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { AppState } from 'react-native';
 import {
   Container,
   Content,
@@ -20,10 +21,22 @@ import firebase from 'firebase';
 export default class Convos extends React.Component {
   constructor() {
     super();
-    this.state = {
-      convos: [],
-      search: '',
-    };
+    this.state = { convos: [], search: '' };
+    this.handleAppStateChange = this.handleAppStateChange.bind(this);
+  }
+
+  handleAppStateChange(appState) {
+    if (appState === 'background') {
+      console.log('app state is background. here is state', this.state);
+    }
+  }
+
+  componentDidMount() {
+    AppState.addEventListener('change', this.handleAppStateChange);
+  }
+
+  componentWillUnmount() {
+    AppState.removeEventListener('change', this.handleAppStateChange);
   }
 
   enterSearch(search) {
@@ -39,11 +52,8 @@ export default class Convos extends React.Component {
       .collection('users')
       .where('email', '==', email)
       .get();
-
     const userData = snapshot.docs.map(doc => doc.data());
-
     let convos = [];
-
     for (let id of userData[0].conversations) {
       let convo = await db
         .collection('conversations')
@@ -51,7 +61,6 @@ export default class Convos extends React.Component {
         .get();
       convos.push(convo.data());
     }
-
     this.setState({ convos });
   }
 
