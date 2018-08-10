@@ -10,6 +10,7 @@ class Messages extends React.Component {
     };
     this.onSend = this.onSend.bind(this);
     this.handleAppStateChange = this.handleAppStateChange.bind(this);
+    // this.observeAuth()
   }
 
   componentWillMount() {
@@ -48,6 +49,13 @@ class Messages extends React.Component {
       messages: GiftedChat.append(previousState.messages, messages),
     }));
   }
+  // FOR GROUP CHAT NAMES
+  // static navigationOptions = ({ navigation }) => ({
+  //   title: (navigation.state.params || {}).name || "Chat!"
+  // });
+
+  observeAuth = () =>
+    firebase.auth().onAuthStateChanged(this.onAuthStateChanged);
 
   render() {
     return (
