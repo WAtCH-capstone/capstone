@@ -14,11 +14,14 @@ import {
   Input,
   Button,
 } from 'native-base';
+import db from '../../firestore';
+import firebase from 'firebase';
 
-class Convos extends React.Component {
+export default class Convos extends React.Component {
   constructor() {
     super();
     this.state = {
+      convos: [],
       search: '',
     };
   }
@@ -30,55 +33,85 @@ class Convos extends React.Component {
     );
   }
 
+  async componentDidMount() {
+    const email = await firebase.auth().currentUser.email;
+    const snapshot = await db
+      .collection('users')
+      .where('email', '==', email)
+      .get();
+
+    const userData = snapshot.docs.map(doc => doc.data());
+
+    let convos = [];
+
+    for (let id of userData[0].conversations) {
+      let convo = await db
+        .collection('conversations')
+        .doc(id)
+        .get();
+      convos.push(convo.data());
+    }
+
+    this.setState({ convos });
+  }
+
   render() {
     const navigation = this.props.navigation;
-    return (
-      <Container>
-        <Header searchBar rounded>
-          <Item>
-            <Input
-              clearButtonMode="always"
-              onChangeText={search => this.setState({ search })}
-              placeholder="Search"
-            />
-          </Item>
-          <Button
-            transparent
-            onPress={() => this.enterSearch(this.state.search)}
-          >
-            <Text>Search</Text>
-          </Button>
-        </Header>
-        <Content>
-          <List>
-            {navigation.state.params.convos.map(convo => {
-              const firstMessage = convo.messages[0];
-              return (
-                <ListItem
-                  avatar
-                  key={convo.id}
-                  onPress={() => navigation.navigate('SingleConvo', { convo })}
-                >
-                  <Left>
-                    <Thumbnail
-                      source={{ uri: 'https://placeimg.com/140/140/any' }}
-                    />
-                  </Left>
-                  <Body>
-                    <Text>{convo.name}</Text>
-                    <Text note>{firstMessage.text}.</Text>
-                  </Body>
-                  <Right>
-                    <Text note>{firstMessage.time}</Text>
-                  </Right>
-                </ListItem>
-              );
-            })}
-          </List>
-        </Content>
-      </Container>
-    );
+    const convosOnState = this.state.convos;
+    const firstConvo = convosOnState[0];
+    if (convosOnState && convosOnState.length) {
+      const firstMessage = firstConvo.messages[0];
+      return (
+        <Container>
+          <Header searchBar rounded>
+            <Item>
+              <Input
+                clearButtonMode="always"
+                onChangeText={search => this.setState({ search })}
+                placeholder="Search"
+              />
+            </Item>
+            <Button
+              transparent
+              onPress={() => this.enterSearch(this.state.search)}
+            >
+              <Text>Search</Text>
+            </Button>
+          </Header>
+          <Content>
+            <List>
+              <ListItem
+                key={1}
+                avatar
+                onPress={() =>
+                  navigation.navigate('Singleconvo', {
+                    convos: firstConvo,
+                  })
+                }
+              >
+                <Left>
+                  <Thumbnail
+                    source={{ uri: 'https://placeimg.com/140/140/any' }}
+                  />
+                </Left>
+                <Body>
+                  <Text>{firstConvo.users[0]}</Text>
+                  <Text note>{firstMessage.text}.</Text>
+                </Body>
+                <Right>
+                  <Text note>{firstMessage.time}</Text>
+                </Right>
+              </ListItem>
+            </List>
+          </Content>
+        </Container>
+      );
+    } else {
+      return (
+        <Container>
+          <Text>No conversations</Text>
+        </Container>
+      );
+    }
   }
 }
-
-export default Convos;
