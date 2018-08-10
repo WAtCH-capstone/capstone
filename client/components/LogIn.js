@@ -41,6 +41,7 @@ class LogIn extends React.Component {
     const navigation = this.props.navigation;
     return (
       <Container>
+        {console.log("this.state", this.state)}
         <Image
           source={{
             uri:

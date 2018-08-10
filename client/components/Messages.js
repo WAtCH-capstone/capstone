@@ -1,13 +1,16 @@
-import React from 'react';
-import { Text, View, AppState } from 'react-native';
-import { GiftedChat } from 'react-native-gifted-chat';
+import React from "react";
+import { Text, View, AppState } from "react-native";
+import { GiftedChat } from "react-native-gifted-chat";
+import { firebase } from "firebase";
 
 class Messages extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      messages: [],
+      messages: []
     };
+    this.user = firebase.auth().currentUser;
+    console.log(this.user);
     this.onSend = this.onSend.bind(this);
     this.handleAppStateChange = this.handleAppStateChange.bind(this);
     // this.observeAuth()
@@ -18,35 +21,35 @@ class Messages extends React.Component {
       messages: [
         {
           _id: 1,
-          text: 'Hello developer',
+          text: "Hello developer",
           createdAt: new Date(),
           user: {
             _id: 2,
-            name: 'React Native',
-            avatar: 'https://placeimg.com/140/140/any',
-          },
-        },
-      ],
+            name: "React Native",
+            avatar: "https://placeimg.com/140/140/any"
+          }
+        }
+      ]
     });
   }
 
   handleAppStateChange(appState) {
-    if (appState === 'background') {
-      console.log('app state is background. here is state', this.state);
+    if (appState === "background") {
+      console.log("app state is background. here is state", this.state);
     }
   }
 
   componentDidMount() {
-    AppState.addEventListener('change', this.handleAppStateChange);
+    AppState.addEventListener("change", this.handleAppStateChange);
   }
 
   componentWillUnmount() {
-    AppState.removeEventListener('change', this.handleAppStateChange);
+    AppState.removeEventListener("change", this.handleAppStateChange);
   }
 
   onSend(messages = []) {
     this.setState(previousState => ({
-      messages: GiftedChat.append(previousState.messages, messages),
+      messages: GiftedChat.append(previousState.messages, messages)
     }));
   }
   // FOR GROUP CHAT NAMES
@@ -63,7 +66,7 @@ class Messages extends React.Component {
         messages={this.state.messages}
         onSend={messages => this.onSend(messages)}
         user={{
-          _id: 1,
+          _id: 1
         }}
       />
     );
