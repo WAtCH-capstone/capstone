@@ -22,10 +22,12 @@ export default class Convos extends React.Component {
     super();
     this.state = {
       convos: [],
+      name: '',
       search: '',
     };
 
-    this.user = firebase.auth().currentUser
+    this.user = firebase.auth().currentUser;
+    this.getUserName = this.getUserName.bind(this);
   }
 
   enterSearch(search) {
@@ -36,6 +38,7 @@ export default class Convos extends React.Component {
   }
 
   async componentDidMount() {
+    this.getUserName();
     const email = await firebase.auth().currentUser.email;
     const snapshot = await db
       .collection('users')
@@ -51,14 +54,30 @@ export default class Convos extends React.Component {
         .doc(id)
         .get();
       convos.push(convo.data());
-      convos.push(id)
+      convos.push(id);
     }
-
     this.setState({ convos });
   }
 
-  async getRef (id) {
-    return db.collection('conversations').doc(id)
+  async getRef(id) {
+    return db.collection('conversations').doc(id);
+  }
+  async getUserName() {
+    const userRef = await db
+      .collection('users')
+      .doc('REQv5MZj0mRHUnZkVfOGm8uVsyo2'); // need to change this
+    const getDoc = userRef
+      .get()
+      .then(doc => {
+        if (!doc.exists) {
+          console.log('No such document!');
+        } else {
+          this.setState({ name: doc.data().displayName });
+        }
+      })
+      .catch(err => {
+        console.log('Error getting document', err);
+      });
   }
 
   render() {
@@ -90,26 +109,29 @@ export default class Convos extends React.Component {
                 key={1}
                 avatar
                 onPress={() => {
-                  const friend = convo.users.filter(id => id !== this.user.uid)
-                  const ref = this.getRef(convosOnState[1])
+                  const friend = convo.users.filter(id => id !== this.user.uid);
+                  const ref = this.getRef(convosOnState[1]);
                   navigation.navigate('SingleConvo', {
-                    convo, ref, user: this.user, friend
-                  })
+                    convo,
+                    ref,
+                    user: this.user,
+                    friend,
+                  });
                 }}
               />
-                <Left>
-                  <Thumbnail
-                    source={{ uri: 'https://placeimg.com/140/140/any' }}
-                  />
-                </Left>
-                <Body>
-                  <Text>{convo.users[0]}</Text>
-                  <Text note>{firstMessage.text}.</Text>
-                </Body>
-                <Right>
-                  <Text note>{firstMessage.time}</Text>
-                </Right>
-              </ListItem>
+              <Left>
+                <Thumbnail
+                  source={{ uri: 'https://placeimg.com/140/140/any' }}
+                />
+              </Left>
+              <Body>
+                {/* {firstConvo.users[1]} */}
+                <Text>{this.state.name}</Text>
+                <Text note>{firstMessage.text}.</Text>
+              </Body>
+              <Right>
+                <Text note>{firstMessage.time}</Text>
+              </Right>
             </List>
           </Content>
         </Container>

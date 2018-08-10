@@ -12,8 +12,8 @@ import db from '../../firestore';
 
 export default class SingleConvo extends React.Component {
   constructor() {
-    const navProps = this.props.navigation.state.params;
     super();
+    const navProps = this.props.navigation.state.params;
     this.state = {
       convo: {},
     };
