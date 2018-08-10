@@ -15,6 +15,8 @@ import {
   Input,
   Button,
 } from 'native-base';
+import PushController from './PushController';
+import PushNotification from 'react-native-push-notification';
 import db from '../../firestore';
 import firebase from 'firebase';
 
@@ -27,12 +29,12 @@ export default class Convos extends React.Component {
 
   handleAppStateChange(appState) {
     if (appState === 'background') {
+      PushNotification.localNotificationSchedule({
+        message: 'My notificaiton message',
+        date: new Date(Date.now() + 3 * 1000).toISOString(), // sends notification every three seconds
+      });
       console.log('app state is background. here is state', this.state);
     }
-  }
-
-  componentDidMount() {
-    AppState.addEventListener('change', this.handleAppStateChange);
   }
 
   componentWillUnmount() {
@@ -47,6 +49,7 @@ export default class Convos extends React.Component {
   }
 
   async componentDidMount() {
+    AppState.addEventListener('change', this.handleAppStateChange);
     const email = await firebase.auth().currentUser.email;
     const snapshot = await db
       .collection('users')
@@ -113,12 +116,14 @@ export default class Convos extends React.Component {
               </ListItem>
             </List>
           </Content>
+          <PushController />
         </Container>
       );
     } else {
       return (
         <Container>
           <Text>No conversations</Text>
+          <PushController />
         </Container>
       );
     }
