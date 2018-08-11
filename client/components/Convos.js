@@ -26,7 +26,6 @@ export default class Convos extends React.Component {
     };
 
     this.user = firebase.auth().currentUser;
-    // this.getUserName = this.getUserName.bind(this);
   }
 
   enterSearch(search) {
@@ -44,84 +43,72 @@ export default class Convos extends React.Component {
       .doc(uid)
       .get();
 
-    console.log('snapshot', snapshot);
     const userData = await snapshot.data();
-    console.log('user', userData);
     let convosArr = [];
 
     for (let id of userData.conversations) {
-      let convo = await db
-        .collection('conversations')
-        .doc(id)
-        .get();
-      convosArr.push(convo.data());
-      // convos.push(id);
+      const ref = await this.getRef(id);
+      const convo = await this.getConvo(ref);
+      const friend = await this.getFriend(convo);
+      convosArr.push({ id, ref, convo, friend });
     }
     this.setState({ convos: convosArr });
   }
 
-  async getRef(id) {
+  getRef(id) {
     return db.collection('conversations').doc(id);
   }
 
-  async getFriend(id) {
+  async getConvo(ref) {
+    const convo = await ref.get();
+    return convo.data();
+  }
+
+  async getFriend(convo) {
+    const friendID = convo.users.find(id => id !== this.user.uid);
     const friend = await db
       .collection('users')
-      .doc(id)
+      .doc(friendID)
       .get();
     return friend.data();
   }
 
-  async renderConvo(convo) {
-    const navigation = this.props.navigation;
-    const friendID = convo.users.find(id => id !== this.user.uid);
-    const friend = await this.getFriend(friendID);
-    console.log('NAME', friend.displayName);
-    const firstMessage = convo.messages[0];
-    return (
-      <React.Fragment>
+  renderConvos(convos) {
+    return convos.map(convoData => {
+      const navigation = this.props.navigation;
+      const id = convoData.id;
+      const convo = convoData.convo;
+      const friend = convoData.friend;
+      const ref = convoData.ref;
+      const firstMessage = convo.messages[0];
+      return (
         <ListItem
-          key={1}
+          key={id}
           avatar
           onPress={() =>
             navigation.navigate('SingleConvo', {
+              id,
               convo,
-              // ref,
+              ref,
               user: this.user,
               friend,
             })
           }
-        />
-        <Left>
-          <Thumbnail source={{ uri: 'https://placeimg.com/140/140/any' }} />
-        </Left>
-        <Body>
-          <Text>{friend.displayName}</Text>
-          <Text note>{firstMessage.text}</Text>
-        </Body>
-        <Right>
-          <Text note>{firstMessage.time}</Text>
-        </Right>
-      </React.Fragment>
-    );
+        >
+          <Left>
+            <Thumbnail source={{ uri: 'https://placeimg.com/140/140/any' }} />
+          </Left>
+          <Body>
+            <Text>{friend.displayName}</Text>
+            <Text note>{firstMessage.text}</Text>
+          </Body>
+          <Right>
+            <Text note>{firstMessage.time}</Text>
+          </Right>
+        </ListItem>
+      );
+    });
   }
-  // async getUserName() {
-  //   const userRef = await db
-  //     .collection('users')
-  //     .doc('REQv5MZj0mRHUnZkVfOGm8uVsyo2'); // need to change this
-  //   const getDoc = userRef
-  //     .get()
-  //     .then(doc => {
-  //       if (!doc.exists) {
-  //         console.log('No such document!');
-  //       } else {
-  //         this.setState({ name: doc.data().displayName });
-  //       }
-  //     })
-  //     .catch(err => {
-  //       console.log('Error getting document', err);
-  //     });
-  // }
 
   render() {
     const convos = this.state.convos;
@@ -145,7 +132,7 @@ export default class Convos extends React.Component {
             </Button>
           </Header>
           <Content>
-            <List>{convos.map(convo => this.renderConvo(convo))}</List>
+            <List>{this.renderConvos(convos)}</List>
           </Content>
         </Container>
       );
