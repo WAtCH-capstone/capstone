@@ -18,22 +18,26 @@ class SignUp extends React.Component {
     this.createUser = this.createUser.bind(this);
   }
 
-  signUpUser(email, password) {
+  async signUpUser(email, password) {
     try {
       if (this.state.password.length < 6) {
         alert('Please enter at least 6 characters');
         return;
       }
-      firebase.auth().createUserWithEmailAndPassword(email, password);
+      await firebase.auth().createUserWithEmailAndPassword(email, password);
+      const currentUser = await firebase.auth().currentUser;
       alert(`Account created for ${email}. Now you may login.`);
+      return currentUser.uid;
     } catch (err) {
       console.log(err.toString());
     }
   }
 
-  createUser() {
-    db.collection('users')
-      .add(this.state)
+  async createUser(id) {
+    await db
+      .collection('users')
+      .doc(id)
+      .set(this.state)
       .then(ref => {
         console.log('Added document with ID: ', ref.id);
       });
@@ -86,9 +90,12 @@ class SignUp extends React.Component {
             full
             rounded
             primary
-            onPress={() => {
-              this.signUpUser(this.state.email, this.state.password);
-              this.createUser();
+            onPress={async () => {
+              const id = await this.signUpUser(
+                this.state.email,
+                this.state.password
+              );
+              await this.createUser(id);
               navigation.navigate('LogIn');
             }}
           >
