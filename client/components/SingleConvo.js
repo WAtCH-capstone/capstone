@@ -8,7 +8,6 @@ import {
   Button,
 } from 'react-native';
 import Messages from './Messages';
-import db from '../../firestore';
 
 export default class SingleConvo extends React.Component {
   constructor() {

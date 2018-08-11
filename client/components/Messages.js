@@ -23,7 +23,7 @@ class Messages extends React.Component {
     const parsed = {
       _id: new Date().getTime(),
       text: message.text,
-      user: message.user,
+      user: { _id: message.user },
     };
     return parsed;
   }
@@ -41,45 +41,47 @@ class Messages extends React.Component {
   }
 
   listen(ref) {
-    ref.onSnapshot(snap =>
-      this.setState({
-        messages: [...snap.data().messages],
-      })
-    );
+    ref.onSnapshot(snap => {
+      const parsed = snap.data().messages.map(message => this.parse(message));
+      return this.setState({
+        messages: [...parsed],
+      });
+    });
   }
 
   componentWillUnmount() {
     AppState.removeEventListener('change', this.listen);
   }
 
-  // onSend(messages = []) {
-  //   this.setState(previousState => ({
-  //     messages: GiftedChat.append(previousState.messages, messages),
-  //   }));
-  // }
-
   onSend(messages = []) {
-    console.log(messages);
-    messages.forEach(message => {
-      const time = new Date().getTime();
-      const newMessages = [
-        ...this.state.messages,
-        {
-          _id: message._id,
-          text: message.text,
-          time,
-          user: this.state.user.uid,
-        },
-      ];
-      this.state.ref.set(
-        {
-          messages: newMessages,
-        },
-        { merge: true }
-      );
-      this.setState({ messages: newMessages });
-    });
+    console.log('messages', this.state.messages);
+    this.setState(previousState => ({
+      messages: GiftedChat.append(previousState.messages, messages),
+    }));
   }
+
+  // onSend(messages = []) {
+  //   console.log(messages);
+  //   messages.forEach(message => {
+  //     const time = new Date().getTime();
+  //     const newMessages = [
+  //       ...this.state.messages,
+  //       {
+  //         _id: message._id,
+  //         text: message.text,
+  //         time,
+  //         user: this.state.user.uid,
+  //       },
+  //     ];
+  //     this.state.ref.set(
+  //       {
+  //         messages: newMessages,
+  //       },
+  //       { merge: true }
+  //     );
+  //     this.setState({ messages: newMessages });
+  //   });
+  // }
 
   render() {
     console.log('messages', this.state.messages);
