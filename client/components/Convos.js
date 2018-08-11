@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 import {
   Container,
   Content,
@@ -12,32 +12,32 @@ import {
   Header,
   Item,
   Input,
-  Button,
-} from 'native-base';
-import db from '../../firestore';
-import firebase from 'firebase';
+  Button
+} from "native-base";
+import db from "../../firestore";
+import firebase from "firebase";
 
 export default class Convos extends React.Component {
   constructor() {
     super();
     this.state = {
       convos: [],
-      search: '',
+      search: ""
     };
   }
 
   enterSearch(search) {
-    console.log('search: ', search);
+    console.log("search: ", search);
     console.log(
-      'this would filter the messages and only return ones relevant to the search'
+      "this would filter the messages and only return ones relevant to the search"
     );
   }
 
   async componentDidMount() {
     const email = await firebase.auth().currentUser.email;
     const snapshot = await db
-      .collection('users')
-      .where('email', '==', email)
+      .collection("users")
+      .where("email", "==", email)
       .get();
 
     const userData = snapshot.docs.map(doc => doc.data());
@@ -46,7 +46,7 @@ export default class Convos extends React.Component {
 
     for (let id of userData[0].conversations) {
       let convo = await db
-        .collection('conversations')
+        .collection("conversations")
         .doc(id)
         .get();
       convos.push(convo.data());
@@ -84,14 +84,14 @@ export default class Convos extends React.Component {
                 key={1}
                 avatar
                 onPress={() =>
-                  navigation.navigate('Singleconvo', {
-                    convos: firstConvo,
+                  navigation.navigate("Singleconvo", {
+                    convos: firstConvo
                   })
                 }
               >
                 <Left>
                   <Thumbnail
-                    source={{ uri: 'https://placeimg.com/140/140/any' }}
+                    source={{ uri: "https://placeimg.com/140/140/any" }}
                   />
                 </Left>
                 <Body>
@@ -109,6 +109,7 @@ export default class Convos extends React.Component {
     } else {
       return (
         <Container>
+          {console.log("hihihi")}
           <Text>No conversations</Text>
         </Container>
       );

@@ -61,6 +61,9 @@ class Messages extends React.Component {
     firebase.auth().onAuthStateChanged(this.onAuthStateChanged);
 
   render() {
+    alert("hi");
+    console.log("hihihihi");
+    console.log("this.state", this.state);
     return (
       <GiftedChat
         messages={this.state.messages}
