@@ -1,6 +1,7 @@
 import React from 'react';
 import { Text, View, AppState } from 'react-native';
 import { GiftedChat } from 'react-native-gifted-chat';
+import db from '../../firestore';
 
 class Messages extends React.Component {
   constructor(props) {
@@ -11,75 +12,101 @@ class Messages extends React.Component {
       messages: [],
     };
     this.onSend = this.onSend.bind(this);
-    this.handleAppStateChange = this.handleAppStateChange.bind(this);
-    // this.observeAuth()
+    this.listen = this.listen.bind(this);
+  }
+
+  getRef(id) {
+    return db.collection('conversations').doc(id);
   }
 
   parse(message) {
-    let user;
-    if (message.sender === this.props.user.uid) {
-      user = this.props.user;
-    } else {
-      user = this.props.friend;
-    }
-    const timestamp = new Date(message.time);
     const parsed = {
-      timestamp,
+      _id: new Date().getTime(),
       text: message.text,
-      user,
+      user: message.user,
     };
     return parsed;
   }
 
-  componentDidMount() {
-    AppState.addEventListener('change', this.handleAppStateChange);
-    const parsedArr = this.props.messages.map(message => this.parse(message));
+  async componentDidMount() {
+    const ref = await this.getRef(this.props.id);
+    const messages = this.props.messages.map(message => this.parse(message));
+    // AppState.addEventListener('change', this.listen(ref));
     this.setState({
+      ref,
       user: this.props.user,
       friend: this.props.friend,
-      messages: parsedArr,
+      messages,
     });
   }
 
-  handleAppStateChange(appState) {
-    if (appState === 'background') {
-      console.log('app state is background. here is state', this.state);
-    }
+  listen(ref) {
+    ref.onSnapshot(snap =>
+      this.setState({
+        messages: [...snap.data().messages],
+      })
+    );
   }
 
   componentWillUnmount() {
-    AppState.removeEventListener('change', this.handleAppStateChange);
+    AppState.removeEventListener('change', this.listen);
   }
+
+  // onSend(messages = []) {
+  //   this.setState(previousState => ({
+  //     messages: GiftedChat.append(previousState.messages, messages),
+  //   }));
+  // }
 
   onSend(messages = []) {
-    this.setState(previousState => ({
-      messages: GiftedChat.append(previousState.messages, messages),
-    }));
+    console.log(messages);
+    messages.forEach(message => {
+      const time = new Date().getTime();
+      const newMessages = [
+        ...this.state.messages,
+        {
+          _id: message._id,
+          text: message.text,
+          time,
+          user: this.state.user.uid,
+        },
+      ];
+      this.state.ref.set(
+        {
+          messages: newMessages,
+        },
+        { merge: true }
+      );
+      this.setState({ messages: newMessages });
+    });
   }
-
-  onSend(messages = []) {
-    const now = new Date().getTime();
-  }
-  // FOR GROUP CHAT NAMES
-  // static navigationOptions = ({ navigation }) => ({
-  //   title: (navigation.state.params || {}).name || "Chat!"
-  // });
-
-  observeAuth = () =>
-    firebase.auth().onAuthStateChanged(this.onAuthStateChanged);
 
   render() {
+    console.log('messages', this.state.messages);
     return (
-      <Text>messages</Text>
-      // <GiftedChat
-      //   messages={this.state.messages}
-      //   onSend={messages => this.onSend(messages)}
-      //   user={{
-      //     _id: 1,
-      //   }}
-      // />
+      <GiftedChat
+        messages={this.state.messages}
+        onSend={this.onSend}
+        user={{
+          _id: this.props.user.uid,
+        }}
+      />
     );
   }
 }
 
 export default Messages;
+
+// FOR GROUP CHAT NAMES
+// static navigationOptions = ({ navigation }) => ({
+//   title: (navigation.state.params || {}).name || "Chat!"
+// });
+
+// observeAuth = () =>
+//   firebase.auth().onAuthStateChanged(this.onAuthStateChanged);
+
+// handleAppStateChange(appState) {
+//   if (appState === 'background') {
+//     console.log('app state is background. here is state', this.state);
+//   }
+// }
