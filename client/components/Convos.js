@@ -112,7 +112,6 @@ export default class Convos extends React.Component {
 
   render() {
     const convos = this.state.convos;
-    console.log('convo on state:', convos[0]);
     if (convos && convos.length) {
       return (
         <Container>

@@ -3,18 +3,18 @@ import { Image } from 'react-native';
 import { Container, Form, Input, Item, Button, Label, Text } from 'native-base';
 const firebase = require('firebase');
 
-const convos = [
-  {
-    id: 1,
-    name: 'Mom',
-    messages: [{ id: 1, time: '3:30pm', text: 'Hello World' }],
-  },
-  {
-    id: 2,
-    name: 'Jack',
-    messages: [{ id: 1, time: '11:17am', text: 'Dlrow Olleh' }],
-  },
-];
+// const convos = [
+//   {
+//     id: 1,
+//     name: 'Mom',
+//     messages: [{ id: 1, time: '3:30pm', text: 'Hello World' }],
+//   },
+//   {
+//     id: 2,
+//     name: 'Jack',
+//     messages: [{ id: 1, time: '11:17am', text: 'Dlrow Olleh' }],
+//   },
+// ];
 
 class LogIn extends React.Component {
   constructor(props) {
@@ -28,10 +28,7 @@ class LogIn extends React.Component {
       firebase
         .auth()
         .signInWithEmailAndPassword(email, password)
-        .then(user => console.log(user))
-        .then(() =>
-          this.props.navigation.navigate('Convos', { convos: convos })
-        );
+        .then(() => this.props.navigation.navigate('Convos'));
     } catch (err) {
       console.log(err.toString());
     }

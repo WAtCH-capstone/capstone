@@ -13,21 +13,23 @@ import db from '../../firestore';
 export default class SingleConvo extends React.Component {
   constructor() {
     super();
-    const navProps = this.props.navigation.state.params;
+    console.log(this.props);
+    // const navProps = this.props.navigation.state.params;
     this.state = {
       convo: {},
+      ref: {},
+      user: {},
+      friend: {},
     };
-
-    this.user = navProps.user;
-    this.friend = navProps.friend;
-
-    this.ref = navProps.ref;
   }
 
   componentDidMount() {
     const navProps = this.props.navigation.state.params;
     this.setState({
       convo: navProps.convo,
+      ref: navProps.ref,
+      user: navProps.user,
+      friend: navProps.friend,
     });
   }
 
@@ -36,27 +38,32 @@ export default class SingleConvo extends React.Component {
       uri:
         'https://lh3.googleusercontent.com/vgv0EDmcYrsy-o7ZjRzKPbJzW2fC7uqSKsnMhrGcTaMImLIKM-1ePl0Gy-n-8SFmCYJKWUf-wu4ChBkJAQ',
     };
-    return (
-      <View style={styles.container}>
-        {/* add padding, change to keyboard avoiding view*/}
-        <View style={{ flex: 3, flexDirection: 'row' }}>
-          <View style={{ width: 60, height: 60 }}>
-            <Image source={userImage} style={styles.image} />
+    if (this.state.convo.messages && this.state.convo.messages.length) {
+      return (
+        <View style={styles.container}>
+          {/* add padding, change to keyboard avoiding view*/}
+          <View style={{ flex: 3, flexDirection: 'row' }}>
+            <View style={{ width: 60, height: 60 }}>
+              <Image source={userImage} style={styles.image} />
+            </View>
+            <View style={{ width: 170, height: 170 }}>
+              <Text>{this.state.friend.displayName}</Text>
+            </View>
+            <View style={{ width: 150, height: 150 }}>
+              <Button title="Preferences" />
+            </View>
           </View>
-          <View style={{ width: 170, height: 170 }}>
-            <Text>{this.friend.name}</Text>
-          </View>
-          <View style={{ width: 150, height: 150 }}>
-            <Button title="Preferences" />
-          </View>
+          <Messages
+            messages={this.state.convo.messages}
+            user={this.state.user}
+            friend={this.state.friend}
+            ref={this.state.ref}
+          />
         </View>
-        <Messages
-          messages={this.state.convo.messages}
-          user={this.user}
-          friend={this.friend}
-        />
-      </View>
-    );
+      );
+    } else {
+      return <Text>Lodeing...</Text>;
+    }
   }
 }
 

@@ -17,7 +17,7 @@ class Messages extends React.Component {
 
   parse(message) {
     let user;
-    if (message.sender === this.props.user.id) {
+    if (message.sender === this.props.user.uid) {
       user = this.props.user;
     } else {
       user = this.props.friend;
@@ -70,13 +70,14 @@ class Messages extends React.Component {
 
   render() {
     return (
-      <GiftedChat
-        messages={this.state.messages}
-        onSend={messages => this.onSend(messages)}
-        user={{
-          _id: 1,
-        }}
-      />
+      <Text>messages</Text>
+      // <GiftedChat
+      //   messages={this.state.messages}
+      //   onSend={messages => this.onSend(messages)}
+      //   user={{
+      //     _id: 1,
+      //   }}
+      // />
     );
   }
 }
