@@ -62,6 +62,10 @@ export default class Convos extends React.Component {
   async getRef(id) {
     return db.collection('conversations').doc(id);
   }
+
+  async getFriend(id) {
+    return db.collection('users').doc(id);
+  }
   async getUserName() {
     const userRef = await db
       .collection('users')
@@ -109,7 +113,10 @@ export default class Convos extends React.Component {
                 key={1}
                 avatar
                 onPress={() => {
-                  const friend = convo.users.filter(id => id !== this.user.uid);
+                  const friendID = convo.users.filter(
+                    id => id !== this.user.uid
+                  );
+                  const friend = this.getFriend(friendID);
                   const ref = this.getRef(convosOnState[1]);
                   navigation.navigate('SingleConvo', {
                     convo,
