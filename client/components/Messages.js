@@ -2,17 +2,16 @@ import React from "react";
 import { Text, View, AppState } from "react-native";
 import { GiftedChat } from "react-native-gifted-chat";
 import db from "../../firestore";
+import firebase from "firebase";
 
 export default class Messages extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      user: {},
-      friend: {},
+      ref: "",
       messages: []
     };
     this.user = firebase.auth().currentUser;
-    console.log(this.user);
     this.onSend = this.onSend.bind(this);
     this.listen = this.listen.bind(this);
   }
@@ -21,65 +20,48 @@ export default class Messages extends React.Component {
     return db.collection("conversations").doc(id);
   }
 
-  parse(message) {
-    const parsed = {
-      _id: message._id,
-      time: message.time || new Date().getTime(),
-      text: message.text,
-      user: message.user
-    };
-    return parsed;
-  }
-
   listen(ref) {
-    ref.onSnapshot(snap => {
-      const parsed = snap.data().messages.map(message => this.parse(message));
-      console.log("listen is setting state as:", parsed);
-      return this.setState({
-        messages: [...parsed]
+    ref
+      .collection("messages")
+      .orderBy("createdAt", "desc")
+      .limit(20)
+      .onSnapshot(snap => {
+        let messages;
+        if (!this.state.messages.length) {
+          messages = snap.docs.map(message => message.data());
+          console.log(
+            "setting state",
+            GiftedChat.append(this.state.messages, messages)
+          );
+        } else {
+          messages = snap.docs[0].data();
+          console.log(
+            "setting state",
+            GiftedChat.append(this.state.messages, messages)
+          );
+        }
+        this.setState(prevState => ({
+          ref,
+          messages: GiftedChat.append(prevState.messages, messages)
+        }));
       });
-    });
   }
 
   async componentDidMount() {
-    console.log("MOUNTING");
     const ref = await this.getRef(this.props.id);
-    const messages = this.props.messages.map(message => this.parse(message));
-    console.log("component did mount is setting state with messages", messages);
-    this.setState({
-      ref,
-      user: this.props.user,
-      friend: this.props.friend,
-      messages
-    });
+    this.listen(ref);
   }
 
-  // componentWillUnmount() {
-  //   AppState.removeEventListener('change', this.listen);
-  // }
-
   onSend(messages = []) {
-    console.log("onsend is being called with messages array:", messages);
-    messages.forEach(message => {
-      const time = new Date().getTime();
-      const newMessages = [
-        ...this.state.messages,
-        {
-          _id: message._id,
-          text: message.text,
-          time,
-          user: { _id: this.state.user.uid }
-        }
-      ];
-      console.log("onsend is updating firebase with messages:", newMessages);
-      this.state.ref.set(
-        {
-          messages: newMessages
-        },
-        { merge: true }
-      );
-    });
-    this.listen(this.state.ref);
+    const createdAt = new Date().getTime();
+    const newMessage = {
+      _id: createdAt,
+      text: messages[0].text,
+      createdAt,
+      user: { _id: this.user.uid }
+    };
+    this.state.ref.collection("messages").add(newMessage);
+    this.state.ref.set({ firstMessage: newMessage }, { merge: true });
   }
 
   render() {
@@ -89,7 +71,7 @@ export default class Messages extends React.Component {
         messages={this.state.messages}
         onSend={this.onSend}
         user={{
-          _id: this.props.user.uid
+          _id: this.user.uid
         }}
       />
     );

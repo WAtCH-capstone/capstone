@@ -1,25 +1,15 @@
-import React from 'react';
-import { Image } from 'react-native';
-import { Container, Form, Input, Item, Button, Label, Text } from 'native-base';
-const firebase = require('firebase');
+import React from "react";
+import { Image } from "react-native";
+import { Container, Form, Input, Item, Button, Label, Text } from "native-base";
+const firebase = require("firebase");
 
-// const convos = [
-//   {
-//     id: 1,
-//     name: 'Mom',
-//     messages: [{ id: 1, time: '3:30pm', text: 'Hello World' }],
-//   },
-//   {
-//     id: 2,
-//     name: 'Jack',
-//     messages: [{ id: 1, time: '11:17am', text: 'Dlrow Olleh' }],
-//   },
-// ];
-
-class LogIn extends React.Component {
+export default class LogIn extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { email: '', password: '' };
+    this.state = {
+      email: "",
+      password: ""
+    };
     this.loginUser = this.loginUser.bind(this);
   }
 
@@ -28,27 +18,34 @@ class LogIn extends React.Component {
       firebase
         .auth()
         .signInWithEmailAndPassword(email, password)
-        .then(() => this.props.navigation.navigate('Convos'));
-    } catch (err) {
-      console.log(err.toString());
+        .then(() => this.props.navigation.navigate("Convos"));
+    } catch (error) {
+      console.log(error.toString());
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      if (errorCode === "auth/wrong-password") {
+        alert("Wrong Password");
+      } else {
+        alert(errorMessage);
+      }
     }
   }
 
   render() {
     const navigation = this.props.navigation;
+
     return (
-      <Container>
-        {console.log("this.state", this.state)}
+      <Container style={{ paddingBottom: 100 }}>
         <Image
           source={{
             uri:
-              'https://lh3.googleusercontent.com/vgv0EDmcYrsy-o7ZjRzKPbJzW2fC7uqSKsnMhrGcTaMImLIKM-1ePl0Gy-n-8SFmCYJKWUf-wu4ChBkJAQ',
+              "https://lh3.googleusercontent.com/vgv0EDmcYrsy-o7ZjRzKPbJzW2fC7uqSKsnMhrGcTaMImLIKM-1ePl0Gy-n-8SFmCYJKWUf-wu4ChBkJAQ"
           }}
           style={{
-            width: '100%',
-            height: '60%',
-            justifyContent: 'center',
-            alignItems: 'center',
+            width: "100%",
+            height: "50%",
+            justifyContent: "center",
+            alignItems: "center"
           }}
         />
         <Form>
@@ -58,9 +55,17 @@ class LogIn extends React.Component {
               autoCorrect={false}
               autoCapitalize="none"
               clearButtonMode="always"
-              onChangeText={email => this.setState({ email })}
+              onChangeText={email => {
+                this.setState({ email });
+              }}
             />
           </Item>
+          {!this.state.email.includes("@" && ".") &&
+          this.state.email.length > 0 ? (
+            <Text style={{ color: "red" }}>
+              Please enter a valid e-mail address
+            </Text>
+          ) : null}
           <Item floatingLabel>
             <Label>Password</Label>
             <Input
@@ -68,9 +73,12 @@ class LogIn extends React.Component {
               autoCapitalize="none"
               clearButtonMode="always"
               secureTextEntry={true}
-              onChangeText={password => this.setState({ password })}
+              onChangeText={password => {
+                this.setState({ password });
+              }}
             />
           </Item>
+
           <Button
             style={{ marginTop: 10 }}
             full
@@ -80,26 +88,26 @@ class LogIn extends React.Component {
               this.loginUser(this.state.email, this.state.password);
             }}
           >
-            <Text style={{ color: 'white' }}>Log in</Text>
+            <Text style={{ color: "white" }}>Log in</Text>
           </Button>
+
           <Button
             style={{ marginTop: 10 }}
             full
             rounded
             primary
-            onPress={() => navigation.navigate('SignUp')}
+            onPress={() => {
+              navigation.navigate("SignUp");
+            }}
           >
-            <Text style={{ color: 'white' }}>Sign Up</Text>
+            <Text style={{ color: "white" }}>Sign Up</Text>
           </Button>
-
-          {/* <Button
+          <Button
             onPress={() => this.props.navigation.navigate("SignUp")}
             title="Sign up"
-          /> */}
+          />
         </Form>
       </Container>
     );
   }
 }
-
-export default LogIn;

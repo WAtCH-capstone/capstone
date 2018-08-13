@@ -24,8 +24,8 @@ export default class Convos extends Component {
       convos: [],
       search: ""
     };
-
     this.user = firebase.auth().currentUser;
+    this.enterSearch = this.enterSearch.bind(this);
   }
 
   enterSearch(search) {
@@ -44,41 +44,57 @@ export default class Convos extends Component {
       .get();
     const userData = await snapshot.data();
     let convosArr = [];
-
     for (let id of userData.conversations) {
-      const convo = await this.getConvo(id);
-      const friend = await this.getFriend(convo);
-      convosArr.push({ id, convo, friend });
+      const convoData = await this.getData(id);
+      const firstMessage = convoData.firstMessage;
+      const friend = convoData.friend;
+      convosArr.push({ id, firstMessage, friend });
     }
     this.setState({ convos: convosArr });
   }
 
-  async getConvo(id) {
+  async getData(id) {
     const convo = await db
       .collection("conversations")
       .doc(id)
       .get();
-    return convo.data();
-  }
-
-  async getFriend(convo) {
-    const friendID = convo.users.find(id => id !== this.user.uid);
-    const friend = await db
+    const data = convo.data();
+    const firstMessage = data.firstMessage;
+    const friendID = data.users.find(uid => uid !== this.user.uid);
+    const friendQuery = await db
       .collection("users")
       .doc(friendID)
       .get();
-    return friend.data();
+    const friend = friendQuery.data();
+    return { firstMessage, friend };
   }
 
+  // async getFirstMessage(id) {
+  //   const convo = await db
+  //     .collection('conversations')
+  //     .doc(id)
+  //     .get();
+  //   return convo.data().firstMessage;
+  // }
+
+  // async getFriend(id) {
+  //   const friendID = convo.users.find(id => id !== this.user.uid);
+  //   const friend = await db
+  //     .collection('users')
+  //     .doc(friendID)
+  //     .get();
+  //   return friend.data();
+  // }
+
   renderConvos(convos) {
-    const reversed = convos.reverse();
-    return reversed.map(convoData => {
+    // const sorted = convos.sort(
+    //   (a, b) => a.firstMessage.createdAt - b.firstMessage.createdAt || 0
+    // );
+    return convos.map(convoData => {
       const navigation = this.props.navigation;
       const id = convoData.id;
-      const convo = convoData.convo;
       const friend = convoData.friend;
-      const firstMessage = convo.messages[0];
-
+      const firstMessage = convoData.firstMessage;
       return (
         <ListItem
           key={id}
@@ -86,8 +102,6 @@ export default class Convos extends Component {
           onPress={() =>
             navigation.navigate("SingleConvo", {
               id,
-              convo,
-              user: this.user,
               friend
             })
           }
@@ -97,7 +111,7 @@ export default class Convos extends Component {
           </Left>
           <Body>
             <Text>{friend.displayName}</Text>
-            <Text note>{firstMessage.text}</Text>
+            <Text note>{firstMessage && firstMessage.text}</Text>
           </Body>
           <Right>{/* <Text note>{firstMessage.time}</Text> */}</Right>
         </ListItem>
@@ -107,36 +121,38 @@ export default class Convos extends Component {
 
   render() {
     const convos = this.state.convos;
-    if (convos && convos.length) {
-      return (
-        <Container>
-          <Header searchBar rounded>
-            <Item>
-              <Input
-                clearButtonMode="always"
-                onChangeText={search => this.setState({ search })}
-                placeholder="Search"
-              />
-            </Item>
-            <Button
-              transparent
-              onPress={() => this.enterSearch(this.state.search)}
-            >
-              <Text>Search</Text>
-            </Button>
-          </Header>
-          <Content>
+    const navigation = this.props.navigation;
+    return (
+      <Container>
+        <Header searchBar rounded>
+          <Item>
+            <Input
+              clearButtonMode="always"
+              onChangeText={search => this.setState({ search })}
+              placeholder="Search"
+            />
+          </Item>
+          <Button
+            transparent
+            onPress={() => this.enterSearch(this.state.search)}
+          >
+            <Text>Search</Text>
+          </Button>
+          <Button
+            transparent
+            onPress={() => navigation.navigate("CreateConvo")}
+          >
+            <Text>+</Text>
+          </Button>
+        </Header>
+        <Content>
+          {convos && convos.length ? (
             <List>{this.renderConvos(convos)}</List>
-          </Content>
-        </Container>
-      );
-    } else {
-      return (
-        <Container>
-          {console.log("hihihi")}
-          <Text>No conversations</Text>
-        </Container>
-      );
-    }
+          ) : (
+            <Text>No conversations yet</Text>
+          )}
+        </Content>
+      </Container>
+    );
   }
 }
