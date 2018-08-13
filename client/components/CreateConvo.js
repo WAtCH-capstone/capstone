@@ -8,46 +8,50 @@ export default class CreateConvo extends Component {
     super(props);
     this.state = { email: '' };
     this.createNewConvo = this.createNewConvo.bind(this);
+    // this.findNewConvo = this.findNewConvo.bind(this);
+    // this.updateConvosArrays = this.updateConvosArrays.bind(this);
   }
 
-  async createNewConvo(email) {
-    console.log('this would make a new conversation');
-
-    // grab current user information
+  async createNewConvo(recipientEmail) {
+    const usersSnap = await db.collection('users').get();
+    const recipientArr = await usersSnap.docs.filter(
+      doc =>
+        doc._document.data.internalValue.root.left.right.value.internalValue ===
+        recipientEmail
+    );
+    const recipientId = recipientArr[0].id;
     const currUserId = await firebase.auth().currentUser.uid;
-    // const currUserSnapshot = await db
-    //   .collection('users')
-    //   .doc(currUserId)
-    //   .get();
-    // const currUserData = await currUserSnapshot.data();
-
-    // create new conversation
-
-    const convosRef = db.collection('conversations');
-    // Create a new ref and save data to it in one step
-    const newConvoRef = convosRef.push({
-      messages: [],
-      users: [currUserId, 'lol123'],
-    });
-
-    // THINGS THAT MUST OCCUR HERE:
-    // create a new document in 'conversations' collection
-    //    this document should have an emty messages array
-    //    this document should have a users array with two users
-    //        one should have the ID of the current logged in user
-    //        the other should have the ID of the user associated with the email that has              been input in the form
-    // this should also add to the 'conversations' array on both of the users participating
-    //    just concat the id of the new document in the 'conversations' collection
-
-    // try {
-    //   firebase
-    //     .auth()
-    //     .signInWithEmailAndPassword(email)
-    //     .then(() => this.props.navigation.navigate('Convos'));
-    // } catch (err) {
-    //   console.log(err.toString());
-    // }
+    db.collection('conversations')
+      .add({
+        messages: [],
+        users: [currUserId, recipientId],
+      })
+      .then(docRef => console.log('docRef', docRef))
+      .catch(err => console.error(err));
   }
+
+  // async findNewConvo(currUserId, recipientId) {
+  //   try {
+  //     const users = [currUserId, recipientId].sort();
+  //   } catch (err) {
+  //     console.error(err);
+  //   }
+  // }
+
+  // async updateConvosArrays(currUserId, recipientId) {
+  //   try {
+  //     const currUserRef = db.collection('users').doc(currUserId);
+  //     const recipientRef = db.collection('users').doc(recipientId);
+  //     currUserRef.update({
+  //       conversations: firebase.firestore.FieldValue.arrayUnion(),
+  //     });
+  //     currUserRef.update({
+  //       conversations: firebase.firestore.FieldValue.arrayUnion(),
+  //     });
+  //   } catch (err) {
+  //     console.error(err);
+  //   }
+  // }
 
   render() {
     // const navigation = this.props.navigation;

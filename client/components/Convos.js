@@ -44,7 +44,6 @@ export default class Convos extends Component {
       .get();
     const userData = await snapshot.data();
     let convosArr = [];
-
     for (let id of userData.conversations) {
       const convo = await this.getConvo(id);
       const friend = await this.getFriend(convo);

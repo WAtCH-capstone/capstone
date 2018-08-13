@@ -88,7 +88,7 @@ export default class LogIn extends Component {
             primary
             onPress={() => navigation.navigate('SignUp')}
           >
-            <Text style={{ color: 'white' }}>Sign Up</Text>
+            <Text style={{ color: 'white' }}>Sign up</Text>
           </Button>
           {/* <Button
             onPress={() => this.props.navigation.navigate("SignUp")}
