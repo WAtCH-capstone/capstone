@@ -27,15 +27,6 @@ class SignUp extends React.Component {
     } catch (err) {
       console.log(err.toString());
     }
-
-    // try {
-    //   firebase
-    //     .auth()
-    //     .createUserWithEmailAndPassword(email, password)
-    //     .then(() => this.props.navigation.navigate("Home"));
-    // } catch (err) {
-    //   console.log(err.toString());
-    // }
   }
 
   async createUser(id) {

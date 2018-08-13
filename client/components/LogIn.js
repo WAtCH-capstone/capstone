@@ -3,13 +3,12 @@ import { Image } from "react-native";
 import { Container, Form, Input, Item, Button, Label, Text } from "native-base";
 const firebase = require("firebase");
 
-class LogIn extends React.Component {
+export default class LogIn extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       email: "",
-      password: "",
-      loading: true
+      password: ""
     };
     this.loginUser = this.loginUser.bind(this);
   }
@@ -20,13 +19,21 @@ class LogIn extends React.Component {
         .auth()
         .signInWithEmailAndPassword(email, password)
         .then(() => this.props.navigation.navigate("Convos"));
-    } catch (err) {
-      console.log(err.toString());
+    } catch (error) {
+      console.log(error.toString());
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      if (errorCode === "auth/wrong-password") {
+        alert("Wrong Password");
+      } else {
+        alert(errorMessage);
+      }
     }
   }
 
   render() {
     const navigation = this.props.navigation;
+
     return (
       <Container style={{ paddingBottom: 100 }}>
         <Image
@@ -36,7 +43,7 @@ class LogIn extends React.Component {
           }}
           style={{
             width: "100%",
-            height: "60%",
+            height: "50%",
             justifyContent: "center",
             alignItems: "center"
           }}
@@ -102,5 +109,3 @@ class LogIn extends React.Component {
     );
   }
 }
-
-export default LogIn;
