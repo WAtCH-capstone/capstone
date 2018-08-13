@@ -30,8 +30,8 @@ export default class SingleConvo extends React.Component {
   componentDidMount() {
     const navProps = this.props.navigation.state.params;
     this.setState({
+      id: navProps.id,
       convo: navProps.convo,
-      ref: navProps.ref,
       user: navProps.user,
       friend: navProps.friend
     });
@@ -65,10 +65,10 @@ export default class SingleConvo extends React.Component {
               </View>
             </View>
             <Messages
+              id={this.state.id}
               messages={this.state.convo.messages}
               user={this.state.user}
               friend={this.state.friend}
-              ref={this.state.ref}
             />
           </View>
         </SideMenu>

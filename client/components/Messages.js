@@ -1,7 +1,7 @@
 import React from "react";
 import { Text, View, AppState } from "react-native";
 import { GiftedChat } from "react-native-gifted-chat";
-import { firebase } from "firebase";
+import db from "../../firestore";
 
 export default class Messages extends React.Component {
   constructor(props) {
@@ -14,70 +14,104 @@ export default class Messages extends React.Component {
     this.user = firebase.auth().currentUser;
     console.log(this.user);
     this.onSend = this.onSend.bind(this);
-    this.handleAppStateChange = this.handleAppStateChange.bind(this);
-    // this.observeAuth()
+    this.listen = this.listen.bind(this);
+  }
+
+  getRef(id) {
+    return db.collection("conversations").doc(id);
   }
 
   parse(message) {
-    let user;
-    if (message.sender === this.props.user.uid) {
-      user = this.props.user;
-    } else {
-      user = this.props.friend;
-    }
-    const timestamp = new Date(message.time);
     const parsed = {
-      timestamp,
+      _id: message._id,
+      time: message.time || new Date().getTime(),
       text: message.text,
-      user
+      user: message.user
     };
     return parsed;
   }
 
-  componentDidMount() {
-    AppState.addEventListener("change", this.handleAppStateChange);
-    const parsedArr = this.props.messages.map(message => this.parse(message));
-    this.setState({
-      user: this.props.user,
-      friend: this.props.friend,
-      messages: parsedArr
+  listen(ref) {
+    ref.onSnapshot(snap => {
+      const parsed = snap.data().messages.map(message => this.parse(message));
+      console.log("listen is setting state as:", parsed);
+      return this.setState({
+        messages: [...parsed]
+      });
     });
   }
 
-  handleAppStateChange(appState) {
-    if (appState === "background") {
-      console.log("app state is background. here is state", this.state);
-    }
+  async componentDidMount() {
+    console.log("MOUNTING");
+    const ref = await this.getRef(this.props.id);
+    const messages = this.props.messages.map(message => this.parse(message));
+    console.log("component did mount is setting state with messages", messages);
+    this.setState({
+      ref,
+      user: this.props.user,
+      friend: this.props.friend,
+      messages
+    });
   }
 
-  componentWillUnmount() {
-    AppState.removeEventListener("change", this.handleAppStateChange);
-  }
+  // componentWillUnmount() {
+  //   AppState.removeEventListener('change', this.listen);
+  // }
 
   onSend(messages = []) {
-    this.setState(previousState => ({
-      messages: GiftedChat.append(previousState.messages, messages)
-    }));
+    console.log("onsend is being called with messages array:", messages);
+    messages.forEach(message => {
+      const time = new Date().getTime();
+      const newMessages = [
+        ...this.state.messages,
+        {
+          _id: message._id,
+          text: message.text,
+          time,
+          user: { _id: this.state.user.uid }
+        }
+      ];
+      console.log("onsend is updating firebase with messages:", newMessages);
+      this.state.ref.set(
+        {
+          messages: newMessages
+        },
+        { merge: true }
+      );
+    });
+    this.listen(this.state.ref);
   }
 
-  // FOR GROUP CHAT NAMES
-  // static navigationOptions = ({ navigation }) => ({
-  //   title: (navigation.state.params || {}).name || "Chat!"
-  // });
-
-  observeAuth = () =>
-    firebase.auth().onAuthStateChanged(this.onAuthStateChanged);
-
   render() {
+    console.log("renderrring messages", this.state.messages);
     return (
-      <Text>messages</Text>
-      // <GiftedChat
-      //   messages={this.state.messages}
-      //   onSend={messages => this.onSend(messages)}
-      //   user={{
-      //     _id: 1,
-      //   }}
-      // />
+      <GiftedChat
+        messages={this.state.messages}
+        onSend={this.onSend}
+        user={{
+          _id: this.props.user.uid
+        }}
+      />
     );
   }
 }
+
+// export default Messages;
+
+// FOR GROUP CHAT NAMES
+// static navigationOptions = ({ navigation }) => ({
+//   title: (navigation.state.params || {}).name || "Chat!"
+// });
+
+// observeAuth = () =>
+//   firebase.auth().onAuthStateChanged(this.onAuthStateChanged);
+
+// handleAppStateChange(appState) {
+//   if (appState === 'background') {
+//     console.log('app state is background. here is state', this.state);
+//   }
+// }
+
+// this.setState(previousState => ({
+//   messages: GiftedChat.append(previousState.messages, messages),
+// }));

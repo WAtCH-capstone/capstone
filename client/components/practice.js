@@ -52,9 +52,9 @@ export default class SingleConvo extends Component {
 
   render() {
     return (
-      <div id="messages" className="column modal-card is=flex">
-        <p className="modal-card-title">Class Chat</p>
-        <div className="modal-card-body">
+      <div id="messages">
+        <p className="class-chat">Class Chat</p>
+        <div className="each-chat">
           {this.state.messages.map(message => (
             <Message key={message.id} message={message} />
           ))}
