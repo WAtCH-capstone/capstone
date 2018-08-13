@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { Image } from 'react-native';
 import { Container, Form, Input, Item, Button, Label, Text } from 'native-base';
 const firebase = require('firebase');
@@ -16,7 +16,7 @@ const firebase = require('firebase');
 //   },
 // ];
 
-class LogIn extends React.Component {
+export default class LogIn extends Component {
   constructor(props) {
     super(props);
     this.state = { email: '', password: '' };
@@ -99,5 +99,3 @@ class LogIn extends React.Component {
     );
   }
 }
-
-export default LogIn;

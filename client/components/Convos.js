@@ -16,7 +16,6 @@ import {
 } from 'native-base';
 import db from '../../firestore';
 import firebase from 'firebase';
-import { MenuProvider } from 'react-native-popup-menu';
 
 export default class Convos extends Component {
   constructor() {
@@ -27,11 +26,6 @@ export default class Convos extends Component {
     };
     this.user = firebase.auth().currentUser;
     this.enterSearch = this.enterSearch.bind(this);
-    this.newConvo = this.newConvo.bind(this);
-  }
-
-  newConvo() {
-    console.log('this would create a new convo');
   }
 
   enterSearch(search) {
@@ -84,7 +78,6 @@ export default class Convos extends Component {
       const convo = convoData.convo;
       const friend = convoData.friend;
       const firstMessage = convo.messages[0];
-
       return (
         <ListItem
           key={id}
@@ -113,45 +106,38 @@ export default class Convos extends Component {
 
   render() {
     const convos = this.state.convos;
-    // if (convos && convos.length) {
+    const navigation = this.props.navigation;
     return (
-      <MenuProvider>
-        <Container>
-          <Header searchBar rounded>
-            <Item>
-              <Input
-                clearButtonMode="always"
-                onChangeText={search => this.setState({ search })}
-                placeholder="Search"
-              />
-            </Item>
-            <Button
-              transparent
-              onPress={() => this.enterSearch(this.state.search)}
-            >
-              <Text>Search</Text>
-            </Button>
-            <Button transparent onPress={() => this.newConvo()}>
-              <Text>+</Text>
-            </Button>
-          </Header>
-          <Content>
-            {convos && convos.length ? (
-              <List>{this.renderConvos(convos)}</List>
-            ) : (
-              <Text>No conversations yet</Text>
-            )}
-          </Content>
-        </Container>
-      </MenuProvider>
+      <Container>
+        <Header searchBar rounded>
+          <Item>
+            <Input
+              clearButtonMode="always"
+              onChangeText={search => this.setState({ search })}
+              placeholder="Search"
+            />
+          </Item>
+          <Button
+            transparent
+            onPress={() => this.enterSearch(this.state.search)}
+          >
+            <Text>Search</Text>
+          </Button>
+          <Button
+            transparent
+            onPress={() => navigation.navigate('CreateConvo')}
+          >
+            <Text>+</Text>
+          </Button>
+        </Header>
+        <Content>
+          {convos && convos.length ? (
+            <List>{this.renderConvos(convos)}</List>
+          ) : (
+            <Text>No conversations yet</Text>
+          )}
+        </Content>
+      </Container>
     );
-    // }
-    // else {
-    //   return (
-    //     <Container>
-    //       <Text>No conversations</Text>
-    //     </Container>
-    //   );
-    // }
   }
 }
