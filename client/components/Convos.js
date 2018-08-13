@@ -24,8 +24,13 @@ export default class Convos extends Component {
       convos: [],
       search: '',
     };
-
     this.user = firebase.auth().currentUser;
+    this.enterSearch = this.enterSearch.bind(this);
+    this.newConvo = this.newConvo.bind(this);
+  }
+
+  newConvo() {
+    console.log('this would create a new convo');
   }
 
   enterSearch(search) {
@@ -110,7 +115,7 @@ export default class Convos extends Component {
     if (convos && convos.length) {
       return (
         <Container>
-          {/* <Header searchBar rounded>
+          <Header searchBar rounded>
             <Item>
               <Input
                 clearButtonMode="always"
@@ -124,7 +129,10 @@ export default class Convos extends Component {
             >
               <Text>Search</Text>
             </Button>
-          </Header> */}
+            <Button transparent onPress={() => this.newConvo()}>
+              <Text>New</Text>
+            </Button>
+          </Header>
           <Content>
             <List>{this.renderConvos(convos)}</List>
           </Content>
