@@ -3,23 +3,13 @@ import { Image } from "react-native";
 import { Container, Form, Input, Item, Button, Label, Text } from "native-base";
 const firebase = require("firebase");
 
-// const convos = [
-//   {
-//     id: 1,
-//     name: 'Mom',
-//     messages: [{ id: 1, time: '3:30pm', text: 'Hello World' }],
-//   },
-//   {
-//     id: 2,
-//     name: 'Jack',
-//     messages: [{ id: 1, time: '11:17am', text: 'Dlrow Olleh' }],
-//   },
-// ];
-console.error = error => error.apply;
 class LogIn extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { email: "", password: "", emailError: "", passwordError: "" };
+    this.state = {
+      email: "",
+      password: ""
+    };
     this.loginUser = this.loginUser.bind(this);
   }
 
@@ -30,52 +20,9 @@ class LogIn extends React.Component {
         .signInWithEmailAndPassword(email, password)
         .then(() => this.props.navigation.navigate("Convos"));
     } catch (err) {
-      // console.log(err.toString());
-      // console.log(err);
-      // var errorCode = err.code;
-      // var errorMessage = err.message;
-      this.setState({ error: "Authentication Failed", loading: false });
+      console.log(err.toString());
     }
   }
-
-  renderButtonOrLoading() {
-    if (this.state.loading) {
-      return <Text>Loading...</Text>;
-    }
-    return (
-      <Button
-        style={{ marginTop: 10 }}
-        full
-        rounded
-        primary
-        onPress={() => {
-          this.loginUser(this.state.email, this.state.password);
-          this.setState({ error: "", loading: true });
-        }}
-      >
-        <Text style={{ color: "white" }}>Log in</Text>
-      </Button>
-    );
-  }
-  // renderButtonOrLoading() {
-  //   if (this.state.loading) {
-  //     return <Text>Loading...</Text>;
-  //   }
-  //   return (
-  //     <Button
-  //       style={{ marginTop: 10 }}
-  //       full
-  //       rounded
-  //       primary
-  //       onPress={() => {
-  //         this.loginUser(this.state.email, this.state.password);
-  //         this.setState({ error: "", loading: true });
-  //       }}
-  //     >
-  //       <Text style={{ color: "white" }}>Log in</Text>
-  //     </Button>
-  //   );
-  // }
 
   render() {
     const navigation = this.props.navigation;
@@ -100,9 +47,17 @@ class LogIn extends React.Component {
               autoCorrect={false}
               autoCapitalize="none"
               clearButtonMode="always"
-              onChangeText={email => this.setState({ email })}
+              onChangeText={email => {
+                this.setState({ email });
+              }}
             />
           </Item>
+          {!this.state.email.includes("@" && ".") &&
+          this.state.email.length > 0 ? (
+            <Text style={{ color: "red" }}>
+              Please enter a valid e-mail address
+            </Text>
+          ) : null}
           <Item floatingLabel>
             <Label>Password</Label>
             <Input
@@ -110,10 +65,12 @@ class LogIn extends React.Component {
               autoCapitalize="none"
               clearButtonMode="always"
               secureTextEntry={true}
-              onChangeText={password => this.setState({ password })}
+              onChangeText={password => {
+                this.setState({ password });
+              }}
             />
           </Item>
-          <Text>{this.state.error}</Text>
+
           <Button
             style={{ marginTop: 10 }}
             full
@@ -121,11 +78,11 @@ class LogIn extends React.Component {
             primary
             onPress={() => {
               this.loginUser(this.state.email, this.state.password);
-              this.setState({ error: "", loading: true });
             }}
           >
             <Text style={{ color: "white" }}>Log in</Text>
           </Button>
+
           <Button
             style={{ marginTop: 10 }}
             full
@@ -135,7 +92,6 @@ class LogIn extends React.Component {
           >
             <Text style={{ color: "white" }}>Sign Up</Text>
           </Button>
-
           <Button
             onPress={() => this.props.navigation.navigate("SignUp")}
             title="Sign up"
