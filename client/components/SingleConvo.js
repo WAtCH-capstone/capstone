@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import Messages from './Messages';
 import db from '../../firestore';
-  import SingleConvoPreferences from './SingleConvoPreferences';
+import SingleConvoPreferences from './SingleConvoPreferences';
 import SideMenu from 'react-native-side-menu';
 
 export default class SingleConvo extends React.Component {
@@ -30,8 +30,8 @@ export default class SingleConvo extends React.Component {
   componentDidMount() {
     const navProps = this.props.navigation.state.params;
     this.setState({
+      id: navProps.id,
       convo: navProps.convo,
-      ref: navProps.ref,
       user: navProps.user,
       friend: navProps.friend,
     });
@@ -41,35 +41,35 @@ export default class SingleConvo extends React.Component {
       uri:
         'https://lh3.googleusercontent.com/vgv0EDmcYrsy-o7ZjRzKPbJzW2fC7uqSKsnMhrGcTaMImLIKM-1ePl0Gy-n-8SFmCYJKWUf-wu4ChBkJAQ',
     };
-      const menu = <SingleConvoPreferences navigator={navigator} />;
+    const menu = <SingleConvoPreferences navigator={navigator} />;
     if (this.state.convo.messages && this.state.convo.messages.length) {
       return (
         <SideMenu menu={menu} menuPosition="right" isOpen={this.state.menuOpen}>
-        <View style={styles.container}>
-          {/* add padding, change to keyboard avoiding view*/}
-          <View style={{ flex: 3, flexDirection: 'row' }}>
-            <View style={{ width: 60, height: 60 }}>
-              <Image source={userImage} style={styles.image} />
+          <View style={styles.container}>
+            {/* add padding, change to keyboard avoiding view*/}
+            <View style={{ flex: 3, flexDirection: 'row' }}>
+              <View style={{ width: 60, height: 60 }}>
+                <Image source={userImage} style={styles.image} />
+              </View>
+              <View style={{ width: 170, height: 170 }}>
+                <Text>{this.state.friend.displayName}</Text>
+              </View>
+              <View style={{ width: 150, height: 150 }}>
+                <Button
+                  title="Preferences"
+                  onPress={() => {
+                    this.setState({ menuOpen: true });
+                  }}
+                />
+              </View>
             </View>
-            <View style={{ width: 170, height: 170 }}>
-              <Text>{this.state.friend.displayName}</Text>
-            </View>
-            <View style={{ width: 150, height: 150 }}>
-              <Button
-                title="Preferences"
-                onPress={() => {
-                  this.setState({ menuOpen: true });
-                }}
-              />
-            </View>
+            <Messages
+              id={this.state.id}
+              messages={this.state.convo.messages}
+              user={this.state.user}
+              friend={this.state.friend}
+            />
           </View>
-          <Messages
-            messages={this.state.convo.messages}
-            user={this.state.user}
-            friend={this.state.friend}
-            ref={this.state.ref}
-          />
-        </View>
         </SideMenu>
       );
     } else {

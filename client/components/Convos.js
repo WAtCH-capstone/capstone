@@ -46,20 +46,18 @@ export default class Convos extends Component {
     let convosArr = [];
 
     for (let id of userData.conversations) {
-      const ref = await this.getRef(id);
-      const convo = await this.getConvo(ref);
+      const convo = await this.getConvo(id);
       const friend = await this.getFriend(convo);
-      convosArr.push({ id, ref, convo, friend });
+      convosArr.push({ id, convo, friend });
     }
     this.setState({ convos: convosArr });
   }
 
-  getRef(id) {
-    return db.collection("conversations").doc(id);
-  }
-
-  async getConvo(ref) {
-    const convo = await ref.get();
+  async getConvo(id) {
+    const convo = await db
+      .collection("conversations")
+      .doc(id)
+      .get();
     return convo.data();
   }
 
@@ -73,13 +71,14 @@ export default class Convos extends Component {
   }
 
   renderConvos(convos) {
-    return convos.map(convoData => {
+    const reversed = convos.reverse();
+    return reversed.map(convoData => {
       const navigation = this.props.navigation;
       const id = convoData.id;
       const convo = convoData.convo;
       const friend = convoData.friend;
-      const ref = convoData.ref;
       const firstMessage = convo.messages[0];
+
       return (
         <ListItem
           key={id}
@@ -88,7 +87,6 @@ export default class Convos extends Component {
             navigation.navigate("SingleConvo", {
               id,
               convo,
-              ref,
               user: this.user,
               friend
             })
@@ -101,9 +99,7 @@ export default class Convos extends Component {
             <Text>{friend.displayName}</Text>
             <Text note>{firstMessage.text}</Text>
           </Body>
-          <Right>
-            <Text note>{firstMessage.time}</Text>
-          </Right>
+          <Right>{/* <Text note>{firstMessage.time}</Text> */}</Right>
         </ListItem>
       );
     });
