@@ -16,6 +16,7 @@ import {
 } from 'native-base';
 import db from '../../firestore';
 import firebase from 'firebase';
+import { MenuProvider } from 'react-native-popup-menu';
 
 export default class Convos extends Component {
   constructor() {
@@ -112,8 +113,9 @@ export default class Convos extends Component {
 
   render() {
     const convos = this.state.convos;
-    if (convos && convos.length) {
-      return (
+    // if (convos && convos.length) {
+    return (
+      <MenuProvider>
         <Container>
           <Header searchBar rounded>
             <Item>
@@ -130,20 +132,26 @@ export default class Convos extends Component {
               <Text>Search</Text>
             </Button>
             <Button transparent onPress={() => this.newConvo()}>
-              <Text>New</Text>
+              <Text>+</Text>
             </Button>
           </Header>
           <Content>
-            <List>{this.renderConvos(convos)}</List>
+            {convos && convos.length ? (
+              <List>{this.renderConvos(convos)}</List>
+            ) : (
+              <Text>No conversations yet</Text>
+            )}
           </Content>
         </Container>
-      );
-    } else {
-      return (
-        <Container>
-          <Text>No conversations</Text>
-        </Container>
-      );
-    }
+      </MenuProvider>
+    );
+    // }
+    // else {
+    //   return (
+    //     <Container>
+    //       <Text>No conversations</Text>
+    //     </Container>
+    //   );
+    // }
   }
 }
