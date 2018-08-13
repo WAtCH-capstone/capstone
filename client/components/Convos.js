@@ -114,7 +114,7 @@ export default class Convos extends Component {
     if (convos && convos.length) {
       return (
         <Container>
-          <Header searchBar rounded>
+          {/* <Header searchBar rounded>
             <Item>
               <Input
                 clearButtonMode="always"
@@ -128,7 +128,7 @@ export default class Convos extends Component {
             >
               <Text>Search</Text>
             </Button>
-          </Header>
+          </Header> */}
           <Content>
             <List>{this.renderConvos(convos)}</List>
           </Content>
