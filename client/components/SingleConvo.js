@@ -1,24 +1,50 @@
 import React from 'react';
-import { Text, View, StyleSheet, Image, Button } from 'react-native';
+
+import {
+  Text,
+  View,
+  KeyboardAvoidingView,
+  StyleSheet,
+  Image,
+  Button,
+} from 'react-native';
 import Messages from './Messages';
-import SingleConvoPreferences from './SingleConvoPreferences';
+import db from '../../firestore';
+  import SingleConvoPreferences from './SingleConvoPreferences';
 import SideMenu from 'react-native-side-menu';
 
-class SingleConvo extends React.Component {
+export default class SingleConvo extends React.Component {
   constructor() {
     super();
+    console.log(this.props);
+    // const navProps = this.props.navigation.state.params;
     this.state = {
+      convo: {},
+      ref: {},
+      user: {},
+      friend: {},
       menuOpen: false,
     };
+  }
+
+  componentDidMount() {
+    const navProps = this.props.navigation.state.params;
+    this.setState({
+      convo: navProps.convo,
+      ref: navProps.ref,
+      user: navProps.user,
+      friend: navProps.friend,
+    });
   }
   render() {
     const userImage = {
       uri:
         'https://lh3.googleusercontent.com/vgv0EDmcYrsy-o7ZjRzKPbJzW2fC7uqSKsnMhrGcTaMImLIKM-1ePl0Gy-n-8SFmCYJKWUf-wu4ChBkJAQ',
     };
-    const menu = <SingleConvoPreferences navigator={navigator} />;
-    return (
-      <SideMenu menu={menu} menuPosition="right" isOpen={this.state.menuOpen}>
+      const menu = <SingleConvoPreferences navigator={navigator} />;
+    if (this.state.convo.messages && this.state.convo.messages.length) {
+      return (
+        <SideMenu menu={menu} menuPosition="right" isOpen={this.state.menuOpen}>
         <View style={styles.container}>
           {/* add padding, change to keyboard avoiding view*/}
           <View style={{ flex: 3, flexDirection: 'row' }}>
@@ -26,7 +52,7 @@ class SingleConvo extends React.Component {
               <Image source={userImage} style={styles.image} />
             </View>
             <View style={{ width: 170, height: 170 }}>
-              <Text>NAME GOES HERE</Text>
+              <Text>{this.state.friend.displayName}</Text>
             </View>
             <View style={{ width: 150, height: 150 }}>
               <Button
@@ -37,10 +63,18 @@ class SingleConvo extends React.Component {
               />
             </View>
           </View>
-          <Messages />
+          <Messages
+            messages={this.state.convo.messages}
+            user={this.state.user}
+            friend={this.state.friend}
+            ref={this.state.ref}
+          />
         </View>
-      </SideMenu>
-    );
+        </SideMenu>
+      );
+    } else {
+      return <Text>Lodeing...</Text>;
+    }
   }
 }
 
@@ -57,5 +91,3 @@ const styles = StyleSheet.create({
 });
 
 // console.disableYellowBox = true;
-
-export default SingleConvo;

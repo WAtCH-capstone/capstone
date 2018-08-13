@@ -6,6 +6,8 @@ export default class Messages extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      user: {},
+      friend: {},
       messages: [],
     };
     this.onSend = this.onSend.bind(this);
@@ -13,20 +15,29 @@ export default class Messages extends React.Component {
     // this.observeAuth()
   }
 
-  componentWillMount() {
+  parse(message) {
+    let user;
+    if (message.sender === this.props.user.uid) {
+      user = this.props.user;
+    } else {
+      user = this.props.friend;
+    }
+    const timestamp = new Date(message.time);
+    const parsed = {
+      timestamp,
+      text: message.text,
+      user,
+    };
+    return parsed;
+  }
+
+  componentDidMount() {
+    AppState.addEventListener('change', this.handleAppStateChange);
+    const parsedArr = this.props.messages.map(message => this.parse(message));
     this.setState({
-      messages: [
-        {
-          _id: 1,
-          text: 'Hello developer',
-          createdAt: new Date(),
-          user: {
-            _id: 2,
-            name: 'React Native',
-            avatar: 'https://placeimg.com/140/140/any',
-          },
-        },
-      ],
+      user: this.props.user,
+      friend: this.props.friend,
+      messages: parsedArr,
     });
   }
 
@@ -34,10 +45,6 @@ export default class Messages extends React.Component {
     if (appState === 'background') {
       console.log('app state is background. here is state', this.state);
     }
-  }
-
-  componentDidMount() {
-    AppState.addEventListener('change', this.handleAppStateChange);
   }
 
   componentWillUnmount() {
@@ -60,13 +67,14 @@ export default class Messages extends React.Component {
 
   render() {
     return (
-      <GiftedChat
-        messages={this.state.messages}
-        onSend={messages => this.onSend(messages)}
-        user={{
-          _id: 1,
-        }}
-      />
+      <Text>messages</Text>
+      // <GiftedChat
+      //   messages={this.state.messages}
+      //   onSend={messages => this.onSend(messages)}
+      //   user={{
+      //     _id: 1,
+      //   }}
+      // />
     );
   }
 }
