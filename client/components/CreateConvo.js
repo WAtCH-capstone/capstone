@@ -8,8 +8,6 @@ export default class CreateConvo extends Component {
     super(props);
     this.state = { email: '' };
     this.createNewConvo = this.createNewConvo.bind(this);
-    // this.findNewConvo = this.findNewConvo.bind(this);
-    // this.updateConvosArrays = this.updateConvosArrays.bind(this);
   }
 
   async createNewConvo(recipientEmail) {
@@ -21,12 +19,21 @@ export default class CreateConvo extends Component {
     );
     const recipientId = recipientArr[0].id;
     const currUserId = await firebase.auth().currentUser.uid;
+    const currUserRef = db.collection('users').doc(currUserId);
+    const recipientRef = db.collection('users').doc(recipientId);
     db.collection('conversations')
       .add({
         messages: [],
         users: [currUserId, recipientId],
       })
-      .then(docRef => console.log('docRef', docRef))
+      .then(docRef => {
+        currUserRef.update({
+          conversations: firebase.firestore.FieldValue.arrayUnion(docRef.id),
+        });
+        recipientRef.update({
+          conversations: firebase.firestore.FieldValue.arrayUnion(docRef.id),
+        });
+      })
       .catch(err => console.error(err));
   }
 
