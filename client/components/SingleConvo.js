@@ -80,7 +80,7 @@ export default class SingleConvo extends React.Component {
         </SideMenu>
       );
     } else {
-      return <Text>Lodeing...</Text>;
+      return <Text>Loading...</Text>;
     }
   }
 }

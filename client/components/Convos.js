@@ -133,7 +133,7 @@ export default class Convos extends Component {
           {convos && convos.length ? (
             <List>{this.renderConvos(convos)}</List>
           ) : (
-            <Text>No conversations yet</Text>
+            <Text>Loading...</Text>
           )}
         </Content>
       </Container>
