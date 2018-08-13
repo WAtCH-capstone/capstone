@@ -3,7 +3,7 @@ import { Text, View, AppState } from "react-native";
 import { GiftedChat } from "react-native-gifted-chat";
 import { firebase } from "firebase";
 
-class Messages extends React.Component {
+export default class Messages extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -60,9 +60,6 @@ class Messages extends React.Component {
     }));
   }
 
-  onSend(messages = []) {
-    const now = new Date().getTime();
-  }
   // FOR GROUP CHAT NAMES
   // static navigationOptions = ({ navigation }) => ({
   //   title: (navigation.state.params || {}).name || "Chat!"
@@ -84,5 +81,3 @@ class Messages extends React.Component {
     );
   }
 }
-
-export default Messages;
