@@ -1,7 +1,7 @@
-import React from 'react';
-import { Image } from 'react-native';
-import { Container, Form, Input, Item, Button, Label, Text } from 'native-base';
-const firebase = require('firebase');
+import React from "react";
+import { Image } from "react-native";
+import { Container, Form, Input, Item, Button, Label, Text } from "native-base";
+const firebase = require("firebase");
 
 // const convos = [
 //   {
@@ -15,11 +15,11 @@ const firebase = require('firebase');
 //     messages: [{ id: 1, time: '11:17am', text: 'Dlrow Olleh' }],
 //   },
 // ];
-
+console.error = error => error.apply;
 class LogIn extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { email: '', password: '' };
+    this.state = { email: "", password: "", emailError: "", passwordError: "" };
     this.loginUser = this.loginUser.bind(this);
   }
 
@@ -28,26 +28,69 @@ class LogIn extends React.Component {
       firebase
         .auth()
         .signInWithEmailAndPassword(email, password)
-        .then(() => this.props.navigation.navigate('Convos'));
+        .then(() => this.props.navigation.navigate("Convos"));
     } catch (err) {
-      console.log(err.toString());
+      // console.log(err.toString());
+      // console.log(err);
+      // var errorCode = err.code;
+      // var errorMessage = err.message;
+      this.setState({ error: "Authentication Failed", loading: false });
     }
   }
+
+  renderButtonOrLoading() {
+    if (this.state.loading) {
+      return <Text>Loading...</Text>;
+    }
+    return (
+      <Button
+        style={{ marginTop: 10 }}
+        full
+        rounded
+        primary
+        onPress={() => {
+          this.loginUser(this.state.email, this.state.password);
+          this.setState({ error: "", loading: true });
+        }}
+      >
+        <Text style={{ color: "white" }}>Log in</Text>
+      </Button>
+    );
+  }
+  // renderButtonOrLoading() {
+  //   if (this.state.loading) {
+  //     return <Text>Loading...</Text>;
+  //   }
+  //   return (
+  //     <Button
+  //       style={{ marginTop: 10 }}
+  //       full
+  //       rounded
+  //       primary
+  //       onPress={() => {
+  //         this.loginUser(this.state.email, this.state.password);
+  //         this.setState({ error: "", loading: true });
+  //       }}
+  //     >
+  //       <Text style={{ color: "white" }}>Log in</Text>
+  //     </Button>
+  //   );
+  // }
 
   render() {
     const navigation = this.props.navigation;
     return (
-      <Container>
+      <Container style={{ paddingBottom: 100 }}>
         <Image
           source={{
             uri:
-              'https://lh3.googleusercontent.com/vgv0EDmcYrsy-o7ZjRzKPbJzW2fC7uqSKsnMhrGcTaMImLIKM-1ePl0Gy-n-8SFmCYJKWUf-wu4ChBkJAQ',
+              "https://lh3.googleusercontent.com/vgv0EDmcYrsy-o7ZjRzKPbJzW2fC7uqSKsnMhrGcTaMImLIKM-1ePl0Gy-n-8SFmCYJKWUf-wu4ChBkJAQ"
           }}
           style={{
-            width: '100%',
-            height: '60%',
-            justifyContent: 'center',
-            alignItems: 'center',
+            width: "100%",
+            height: "60%",
+            justifyContent: "center",
+            alignItems: "center"
           }}
         />
         <Form>
@@ -70,6 +113,7 @@ class LogIn extends React.Component {
               onChangeText={password => this.setState({ password })}
             />
           </Item>
+          <Text>{this.state.error}</Text>
           <Button
             style={{ marginTop: 10 }}
             full
@@ -77,24 +121,25 @@ class LogIn extends React.Component {
             primary
             onPress={() => {
               this.loginUser(this.state.email, this.state.password);
+              this.setState({ error: "", loading: true });
             }}
           >
-            <Text style={{ color: 'white' }}>Log in</Text>
+            <Text style={{ color: "white" }}>Log in</Text>
           </Button>
           <Button
             style={{ marginTop: 10 }}
             full
             rounded
             primary
-            onPress={() => navigation.navigate('SignUp')}
+            onPress={() => navigation.navigate("SignUp")}
           >
-            <Text style={{ color: 'white' }}>Sign Up</Text>
+            <Text style={{ color: "white" }}>Sign Up</Text>
           </Button>
 
-          {/* <Button
+          <Button
             onPress={() => this.props.navigation.navigate("SignUp")}
             title="Sign up"
-          /> */}
+          />
         </Form>
       </Container>
     );
