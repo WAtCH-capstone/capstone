@@ -8,31 +8,37 @@ import {
   Button,
 } from 'react-native';
 import Messages from './Messages';
-import db from '../../firestore';
 import SingleConvoPreferences from './SingleConvoPreferences';
 import SideMenu from 'react-native-side-menu';
+import db from '../../firestore';
 
 export default class SingleConvo extends React.Component {
   constructor() {
     super();
-    console.log(this.props);
-    // const navProps = this.props.navigation.state.params;
     this.state = {
-      convo: {},
-      ref: {},
-      user: {},
+      id: '',
+      messages: [],
       friend: {},
       menuOpen: false,
     };
   }
 
-  componentDidMount() {
+  async componentDidMount() {
+    console.log('mounting single convo');
     const navProps = this.props.navigation.state.params;
+    const friend = navProps.friend;
+    const id = navProps.id;
+    let messages = await db
+      .collection('conversations')
+      .doc(id)
+      .collection('messages')
+      .orderBy('createdAt', 'desc')
+      .get();
+    messages = messages.docs.map(el => el.data());
     this.setState({
-      id: navProps.id,
-      convo: navProps.convo,
-      user: navProps.user,
-      friend: navProps.friend,
+      id,
+      messages,
+      friend,
     });
   }
   render() {
@@ -41,7 +47,7 @@ export default class SingleConvo extends React.Component {
         'https://lh3.googleusercontent.com/vgv0EDmcYrsy-o7ZjRzKPbJzW2fC7uqSKsnMhrGcTaMImLIKM-1ePl0Gy-n-8SFmCYJKWUf-wu4ChBkJAQ',
     };
     const menu = <SingleConvoPreferences navigator={navigator} />;
-    if (this.state.convo.messages) {
+    if (this.state.messages && this.state.messages.length) {
       return (
         <SideMenu menu={menu} menuPosition="right" isOpen={this.state.menuOpen}>
           <View style={styles.container}>
@@ -62,12 +68,7 @@ export default class SingleConvo extends React.Component {
                 />
               </View>
             </View>
-            <Messages
-              id={this.state.id}
-              messages={this.state.convo.messages}
-              user={this.state.user}
-              friend={this.state.friend}
-            />
+            <Messages id={this.state.id} messages={this.state.messages} />
           </View>
         </SideMenu>
       );
