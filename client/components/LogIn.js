@@ -90,7 +90,6 @@ class LogIn extends React.Component {
           >
             <Text style={{ color: 'white' }}>Sign Up</Text>
           </Button>
-
           {/* <Button
             onPress={() => this.props.navigation.navigate("SignUp")}
             title="Sign up"
