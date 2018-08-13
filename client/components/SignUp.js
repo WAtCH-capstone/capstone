@@ -1,18 +1,18 @@
-import React from 'react';
-import { Container, Form, Item, Label, Input, Button } from 'native-base';
-import { Text } from 'react-native';
-const firebase = require('firebase');
-import db from '../../firestore';
+import React from "react";
+import { Container, Form, Item, Label, Input, Button } from "native-base";
+import { Text } from "react-native";
+const firebase = require("firebase");
+import db from "../../firestore";
 
 class SignUp extends React.Component {
   constructor() {
     super();
     this.state = {
-      displayName: '',
-      userName: '',
-      email: '',
-      password: '',
-      conversations: [],
+      displayName: "",
+      userName: "",
+      email: "",
+      password: "",
+      conversations: []
     };
     this.signUpUser = this.signUpUser.bind(this);
     this.createUser = this.createUser.bind(this);
@@ -20,10 +20,6 @@ class SignUp extends React.Component {
 
   async signUpUser(email, password) {
     try {
-      if (this.state.password.length < 6) {
-        alert('Please enter at least 6 characters');
-        return;
-      }
       await firebase.auth().createUserWithEmailAndPassword(email, password);
       const currentUser = await firebase.auth().currentUser;
       alert(`Account created for ${email}. Now you may login.`);
@@ -35,11 +31,11 @@ class SignUp extends React.Component {
 
   async createUser(id) {
     await db
-      .collection('users')
+      .collection("users")
       .doc(id)
       .set(this.state)
       .then(ref => {
-        console.log('Added document with ID: ', ref.id);
+        console.log("Added document with ID: ", ref.id);
       });
   }
 
@@ -48,7 +44,7 @@ class SignUp extends React.Component {
     return (
       <Container>
         <Form>
-          <Item floatingLabel>
+          {/* <Item floatingLabel>
             <Label>Display Name</Label>
             <Input
               autoCorrect={false}
@@ -56,7 +52,7 @@ class SignUp extends React.Component {
               clearButtonMode="always"
               onChangeText={displayName => this.setState({ displayName })}
             />
-          </Item>
+          </Item> */}
           <Item floatingLabel>
             <Label>Username</Label>
             <Input
@@ -72,9 +68,20 @@ class SignUp extends React.Component {
               autoCorrect={false}
               autoCapitalize="none"
               clearButtonMode="always"
-              onChangeText={email => this.setState({ email })}
+              onChangeText={email => {
+                this.setState({ email });
+              }}
             />
           </Item>
+
+          {/* E-MAIL ERROR MESSAGE */}
+          {!this.state.email.includes("@" && ".") &&
+          this.state.email.length > 0 ? (
+            <Text style={{ color: "red" }}>
+              Please enter a valid e-mail address
+            </Text>
+          ) : null}
+
           <Item floatingLabel>
             <Label>Password</Label>
             <Input
@@ -82,25 +89,47 @@ class SignUp extends React.Component {
               autoCapitalize="none"
               clearButtonMode="always"
               secureTextEntry={true}
-              onChangeText={password => this.setState({ password })}
+              onChangeText={password => {
+                this.setState({ password });
+              }}
             />
           </Item>
-          <Button
-            style={{ marginTop: 10 }}
-            full
-            rounded
-            primary
-            onPress={async () => {
-              const id = await this.signUpUser(
-                this.state.email,
-                this.state.password
-              );
-              await this.createUser(id);
-              navigation.navigate('LogIn');
-            }}
-          >
-            <Text style={{ color: 'white' }}>Sign up</Text>
-          </Button>
+
+          {this.state.password.length < 6 && this.state.password.length > 0 ? (
+            <Text style={{ color: "red" }}>
+              Password must be at least 6 characters
+            </Text>
+          ) : null}
+
+          {/* PASSWORD ERROR MESSAGE */}
+          {this.state.password.length < 6 ? (
+            <Button
+              disabled={true}
+              style={{ marginTop: 10, backgroundColor: "#D1D1D1" }}
+              full
+              rounded
+              primary
+            >
+              <Text style={{ color: "white" }}>Sign up</Text>
+            </Button>
+          ) : (
+            <Button
+              style={{ marginTop: 10 }}
+              full
+              rounded
+              primary
+              onPress={async () => {
+                const id = await this.signUpUser(
+                  this.state.email,
+                  this.state.password
+                );
+                await this.createUser(id);
+                navigation.navigate("LogIn");
+              }}
+            >
+              <Text style={{ color: "white" }}>Sign up</Text>
+            </Button>
+          )}
         </Form>
       </Container>
     );
