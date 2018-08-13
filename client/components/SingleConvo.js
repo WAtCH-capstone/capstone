@@ -47,13 +47,21 @@ export default class SingleConvo extends React.Component {
           <View style={styles.container}>
             {/* add padding, change to keyboard avoiding view*/}
             <View style={{ flex: 3, flexDirection: 'row' }}>
+              <View style={{ width: 100, height: 50 }}>
+                <Button
+                  title="All Convos"
+                  onPress={() => {
+                    this.props.navigation.navigate('Convos');
+                  }}
+                />
+              </View>
               <View style={{ width: 60, height: 60 }}>
                 <Image source={userImage} style={styles.image} />
               </View>
-              <View style={{ width: 170, height: 170 }}>
+              <View style={{ width: 100, height: 170 }}>
                 <Text>{this.state.friend.displayName}</Text>
               </View>
-              <View style={{ width: 150, height: 150 }}>
+              <View style={{ width: 110, height: 50 }}>
                 <Button
                   title="Preferences"
                   onPress={() => {
