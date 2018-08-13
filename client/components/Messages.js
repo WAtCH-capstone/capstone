@@ -3,7 +3,7 @@ import { Text, View, AppState } from 'react-native';
 import { GiftedChat } from 'react-native-gifted-chat';
 import db from '../../firestore';
 
-class Messages extends React.Component {
+export default class Messages extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -21,17 +21,29 @@ class Messages extends React.Component {
 
   parse(message) {
     const parsed = {
-      _id: new Date().getTime(),
+      _id: message._id,
+      time: message.time || new Date().getTime(),
       text: message.text,
-      user: { _id: message.user },
+      user: message.user,
     };
     return parsed;
   }
 
+  listen(ref) {
+    ref.onSnapshot(snap => {
+      const parsed = snap.data().messages.map(message => this.parse(message));
+      console.log('listen is setting state as:', parsed);
+      return this.setState({
+        messages: [...parsed],
+      });
+    });
+  }
+
   async componentDidMount() {
+    console.log('MOUNTING');
     const ref = await this.getRef(this.props.id);
     const messages = this.props.messages.map(message => this.parse(message));
-    // AppState.addEventListener('change', this.listen(ref));
+    console.log('component did mount is setting state with messages', messages);
     this.setState({
       ref,
       user: this.props.user,
@@ -40,51 +52,36 @@ class Messages extends React.Component {
     });
   }
 
-  listen(ref) {
-    ref.onSnapshot(snap => {
-      const parsed = snap.data().messages.map(message => this.parse(message));
-      return this.setState({
-        messages: [...parsed],
-      });
-    });
-  }
-
-  componentWillUnmount() {
-    AppState.removeEventListener('change', this.listen);
-  }
-
-  onSend(messages = []) {
-    console.log('messages', this.state.messages);
-    this.setState(previousState => ({
-      messages: GiftedChat.append(previousState.messages, messages),
-    }));
-  }
-
-  // onSend(messages = []) {
-  //   console.log(messages);
-  //   messages.forEach(message => {
-  //     const time = new Date().getTime();
-  //     const newMessages = [
-  //       ...this.state.messages,
-  //       {
-  //         _id: message._id,
-  //         text: message.text,
-  //         time,
-  //         user: this.state.user.uid,
-  //       },
-  //     ];
-  //     this.state.ref.set(
-  //       {
-  //         messages: newMessages,
-  //       },
-  //       { merge: true }
-  //     );
-  //     this.setState({ messages: newMessages });
-  //   });
+  // componentWillUnmount() {
+  //   AppState.removeEventListener('change', this.listen);
   // }
 
+  onSend(messages = []) {
+    console.log('onsend is being called with messages array:', messages);
+    messages.forEach(message => {
+      const time = new Date().getTime();
+      const newMessages = [
+        ...this.state.messages,
+        {
+          _id: message._id,
+          text: message.text,
+          time,
+          user: { _id: this.state.user.uid },
+        },
+      ];
+      console.log('onsend is updating firebase with messages:', newMessages);
+      this.state.ref.set(
+        {
+          messages: newMessages,
+        },
+        { merge: true }
+      );
+    });
+    this.listen(this.state.ref);
+  }
+
   render() {
-    console.log('messages', this.state.messages);
+    console.log('renderrring messages', this.state.messages);
     return (
       <GiftedChat
         messages={this.state.messages}
@@ -97,7 +94,7 @@ class Messages extends React.Component {
   }
 }
 
-export default Messages;
+// export default Messages;
 
 // FOR GROUP CHAT NAMES
 // static navigationOptions = ({ navigation }) => ({
@@ -112,3 +109,7 @@ export default Messages;
 //     console.log('app state is background. here is state', this.state);
 //   }
 // }
+
+// this.setState(previousState => ({
+//   messages: GiftedChat.append(previousState.messages, messages),
+// }));
