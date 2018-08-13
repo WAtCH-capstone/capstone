@@ -2,7 +2,7 @@ import React from 'react';
 import { Text, View, AppState } from 'react-native';
 import { GiftedChat } from 'react-native-gifted-chat';
 
-class Messages extends React.Component {
+export default class Messages extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -49,6 +49,7 @@ class Messages extends React.Component {
       messages: GiftedChat.append(previousState.messages, messages),
     }));
   }
+
   // FOR GROUP CHAT NAMES
   // static navigationOptions = ({ navigation }) => ({
   //   title: (navigation.state.params || {}).name || "Chat!"
@@ -69,5 +70,3 @@ class Messages extends React.Component {
     );
   }
 }
-
-export default Messages;

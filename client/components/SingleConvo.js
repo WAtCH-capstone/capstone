@@ -1,40 +1,24 @@
 import React from 'react';
-import {
-  Text,
-  View,
-  KeyboardAvoidingView,
-  StyleSheet,
-  Image,
-  Button,
-} from 'react-native';
-import { Drawer } from 'native-base';
+import { Text, View, StyleSheet, Image, Button } from 'react-native';
 import Messages from './Messages';
 import SingleConvoPreferences from './SingleConvoPreferences';
+import SideMenu from 'react-native-side-menu';
 
 class SingleConvo extends React.Component {
-  constructor(props) {
-    super(props);
+  constructor() {
+    super();
+    this.state = {
+      menuOpen: false,
+    };
   }
-
   render() {
-    closeDrawer = () => {
-      this.drawer._root.close();
-    };
-    openDrawer = () => {
-      this.drawer._root.open();
-    };
     const userImage = {
       uri:
         'https://lh3.googleusercontent.com/vgv0EDmcYrsy-o7ZjRzKPbJzW2fC7uqSKsnMhrGcTaMImLIKM-1ePl0Gy-n-8SFmCYJKWUf-wu4ChBkJAQ',
     };
+    const menu = <SingleConvoPreferences navigator={navigator} />;
     return (
-      <Drawer
-        ref={ref => {
-          this.drawer = ref;
-        }}
-        content={<SingleConvoPreferences navigator={this.navigator} />}
-        onClose={() => this.closeDrawer()}
-      >
+      <SideMenu menu={menu} menuPosition="right" isOpen={this.state.menuOpen}>
         <View style={styles.container}>
           {/* add padding, change to keyboard avoiding view*/}
           <View style={{ flex: 3, flexDirection: 'row' }}>
@@ -45,12 +29,17 @@ class SingleConvo extends React.Component {
               <Text>NAME GOES HERE</Text>
             </View>
             <View style={{ width: 150, height: 150 }}>
-              <Button title="Preferences" />
+              <Button
+                title="Preferences"
+                onPress={() => {
+                  this.setState({ menuOpen: true });
+                }}
+              />
             </View>
           </View>
           <Messages />
         </View>
-      </Drawer>
+      </SideMenu>
     );
   }
 }

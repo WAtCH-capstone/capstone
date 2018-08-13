@@ -6,6 +6,10 @@ import {
   List,
   ListItem,
   Text,
+  Picker,
+  Right,
+  Left,
+  Button,
 } from 'native-base';
 import { TouchableOpacity } from 'react-native';
 
@@ -14,37 +18,48 @@ export default class SingleConvoPreferences extends Component {
     super(props);
     this.state = { selected: 'key1' };
   }
-  onValueChange(value: string) {
+  onValueChange() {
     this.setState({ selected: value });
   }
   render() {
-    <Container>
-      <Content>
-        <Separator bordered>
-          <Text>Conversation Preferences</Text>
-        </Separator>
-        <List>
-          <ListItem>
-            <Left>
-              <Text>Share my location at all times</Text>
-            </Left>
-            <Right>
-              <TouchableOpacity>
-                <Picker
-                  note
-                  mode="dropdown"
-                  style={{ width: 120 }}
-                  selectedValue={this.state.selected}
-                  onValueChange={this.onValueChange.bind(this)}
-                >
-                  <Picker.Item label="Yes" value="key0" />
-                  <Picker.Item label="No" value="key1" />
-                </Picker>
-              </TouchableOpacity>
-            </Right>
-          </ListItem>
-        </List>
-      </Content>
-    </Container>;
+    return (
+      <Container>
+        <Content>
+          <Separator bordered>
+            <Text>Conversation Preferences</Text>
+          </Separator>
+          <List>
+            <ListItem>
+              <Left>
+                <Text>Location sharing</Text>
+              </Left>
+              <Right>
+                <TouchableOpacity>
+                  <Picker
+                    note
+                    mode="dropdown"
+                    style={{ width: 120 }}
+                    selectedValue={this.state.selected}
+                    onValueChange={this.onValueChange.bind(this)}
+                  >
+                    <Picker.Item label="On" value="key0" />
+                    <Picker.Item label="Off" value="key1" />
+                  </Picker>
+                </TouchableOpacity>
+              </Right>
+            </ListItem>
+          </List>
+          <Button
+            style={{ marginTop: 10 }}
+            full
+            rounded
+            primary
+            onPress={() => console.log('preferences have been saved')}
+          >
+            <Text style={{ color: 'white' }}>Save preferences</Text>
+          </Button>
+        </Content>
+      </Container>
+    );
   }
 }

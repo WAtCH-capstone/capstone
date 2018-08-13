@@ -17,7 +17,7 @@ import {
 import db from '../../firestore';
 import firebase from 'firebase';
 
-export default class Convos extends React.Component {
+export default class Convos extends Component {
   constructor() {
     super();
     this.state = {
@@ -39,11 +39,8 @@ export default class Convos extends React.Component {
       .collection('users')
       .where('email', '==', email)
       .get();
-
     const userData = snapshot.docs.map(doc => doc.data());
-
     let convos = [];
-
     for (let id of userData[0].conversations) {
       let convo = await db
         .collection('conversations')
@@ -51,7 +48,6 @@ export default class Convos extends React.Component {
         .get();
       convos.push(convo.data());
     }
-
     this.setState({ convos });
   }
 
