@@ -96,7 +96,9 @@ export default class LogIn extends React.Component {
             full
             rounded
             primary
-            onPress={() => navigation.navigate("SignUp")}
+            onPress={() => {
+              navigation.navigate("SignUp");
+            }}
           >
             <Text style={{ color: "white" }}>Sign Up</Text>
           </Button>
