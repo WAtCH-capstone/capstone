@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { Image } from 'react-native';
 import { Container, Form, Input, Item, Button, Label, Text } from 'native-base';
 const firebase = require('firebase');
@@ -16,7 +16,7 @@ const firebase = require('firebase');
 //   },
 // ];
 
-class LogIn extends React.Component {
+export default class LogIn extends Component {
   constructor(props) {
     super(props);
     this.state = { email: '', password: '' };
@@ -45,7 +45,7 @@ class LogIn extends React.Component {
           }}
           style={{
             width: '100%',
-            height: '60%',
+            height: '50%',
             justifyContent: 'center',
             alignItems: 'center',
           }}
@@ -88,9 +88,8 @@ class LogIn extends React.Component {
             primary
             onPress={() => navigation.navigate('SignUp')}
           >
-            <Text style={{ color: 'white' }}>Sign Up</Text>
+            <Text style={{ color: 'white' }}>Sign up</Text>
           </Button>
-
           {/* <Button
             onPress={() => this.props.navigation.navigate("SignUp")}
             title="Sign up"
@@ -100,5 +99,3 @@ class LogIn extends React.Component {
     );
   }
 }
-
-export default LogIn;

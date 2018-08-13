@@ -24,8 +24,8 @@ export default class Convos extends Component {
       convos: [],
       search: ""
     };
-
     this.user = firebase.auth().currentUser;
+    this.enterSearch = this.enterSearch.bind(this);
   }
 
   enterSearch(search) {
@@ -44,7 +44,6 @@ export default class Convos extends Component {
       .get();
     const userData = await snapshot.data();
     let convosArr = [];
-
     for (let id of userData.conversations) {
       const convo = await this.getConvo(id);
       const friend = await this.getFriend(convo);
@@ -78,7 +77,6 @@ export default class Convos extends Component {
       const convo = convoData.convo;
       const friend = convoData.friend;
       const firstMessage = convo.messages[0];
-
       return (
         <ListItem
           key={id}
@@ -107,35 +105,38 @@ export default class Convos extends Component {
 
   render() {
     const convos = this.state.convos;
-    if (convos && convos.length) {
-      return (
-        <Container>
-          <Header searchBar rounded>
-            <Item>
-              <Input
-                clearButtonMode="always"
-                onChangeText={search => this.setState({ search })}
-                placeholder="Search"
-              />
-            </Item>
-            <Button
-              transparent
-              onPress={() => this.enterSearch(this.state.search)}
-            >
-              <Text>Search</Text>
-            </Button>
-          </Header>
-          <Content>
+    const navigation = this.props.navigation;
+    return (
+      <Container>
+        <Header searchBar rounded>
+          <Item>
+            <Input
+              clearButtonMode="always"
+              onChangeText={search => this.setState({ search })}
+              placeholder="Search"
+            />
+          </Item>
+          <Button
+            transparent
+            onPress={() => this.enterSearch(this.state.search)}
+          >
+            <Text>Search</Text>
+          </Button>
+          <Button
+            transparent
+            onPress={() => navigation.navigate('CreateConvo')}
+          >
+            <Text>+</Text>
+          </Button>
+        </Header>
+        <Content>
+          {convos && convos.length ? (
             <List>{this.renderConvos(convos)}</List>
-          </Content>
-        </Container>
-      );
-    } else {
-      return (
-        <Container>
-          <Text>No conversations</Text>
-        </Container>
-      );
-    }
+          ) : (
+            <Text>No conversations yet</Text>
+          )}
+        </Content>
+      </Container>
+    );
   }
 }
