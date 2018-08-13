@@ -1,14 +1,14 @@
-import React from 'react';
+import React from "react";
 import {
   Text,
   View,
   KeyboardAvoidingView,
   StyleSheet,
   Image,
-  Button,
-} from 'react-native';
-import Messages from './Messages';
-import db from '../../firestore';
+  Button
+} from "react-native";
+import Messages from "./Messages";
+import db from "../../firestore";
 
 export default class SingleConvo extends React.Component {
   constructor() {
@@ -19,7 +19,7 @@ export default class SingleConvo extends React.Component {
       convo: {},
       ref: {},
       user: {},
-      friend: {},
+      friend: {}
     };
   }
 
@@ -29,20 +29,21 @@ export default class SingleConvo extends React.Component {
       convo: navProps.convo,
       ref: navProps.ref,
       user: navProps.user,
-      friend: navProps.friend,
+      friend: navProps.friend
     });
   }
 
   render() {
     const userImage = {
       uri:
-        'https://lh3.googleusercontent.com/vgv0EDmcYrsy-o7ZjRzKPbJzW2fC7uqSKsnMhrGcTaMImLIKM-1ePl0Gy-n-8SFmCYJKWUf-wu4ChBkJAQ',
+        "https://lh3.googleusercontent.com/vgv0EDmcYrsy-o7ZjRzKPbJzW2fC7uqSKsnMhrGcTaMImLIKM-1ePl0Gy-n-8SFmCYJKWUf-wu4ChBkJAQ"
     };
     if (this.state.convo.messages && this.state.convo.messages.length) {
+      console.log(this.state);
       return (
         <View style={styles.container}>
           {/* add padding, change to keyboard avoiding view*/}
-          <View style={{ flex: 3, flexDirection: 'row' }}>
+          <View style={{ flex: 3, flexDirection: "row" }}>
             <View style={{ width: 60, height: 60 }}>
               <Image source={userImage} style={styles.image} />
             </View>
@@ -71,12 +72,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingBottom: 50,
-    backgroundColor: 'white',
+    backgroundColor: "white"
   },
   image: {
     width: 50,
-    height: 50,
-  },
+    height: 50
+  }
 });
 
 // console.disableYellowBox = true;
