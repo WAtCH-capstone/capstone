@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 import {
   Container,
   Content,
@@ -12,26 +12,26 @@ import {
   Header,
   Item,
   Input,
-  Button,
-} from 'native-base';
-import db from '../../firestore';
-import firebase from 'firebase';
+  Button
+} from "native-base";
+import db from "../../firestore";
+import firebase from "firebase";
 
 export default class Convos extends React.Component {
   constructor() {
     super();
     this.state = {
       convos: [],
-      search: '',
+      search: ""
     };
 
     this.user = firebase.auth().currentUser;
   }
 
   enterSearch(search) {
-    console.log('search: ', search);
+    console.log("search: ", search);
     console.log(
-      'this would filter the messages and only return ones relevant to the search'
+      "this would filter the messages and only return ones relevant to the search"
     );
   }
 
@@ -39,7 +39,7 @@ export default class Convos extends React.Component {
     // this.getUserName();
     const uid = await firebase.auth().currentUser.uid;
     const snapshot = await db
-      .collection('users')
+      .collection("users")
       .doc(uid)
       .get();
 
@@ -56,7 +56,7 @@ export default class Convos extends React.Component {
   }
 
   getRef(id) {
-    return db.collection('conversations').doc(id);
+    return db.collection("conversations").doc(id);
   }
 
   async getConvo(ref) {
@@ -67,7 +67,7 @@ export default class Convos extends React.Component {
   async getFriend(convo) {
     const friendID = convo.users.find(id => id !== this.user.uid);
     const friend = await db
-      .collection('users')
+      .collection("users")
       .doc(friendID)
       .get();
     return friend.data();
@@ -86,17 +86,17 @@ export default class Convos extends React.Component {
           key={id}
           avatar
           onPress={() =>
-            navigation.navigate('SingleConvo', {
+            navigation.navigate("SingleConvo", {
               id,
               convo,
               ref,
               user: this.user,
-              friend,
+              friend
             })
           }
         >
           <Left>
-            <Thumbnail source={{ uri: 'https://placeimg.com/140/140/any' }} />
+            <Thumbnail source={{ uri: "https://placeimg.com/140/140/any" }} />
           </Left>
           <Body>
             <Text>{friend.displayName}</Text>
