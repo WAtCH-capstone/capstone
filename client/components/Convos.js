@@ -17,7 +17,7 @@ import {
 import db from "../../firestore";
 import firebase from "firebase";
 
-export default class Convos extends React.Component {
+export default class Convos extends Component {
   constructor() {
     super();
     this.state = {
@@ -42,7 +42,6 @@ export default class Convos extends React.Component {
       .collection("users")
       .doc(uid)
       .get();
-
     const userData = await snapshot.data();
     let convosArr = [];
 
