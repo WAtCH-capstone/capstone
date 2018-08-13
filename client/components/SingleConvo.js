@@ -1,4 +1,5 @@
 import React from 'react';
+
 import {
   Text,
   View,
@@ -9,6 +10,8 @@ import {
 } from 'react-native';
 import Messages from './Messages';
 import db from '../../firestore';
+  import SingleConvoPreferences from './SingleConvoPreferences';
+import SideMenu from 'react-native-side-menu';
 
 export default class SingleConvo extends React.Component {
   constructor() {
@@ -20,6 +23,7 @@ export default class SingleConvo extends React.Component {
       ref: {},
       user: {},
       friend: {},
+      menuOpen: false,
     };
   }
 
@@ -32,14 +36,15 @@ export default class SingleConvo extends React.Component {
       friend: navProps.friend,
     });
   }
-
   render() {
     const userImage = {
       uri:
         'https://lh3.googleusercontent.com/vgv0EDmcYrsy-o7ZjRzKPbJzW2fC7uqSKsnMhrGcTaMImLIKM-1ePl0Gy-n-8SFmCYJKWUf-wu4ChBkJAQ',
     };
+      const menu = <SingleConvoPreferences navigator={navigator} />;
     if (this.state.convo.messages && this.state.convo.messages.length) {
       return (
+        <SideMenu menu={menu} menuPosition="right" isOpen={this.state.menuOpen}>
         <View style={styles.container}>
           {/* add padding, change to keyboard avoiding view*/}
           <View style={{ flex: 3, flexDirection: 'row' }}>
@@ -50,7 +55,12 @@ export default class SingleConvo extends React.Component {
               <Text>{this.state.friend.displayName}</Text>
             </View>
             <View style={{ width: 150, height: 150 }}>
-              <Button title="Preferences" />
+              <Button
+                title="Preferences"
+                onPress={() => {
+                  this.setState({ menuOpen: true });
+                }}
+              />
             </View>
           </View>
           <Messages
@@ -60,6 +70,7 @@ export default class SingleConvo extends React.Component {
             ref={this.state.ref}
           />
         </View>
+        </SideMenu>
       );
     } else {
       return <Text>Lodeing...</Text>;
