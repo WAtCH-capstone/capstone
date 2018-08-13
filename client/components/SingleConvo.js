@@ -41,7 +41,7 @@ export default class SingleConvo extends React.Component {
         'https://lh3.googleusercontent.com/vgv0EDmcYrsy-o7ZjRzKPbJzW2fC7uqSKsnMhrGcTaMImLIKM-1ePl0Gy-n-8SFmCYJKWUf-wu4ChBkJAQ',
     };
     const menu = <SingleConvoPreferences navigator={navigator} />;
-    if (this.state.convo.messages && this.state.convo.messages.length) {
+    if (this.state.convo.messages) {
       return (
         <SideMenu menu={menu} menuPosition="right" isOpen={this.state.menuOpen}>
           <View style={styles.container}>

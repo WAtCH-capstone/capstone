@@ -33,32 +33,18 @@ export default class CreateConvo extends Component {
         recipientRef.update({
           conversations: firebase.firestore.FieldValue.arrayUnion(docRef.id),
         });
+        return docRef.id;
       })
+      .then(id =>
+        this.props.navigation.navigate('SingleConvo', {
+          id,
+          convo: { messages: [] },
+          user: { uid: currUserId },
+          friend: { displayName: 'fixLater' },
+        })
+      )
       .catch(err => console.error(err));
   }
-
-  // async findNewConvo(currUserId, recipientId) {
-  //   try {
-  //     const users = [currUserId, recipientId].sort();
-  //   } catch (err) {
-  //     console.error(err);
-  //   }
-  // }
-
-  // async updateConvosArrays(currUserId, recipientId) {
-  //   try {
-  //     const currUserRef = db.collection('users').doc(currUserId);
-  //     const recipientRef = db.collection('users').doc(recipientId);
-  //     currUserRef.update({
-  //       conversations: firebase.firestore.FieldValue.arrayUnion(),
-  //     });
-  //     currUserRef.update({
-  //       conversations: firebase.firestore.FieldValue.arrayUnion(),
-  //     });
-  //   } catch (err) {
-  //     console.error(err);
-  //   }
-  // }
 
   render() {
     // const navigation = this.props.navigation;
