@@ -1,74 +1,70 @@
-import React from 'react';
-import { Image, StyleSheet } from 'react-native';
-import { Container, Footer, FooterTab, Button } from 'native-base';
-
-const convos = [
-  {
-    id: 1,
-    name: 'Mom',
-    messages: [{ id: 1, time: '3:30pm', text: 'Hello World' }],
-  },
-  {
-    id: 2,
-    name: 'Jack',
-    messages: [{ id: 1, time: '11:17am', text: 'Dlrow Olleh' }],
-  },
-];
+import React from "react";
+import { Image, StyleSheet } from "react-native";
+import {
+  Container,
+  Header,
+  Content,
+  Footer,
+  FooterTab,
+  Button,
+  Text,
+  View
+} from "native-base";
 
 const settingsPic = {
   uri:
-    'https://cdn0.iconfinder.com/data/icons/thin-essentials/57/thin-053_settings_gear_preferences-512.png',
+    "https://cdn0.iconfinder.com/data/icons/thin-essentials/57/thin-053_settings_gear_preferences-512.png"
 };
 
 const profilePic = {
-  uri: 'https://static.thenounproject.com/png/538846-200.png',
+  uri: "https://static.thenounproject.com/png/538846-200.png"
 };
 
 const messagesPic = {
   uri:
-    'https://cdn.icon-icons.com/icons2/935/PNG/512/speech-bubble-oval-symbol-with-three-dots_icon-icons.com_73151.png',
+    "https://cdn.icon-icons.com/icons2/935/PNG/512/speech-bubble-oval-symbol-with-three-dots_icon-icons.com_73151.png"
 };
 
 class Navbar extends React.Component {
   render() {
     return (
-      <Container>
-        <Footer style={{ paddingTop: 15 }}>
+      <View>
+        <Footer
+          style={{
+            backgroundColor: "white",
+            position: "absolute",
+            left: 0,
+            right: 0,
+            bottom: 0
+          }}
+        >
           <FooterTab>
-            <Button
-              onPress={() =>
-                this.props.navigation.navigate('Convos', { convos: convos })
-              }
-              full
-            >
+            <Button>
               <Image source={messagesPic} style={{ width: 50, height: 50 }} />
             </Button>
-            <Button
-              onPress={() => this.props.navigation.navigate('Settings')}
-              full
-            >
+            <Button>
               <Image source={profilePic} style={{ width: 50, height: 50 }} />
             </Button>
-            <Button
-              onPress={() => this.props.navigation.navigate('Settings')}
-              full
-            >
+            <Button>
               <Image source={settingsPic} style={{ width: 50, height: 50 }} />
             </Button>
           </FooterTab>
         </Footer>
-      </Container>
+      </View>
+
+      ///FUNCTIONALITY
     );
   }
 }
 
 const styles = StyleSheet.create({
   footer: {
-    position: 'absolute',
+    backgroundColor: "white",
+    position: "absolute",
     bottom: 0,
     left: 0,
-    right: 0,
-  },
+    right: 0
+  }
 });
 
 export default Navbar;

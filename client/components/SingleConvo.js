@@ -1,25 +1,31 @@
-import React from 'react';
+import React from "react";
+import { View, KeyboardAvoidingView, StyleSheet, Image } from "react-native";
 import {
-  Text,
-  View,
-  KeyboardAvoidingView,
-  StyleSheet,
-  Image,
+  Container,
+  Header,
+  Left,
+  Body,
+  Right,
   Button,
-} from 'react-native';
-import Messages from './Messages';
-import SingleConvoPreferences from './SingleConvoPreferences';
-import SideMenu from 'react-native-side-menu';
-import db from '../../firestore';
+  Icon,
+  Title,
+  Text
+} from "native-base";
+import Messages from "./Messages";
+import SingleConvoPreferences from "./SingleConvoPreferences";
+import SideMenu from "react-native-side-menu";
+import db from "../../firestore";
+import Navbar from "./Navbar";
+import MessagePreferences from "./MessagePreferences";
 
 export default class SingleConvo extends React.Component {
   constructor() {
     super();
     this.state = {
-      id: '',
+      id: "",
       messages: [],
       friend: {},
-      menuOpen: false,
+      menuOpen: false
     };
   }
 
@@ -28,24 +34,19 @@ export default class SingleConvo extends React.Component {
     const friend = navProps.friend;
     const id = navProps.id;
     let messages = await db
-      .collection('conversations')
+      .collection("conversations")
       .doc(id)
-      .collection('messages')
-      .orderBy('createdAt', 'desc')
+      .collection("messages")
+      .orderBy("createdAt", "desc")
       .get();
     messages = messages.docs.map(el => el.data());
     this.setState({
       id,
       messages,
-      friend,
+      friend
     });
   }
   render() {
-    // const userImage = {
-    //   uri:
-    //     'https://lh3.googleusercontent.com/vgv0EDmcYrsy-o7ZjRzKPbJzW2fC7uqSKsnMhrGcTaMImLIKM-1ePl0Gy-n-8SFmCYJKWUf-wu4ChBkJAQ',
-    // };
-    console.log('this.state.friend', this.state.friend);
     const menu = <SingleConvoPreferences navigator={navigator} />;
     if (this.state.id.length) {
       return (
@@ -64,15 +65,19 @@ export default class SingleConvo extends React.Component {
               </View>
               <View style={{ width: 150, height: 150 }}>
                 <Button
-                  title="Preferences"
+                  transparent
                   onPress={() => {
                     this.setState({ menuOpen: true });
                   }}
-                />
-              </View>
-            </View>
+                >
+                  <Text>Preferences</Text>
+                </Button>
+              </Right>
+            </Header>
             <Messages id={this.state.id} messages={this.state.messages} />
+            {/* <MessagePreferences /> */}
           </View>
+          {/* <Navbar /> */}
         </SideMenu>
       );
     } else {
@@ -84,13 +89,12 @@ export default class SingleConvo extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingBottom: 50,
-    backgroundColor: 'white',
+    backgroundColor: "white"
   },
   image: {
     width: 50,
-    height: 50,
-  },
+    height: 50
+  }
 });
 
 // console.disableYellowBox = true;
