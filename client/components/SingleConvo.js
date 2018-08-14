@@ -16,6 +16,7 @@ import SingleConvoPreferences from "./SingleConvoPreferences";
 import SideMenu from "react-native-side-menu";
 import db from "../../firestore";
 import Navbar from "./Navbar";
+import MessagePreferences from "./MessagePreferences";
 
 export default class SingleConvo extends React.Component {
   constructor() {
@@ -46,23 +47,23 @@ export default class SingleConvo extends React.Component {
     });
   }
   render() {
-    const userImage = {
-      uri:
-        "https://lh3.googleusercontent.com/vgv0EDmcYrsy-o7ZjRzKPbJzW2fC7uqSKsnMhrGcTaMImLIKM-1ePl0Gy-n-8SFmCYJKWUf-wu4ChBkJAQ"
-    };
     const menu = <SingleConvoPreferences navigator={navigator} />;
     if (this.state.id.length) {
       return (
         <SideMenu menu={menu} menuPosition="right" isOpen={this.state.menuOpen}>
-          <View style={{ flex: 1, backgroundColor: "white" }}>
-            <Header style={{ backgroundColor: "white", paddingTop: -20 }}>
-              <Left>
-                <Image source={userImage} style={styles.image} />
-              </Left>
-              <Body>
-                <Title>{this.state.friend.displayName}</Title>
-              </Body>
-              <Right>
+          <View style={styles.container}>
+            {/* add padding, change to keyboard avoiding view*/}
+            <View style={{ flex: 3, flexDirection: 'row' }}>
+              <View style={{ width: 60, height: 60 }}>
+                <Image
+                  source={{ uri: this.state.friend.icon }}
+                  style={styles.image}
+                />
+              </View>
+              <View style={{ width: 170, height: 170 }}>
+                <Text>{this.state.friend.displayName}</Text>
+              </View>
+              <View style={{ width: 150, height: 150 }}>
                 <Button
                   transparent
                   onPress={() => {
@@ -74,6 +75,7 @@ export default class SingleConvo extends React.Component {
               </Right>
             </Header>
             <Messages id={this.state.id} messages={this.state.messages} />
+            {/* <MessagePreferences /> */}
           </View>
           {/* <Navbar /> */}
         </SideMenu>

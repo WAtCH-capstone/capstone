@@ -3,6 +3,7 @@ import { Text, View, AppState } from "react-native";
 import { GiftedChat } from "react-native-gifted-chat";
 import db from "../../firestore";
 import firebase from "firebase";
+import MessagePreferences from "./MessagePreferences";
 
 export default class Messages extends React.Component {
   constructor(props) {
@@ -59,9 +60,14 @@ export default class Messages extends React.Component {
       text: messages[0].text,
       createdAt,
       user: { _id: this.user.uid }
+      //add image component
     };
     this.state.ref.collection("messages").add(newMessage);
     this.state.ref.set({ firstMessage: newMessage }, { merge: true });
+  }
+
+  renderActions() {
+    return <MessagePreferences />;
   }
 
   render() {
@@ -69,6 +75,7 @@ export default class Messages extends React.Component {
     return (
       <GiftedChat
         style={{ paddingBottom: -50 }}
+        renderActions={this.renderActions}
         messages={this.state.messages}
         onSend={this.onSend}
         user={{
