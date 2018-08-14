@@ -9,6 +9,7 @@ import {
   Messages,
   Navbar,
   CreateConvo,
+  EmojiPicker,
 } from './client/components';
 
 const RootNavigator = createStackNavigator({
@@ -64,6 +65,12 @@ const RootNavigator = createStackNavigator({
     screen: CreateConvo,
     navigationOptions: {
       headerTitle: 'CreateConvo',
+    },
+  },
+  EmojiPicker: {
+    screen: EmojiPicker,
+    navigationOptions: {
+      headerTitle: 'EmojiPicker',
     },
   },
 });
