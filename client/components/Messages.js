@@ -1,16 +1,15 @@
-import React from "react";
-import { Text, View, AppState } from "react-native";
-import { GiftedChat } from "react-native-gifted-chat";
-import db from "../../firestore";
-import firebase from "firebase";
-import MessagePreferences from "./MessagePreferences";
+import React from 'react';
+import { Text, View, AppState } from 'react-native';
+import { GiftedChat } from 'react-native-gifted-chat';
+import db from '../../firestore';
+import firebase from 'firebase';
 
 export default class Messages extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      ref: "",
-      messages: []
+      ref: '',
+      messages: [],
     };
     this.user = firebase.auth().currentUser;
     this.onSend = this.onSend.bind(this);
@@ -18,32 +17,24 @@ export default class Messages extends React.Component {
   }
 
   getRef(id) {
-    return db.collection("conversations").doc(id);
+    return db.collection('conversations').doc(id);
   }
 
   listen(ref) {
     ref
-      .collection("messages")
-      .orderBy("createdAt", "desc")
+      .collection('messages')
+      .orderBy('createdAt', 'desc')
       .limit(20)
       .onSnapshot(snap => {
         let messages;
         if (!this.state.messages.length) {
           messages = snap.docs.map(message => message.data());
-          console.log(
-            "setting state",
-            GiftedChat.append(this.state.messages, messages)
-          );
         } else {
           messages = snap.docs[0].data();
-          console.log(
-            "setting state",
-            GiftedChat.append(this.state.messages, messages)
-          );
         }
         this.setState(prevState => ({
           ref,
-          messages: GiftedChat.append(prevState.messages, messages)
+          messages: GiftedChat.append(prevState.messages, messages),
         }));
       });
   }
@@ -59,27 +50,19 @@ export default class Messages extends React.Component {
       _id: createdAt,
       text: messages[0].text,
       createdAt,
-      user: { _id: this.user.uid }
-      //add image component
+      user: { _id: this.user.uid },
     };
-    this.state.ref.collection("messages").add(newMessage);
+    this.state.ref.collection('messages').add(newMessage);
     this.state.ref.set({ firstMessage: newMessage }, { merge: true });
   }
 
-  renderActions() {
-    return <MessagePreferences />;
-  }
-
   render() {
-    console.log("renderrring messages", this.state.messages);
     return (
       <GiftedChat
-        style={{ paddingBottom: -50 }}
-        renderActions={this.renderActions}
         messages={this.state.messages}
         onSend={this.onSend}
         user={{
-          _id: this.user.uid
+          _id: this.user.uid,
         }}
       />
     );
