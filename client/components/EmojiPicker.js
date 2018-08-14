@@ -7,102 +7,102 @@ import firebase from 'firebase';
 
 const emojis = [
   {
-    id: 1,
+    id: 0,
     uri:
       'https://cdn.shopify.com/s/files/1/1061/1924/files/Money_Face_Emoji.png?9898922749706957214',
   },
   {
-    id: 2,
+    id: 1,
     uri: 'https://data.whicdn.com/images/298328448/large.jpg',
   },
   {
-    id: 3,
+    id: 2,
     uri:
       'https://i.pinimg.com/originals/03/7e/79/037e79b2fb52127537be79110891ae3f.png',
   },
   {
-    id: 4,
+    id: 3,
     uri:
       'https://cdn.macrumors.com/article-new/2017/11/crying-tears-of-joy-emoji-250x248.jpg?retina',
   },
   {
-    id: 5,
+    id: 4,
     uri:
       'https://www.telegraph.co.uk/content/dam/technology/2017/11/01/monocle_trans_NvBQzQNjv4BqqVzuuqpFlyLIwiB6NTmJwfSVWeZ_vEN7c6bHu2jJnT8.png',
   },
   {
-    id: 6,
+    id: 5,
     uri:
       'https://cdn.shopify.com/s/files/1/1061/1924/products/Angel_Halo_Emoji_Icon_0ff75c27-5416-4ac6-bf1a-2a2d44b0a32b_large.png?v=1513251030',
   },
   {
-    id: 7,
+    id: 6,
     uri:
       'https://cdn.shopify.com/s/files/1/1061/1924/files/Nerd_with_Glasses_Emoji.png?9898922749706957214',
   },
   {
-    id: 8,
+    id: 7,
     uri:
       'https://cdn.shopify.com/s/files/1/1061/1924/files/Zipper-Mouth_Face_Emoji.png?9898922749706957214',
   },
   {
-    id: 9,
+    id: 8,
     uri:
       'https://static01.nyt.com/images/2017/07/13/business/13xp-emoji-vomit/13xp-emoji-vomit-jumbo.png?quality=90&auto=webp',
   },
   {
-    id: 10,
+    id: 9,
     uri:
       'https://cdn.shopify.com/s/files/1/1061/1924/files/Surprised_Face_Emoji.png?9898922749706957214',
   },
   {
-    id: 11,
+    id: 10,
     uri: 'https://nyoobserver.files.wordpress.com/2014/11/sleep.png',
   },
   {
-    id: 12,
+    id: 11,
     uri:
       'https://clipart.info/images/ccovers/1496184260OMG-Emoji-Png-transparent-background.png',
   },
   {
+    id: 12,
+    uri:
+      'https://rlv.zcache.com/smiling_cat_face_with_open_mouth_emoji_classic_round_sticker-r43081d1281ca42e4913095a507edabcc_v9waf_8byvr_307.jpg?rvtype=content',
+  },
+  {
     id: 13,
     uri:
-      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTU-gsooMN1ryGlQaoHy40OsNnHHzGz7-FernRDUEgfY6SeTlREfA',
+      'http://cdn.shopify.com/s/files/1/1061/1924/products/Pirate_Skull_Emoji_Icon_b77a0005-472e-41e4-ad15-fd871038f91e_grande.png?v=1513249396',
   },
   {
     id: 14,
     uri:
-      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTU-gsooMN1ryGlQaoHy40OsNnHHzGz7-FernRDUEgfY6SeTlREfA',
+      'http://s3.amazonaws.com/pix.iemoji.com/images/emoji/apple/ios-11/256/butterfly.png',
   },
   {
     id: 15,
     uri:
-      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTU-gsooMN1ryGlQaoHy40OsNnHHzGz7-FernRDUEgfY6SeTlREfA',
+      'http://s3.amazonaws.com/pix.iemoji.com/images/emoji/apple/ios-11/256/skull.png',
   },
   {
     id: 16,
     uri:
-      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTU-gsooMN1ryGlQaoHy40OsNnHHzGz7-FernRDUEgfY6SeTlREfA',
+      'http://s3.amazonaws.com/pix.iemoji.com/images/emoji/apple/ios-11/256/princess.png',
   },
   {
     id: 17,
     uri:
-      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTU-gsooMN1ryGlQaoHy40OsNnHHzGz7-FernRDUEgfY6SeTlREfA',
+      'http://s3.amazonaws.com/pix.iemoji.com/images/emoji/apple/ios-11/256/prince.png',
   },
   {
     id: 18,
     uri:
-      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTU-gsooMN1ryGlQaoHy40OsNnHHzGz7-FernRDUEgfY6SeTlREfA',
+      'https://cdn.shopify.com/s/files/1/1061/1924/products/See_No_Evil_Monkey_Emoji_large.png?v=1480481037',
   },
   {
     id: 19,
     uri:
-      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTU-gsooMN1ryGlQaoHy40OsNnHHzGz7-FernRDUEgfY6SeTlREfA',
-  },
-  {
-    id: 20,
-    uri:
-      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTU-gsooMN1ryGlQaoHy40OsNnHHzGz7-FernRDUEgfY6SeTlREfA',
+      'https://cdn.shopify.com/s/files/1/1061/1924/files/Octopus_Emoji.png?9898922749706957214',
   },
 ];
 
@@ -158,12 +158,17 @@ export default class EmojiPicker extends Component {
           <Row size={20}>{this.renderEmoji(10)}</Row>
           <Row size={20}>{this.renderEmoji(11)}</Row>
           <Row size={20}>{this.renderEmoji(12)}</Row>
+          {/* <text>Fix these</text> */}
           <Row size={20}>{this.renderEmoji(13)}</Row>
+          {/* <text>Fix these</text> */}
           <Row size={20}>{this.renderEmoji(14)}</Row>
         </Col>
         <Col size={25}>
+          {/* <text>Fix these</text> */}
           <Row size={20}>{this.renderEmoji(15)}</Row>
+          {/* <text>Fix these</text> */}
           <Row size={20}>{this.renderEmoji(16)}</Row>
+          {/* <text>Fix these</text> */}
           <Row size={20}>{this.renderEmoji(17)}</Row>
           <Row size={20}>{this.renderEmoji(18)}</Row>
           <Row size={20}>{this.renderEmoji(19)}</Row>
