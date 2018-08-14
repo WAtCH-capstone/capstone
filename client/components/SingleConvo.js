@@ -1,19 +1,20 @@
-import React from 'react';
-import { View, StyleSheet, Image } from 'react-native';
-import { Header, Left, Body, Right, Button, Title, Text } from 'native-base';
-import Messages from './Messages';
-import SingleConvoPreferences from './SingleConvoPreferences';
-import SideMenu from 'react-native-side-menu';
-import db from '../../firestore';
+import React from "react";
+import { View, StyleSheet, Image } from "react-native";
+import { Header, Left, Body, Right, Button, Title, Text } from "native-base";
+import Messages from "./Messages";
+import SingleConvoPreferences from "./SingleConvoPreferences";
+import SideMenu from "react-native-side-menu";
+import db from "../../firestore";
+import MessagePreferences from "./MessagePreferences";
 
 export default class SingleConvo extends React.Component {
   constructor() {
     super();
     this.state = {
-      id: '',
+      id: "",
       messages: [],
       friend: {},
-      menuOpen: false,
+      menuOpen: false
     };
   }
 
@@ -22,16 +23,16 @@ export default class SingleConvo extends React.Component {
     const friend = navProps.friend;
     const id = navProps.id;
     let messages = await db
-      .collection('conversations')
+      .collection("conversations")
       .doc(id)
-      .collection('messages')
-      .orderBy('createdAt', 'desc')
+      .collection("messages")
+      .orderBy("createdAt", "desc")
       .get();
     messages = messages.docs.map(el => el.data());
     this.setState({
       id,
       messages,
-      friend,
+      friend
     });
   }
   render() {
@@ -40,9 +41,9 @@ export default class SingleConvo extends React.Component {
       return (
         <SideMenu menu={menu} menuPosition="right" isOpen={this.state.menuOpen}>
           <View
-            style={{ flex: 1, backgroundColor: 'white', paddingBottom: 50 }}
+            style={{ flex: 1, backgroundColor: "white", paddingBottom: 50 }}
           >
-            <Header style={{ backgroundColor: 'white', paddingTop: -20 }}>
+            <Header style={{ backgroundColor: "white", paddingTop: -20 }}>
               <Left>
                 <Image
                   source={{ uri: this.state.friend.icon }}
@@ -64,6 +65,7 @@ export default class SingleConvo extends React.Component {
               </Right>
             </Header>
             <Messages id={this.state.id} messages={this.state.messages} />
+            <MessagePreferences />
           </View>
         </SideMenu>
       );
@@ -76,10 +78,10 @@ export default class SingleConvo extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: "white"
   },
   image: {
     width: 50,
-    height: 50,
-  },
+    height: 50
+  }
 });
