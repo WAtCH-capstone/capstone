@@ -1,79 +1,86 @@
-import React from 'react';
+import React from "react";
+import { View, KeyboardAvoidingView, StyleSheet, Image } from "react-native";
 import {
-  Text,
-  View,
-  KeyboardAvoidingView,
-  StyleSheet,
-  Image,
+  Container,
+  Header,
+  Left,
+  Body,
+  Right,
   Button,
-} from 'react-native';
-import Messages from './Messages';
-import SingleConvoPreferences from './SingleConvoPreferences';
-import SideMenu from 'react-native-side-menu';
-import db from '../../firestore';
+  Icon,
+  Title,
+  Text
+} from "native-base";
+import Messages from "./Messages";
+import SingleConvoPreferences from "./SingleConvoPreferences";
+import SideMenu from "react-native-side-menu";
+import db from "../../firestore";
+import Navbar from "./Navbar";
 
 export default class SingleConvo extends React.Component {
   constructor() {
     super();
     this.state = {
-      id: '',
+      id: "",
       messages: [],
       friend: {},
-      menuOpen: false,
+      menuOpen: false
     };
   }
 
   async componentDidMount() {
-    console.log('mounting single convo');
+    console.log("mounting single convo");
     const navProps = this.props.navigation.state.params;
     const friend = navProps.friend;
     const id = navProps.id;
     let messages = await db
-      .collection('conversations')
+      .collection("conversations")
       .doc(id)
-      .collection('messages')
-      .orderBy('createdAt', 'desc')
+      .collection("messages")
+      .orderBy("createdAt", "desc")
       .get();
     messages = messages.docs.map(el => el.data());
     this.setState({
       id,
       messages,
-      friend,
+      friend
     });
   }
   render() {
     const userImage = {
       uri:
-        'https://lh3.googleusercontent.com/vgv0EDmcYrsy-o7ZjRzKPbJzW2fC7uqSKsnMhrGcTaMImLIKM-1ePl0Gy-n-8SFmCYJKWUf-wu4ChBkJAQ',
+        "https://lh3.googleusercontent.com/vgv0EDmcYrsy-o7ZjRzKPbJzW2fC7uqSKsnMhrGcTaMImLIKM-1ePl0Gy-n-8SFmCYJKWUf-wu4ChBkJAQ"
     };
     const menu = <SingleConvoPreferences navigator={navigator} />;
     if (this.state.id.length) {
       return (
         <SideMenu menu={menu} menuPosition="right" isOpen={this.state.menuOpen}>
-          <View style={styles.container}>
-            {/* add padding, change to keyboard avoiding view*/}
-            <View style={{ flex: 3, flexDirection: 'row' }}>
-              <View style={{ width: 60, height: 60 }}>
+          <View style={{ flex: 1, backgroundColor: "white" }}>
+            <Header style={{ backgroundColor: "white", paddingTop: -20 }}>
+              <Left>
                 <Image source={userImage} style={styles.image} />
-              </View>
-              <View style={{ width: 170, height: 170 }}>
-                <Text>{this.state.friend.displayName}</Text>
-              </View>
-              <View style={{ width: 150, height: 150 }}>
+              </Left>
+              <Body>
+                <Title>{this.state.friend.displayName}</Title>
+              </Body>
+              <Right>
                 <Button
-                  title="Preferences"
+                  transparent
                   onPress={() => {
                     this.setState({ menuOpen: true });
                   }}
-                />
-              </View>
-            </View>
+                >
+                  <Text>Preferences</Text>
+                </Button>
+              </Right>
+            </Header>
             <Messages id={this.state.id} messages={this.state.messages} />
           </View>
+          {/* <Navbar /> */}
         </SideMenu>
       );
     } else {
-      return <Text>Lodeing...</Text>;
+      return <Text>Loading...</Text>;
     }
   }
 }
@@ -81,13 +88,12 @@ export default class SingleConvo extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingBottom: 50,
-    backgroundColor: 'white',
+    backgroundColor: "white"
   },
   image: {
     width: 50,
-    height: 50,
-  },
+    height: 50
+  }
 });
 
 // console.disableYellowBox = true;

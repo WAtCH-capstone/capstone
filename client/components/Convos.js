@@ -12,10 +12,12 @@ import {
   Header,
   Item,
   Input,
-  Button
+  Button,
+  View
 } from "native-base";
 import db from "../../firestore";
 import firebase from "firebase";
+import Navbar from "./Navbar";
 
 export default class Convos extends Component {
   constructor() {
@@ -152,6 +154,7 @@ export default class Convos extends Component {
             <Text>No conversations yet</Text>
           )}
         </Content>
+        <Navbar />
       </Container>
     );
   }
