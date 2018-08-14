@@ -29,16 +29,8 @@ export default class Messages extends React.Component {
         let messages;
         if (!this.state.messages.length) {
           messages = snap.docs.map(message => message.data());
-          console.log(
-            'setting state',
-            GiftedChat.append(this.state.messages, messages)
-          );
         } else {
           messages = snap.docs[0].data();
-          console.log(
-            'setting state',
-            GiftedChat.append(this.state.messages, messages)
-          );
         }
         this.setState(prevState => ({
           ref,
@@ -65,7 +57,6 @@ export default class Messages extends React.Component {
   }
 
   render() {
-    console.log('renderrring messages', this.state.messages);
     return (
       <GiftedChat
         messages={this.state.messages}
