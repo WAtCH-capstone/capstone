@@ -7,3 +7,4 @@ export { default as SingleConvo } from './SingleConvo';
 export { default as Messages } from './Messages';
 export { default as Navbar } from './Navbar';
 export { default as CreateConvo } from './CreateConvo';
+export { default as EmojiPicker } from './EmojiPicker';

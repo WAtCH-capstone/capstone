@@ -1,18 +1,18 @@
-import React from "react";
-import { Container, Form, Item, Label, Input, Button } from "native-base";
-import { Text } from "react-native";
-const firebase = require("firebase");
-import db from "../../firestore";
+import React from 'react';
+import { Container, Form, Item, Label, Input, Button } from 'native-base';
+import { Text } from 'react-native';
+const firebase = require('firebase');
+import db from '../../firestore';
 
 class SignUp extends React.Component {
   constructor() {
     super();
     this.state = {
-      displayName: "",
-      userName: "",
-      email: "",
-      password: "",
-      conversations: []
+      displayName: '',
+      userName: '',
+      email: '',
+      password: '',
+      conversations: [],
     };
     this.signUpUser = this.signUpUser.bind(this);
     this.createUser = this.createUser.bind(this);
@@ -31,11 +31,11 @@ class SignUp extends React.Component {
 
   async createUser(id) {
     await db
-      .collection("users")
+      .collection('users')
       .doc(id)
       .set(this.state)
       .then(ref => {
-        console.log("Added document with ID: ", ref.id);
+        console.log('Added document with ID: ', ref.id);
       });
   }
 
@@ -44,7 +44,7 @@ class SignUp extends React.Component {
     return (
       <Container>
         <Form>
-          {/* <Item floatingLabel>
+          <Item floatingLabel>
             <Label>Display Name</Label>
             <Input
               autoCorrect={false}
@@ -52,7 +52,7 @@ class SignUp extends React.Component {
               clearButtonMode="always"
               onChangeText={displayName => this.setState({ displayName })}
             />
-          </Item> */}
+          </Item>
           <Item floatingLabel>
             <Label>Username</Label>
             <Input
@@ -75,9 +75,9 @@ class SignUp extends React.Component {
           </Item>
 
           {/* E-MAIL ERROR MESSAGE */}
-          {!this.state.email.includes("@" && ".") &&
+          {!this.state.email.includes('@' && '.') &&
           this.state.email.length > 0 ? (
-            <Text style={{ color: "red" }}>
+            <Text style={{ color: 'red' }}>
               Please enter a valid e-mail address
             </Text>
           ) : null}
@@ -95,22 +95,35 @@ class SignUp extends React.Component {
             />
           </Item>
 
+          {/* PASSWORD ERROR MESSAGE */}
           {this.state.password.length < 6 && this.state.password.length > 0 ? (
-            <Text style={{ color: "red" }}>
+            <Text style={{ color: 'red' }}>
               Password must be at least 6 characters
             </Text>
           ) : null}
 
-          {/* PASSWORD ERROR MESSAGE */}
+          <Button
+            style={{ marginTop: 10 }}
+            full
+            rounded
+            success
+            onPress={() => {
+              navigation.navigate('EmojiPicker');
+            }}
+          >
+            <Text style={{ color: 'white' }}>Pick Your Avatar</Text>
+          </Button>
+
+          {/* SIGN UP BUTTON DISABLED UNTIL CONCERNS ARE MET */}
           {this.state.password.length < 6 ? (
             <Button
               disabled={true}
-              style={{ marginTop: 10, backgroundColor: "#D1D1D1" }}
+              style={{ marginTop: 10, backgroundColor: '#D1D1D1' }}
               full
               rounded
               primary
             >
-              <Text style={{ color: "white" }}>Sign up</Text>
+              <Text style={{ color: 'white' }}>Sign up</Text>
             </Button>
           ) : (
             <Button
@@ -124,10 +137,10 @@ class SignUp extends React.Component {
                   this.state.password
                 );
                 await this.createUser(id);
-                navigation.navigate("LogIn");
+                navigation.navigate('LogIn');
               }}
             >
-              <Text style={{ color: "white" }}>Sign up</Text>
+              <Text style={{ color: 'white' }}>Sign up</Text>
             </Button>
           )}
         </Form>
