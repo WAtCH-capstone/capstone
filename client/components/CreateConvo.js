@@ -11,19 +11,18 @@ export default class CreateConvo extends Component {
   }
 
   async createNewConvo(recipientEmail) {
-    const usersSnap = await db.collection('users').get();
-    const recipientArr = await usersSnap.docs.filter(
-      doc =>
-        doc._document.data.internalValue.root.left.right.value.internalValue ===
-        recipientEmail
-    );
-    const recipientId = recipientArr[0].id;
+    const recipientQuery = await db
+      .collection('users')
+      .where('email', '==', recipientEmail)
+      .get();
+    const recArr = recipientQuery.docs.map(doc => doc.data());
+    const recipient = recArr[0];
+    const recipientId = recipientQuery.docs[0].id;
     const currUserId = await firebase.auth().currentUser.uid;
     const currUserRef = db.collection('users').doc(currUserId);
     const recipientRef = db.collection('users').doc(recipientId);
     db.collection('conversations')
       .add({
-        messages: [],
         users: [currUserId, recipientId],
       })
       .then(docRef => {
@@ -31,7 +30,7 @@ export default class CreateConvo extends Component {
           conversations: firebase.firestore.FieldValue.arrayUnion(docRef.id),
         });
         recipientRef.update({
-          conversations: firebase.firestore.FieldValue.arrayUnion(docRef.id),
+          conversations: [...recipient.conversations, docRef.id],
         });
         return docRef.id;
       })
@@ -40,7 +39,7 @@ export default class CreateConvo extends Component {
           id,
           convo: { messages: [] },
           user: { uid: currUserId },
-          friend: { displayName: 'fixLater' },
+          friend: { displayName: recipient.displayName },
         })
       )
       .catch(err => console.error(err));
