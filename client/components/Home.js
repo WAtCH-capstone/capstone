@@ -1,29 +1,29 @@
-import React, { Component } from 'react';
-import { Text, View, ScrollView, Image, Button as Button1 } from 'react-native';
-import Navbar from './Navbar';
+import React, { Component } from "react";
+import { Text, View, ScrollView, Image, Button as Button1 } from "react-native";
+import Navbar from "./Navbar";
 // import { Image, StyleSheet, View } from "react-native";
-import LogIn from './LogIn';
+import LogIn from "./LogIn";
 import {
   Container,
   Header,
   Content,
   Footer,
   FooterTab,
-  Button,
+  Button
   // Text
-} from 'native-base';
+} from "native-base";
 
 const convos = [
   {
     id: 1,
-    name: 'Mom',
-    messages: [{ id: 1, time: '3:30pm', text: 'Hello World' }],
+    name: "Mom",
+    messages: [{ id: 1, time: "3:30pm", text: "Hello World" }]
   },
   {
     id: 2,
-    name: 'Jack',
-    messages: [{ id: 1, time: '11:17am', text: 'Dlrow Olleh' }],
-  },
+    name: "Jack",
+    messages: [{ id: 1, time: "11:17am", text: "Dlrow Olleh" }]
+  }
 ];
 
 export default class Home extends Component {
@@ -69,7 +69,7 @@ export default class Home extends Component {
             />
           </View> */}
         </ScrollView>
-        <Navbar navigation={navigation} />
+        {/* <Navbar navigation={navigation} /> */}
       </View>
     );
   }
