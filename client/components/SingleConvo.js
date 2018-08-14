@@ -52,7 +52,7 @@ export default class SingleConvo extends React.Component {
         <SideMenu menu={menu} menuPosition="right" isOpen={this.state.menuOpen}>
           <View style={styles.container}>
             {/* add padding, change to keyboard avoiding view*/}
-            <View style={{ flex: 3, flexDirection: "row" }}>
+            <View style={{ flex: 1, flexDirection: "row" }}>
               <View style={{ width: 60, height: 60 }}>
                 <Image source={userImage} style={styles.image} />
               </View>
