@@ -78,7 +78,6 @@ export default class LogIn extends React.Component {
               }}
             />
           </Item>
-
           <Button
             style={{ marginTop: 10 }}
             full
@@ -90,12 +89,11 @@ export default class LogIn extends React.Component {
           >
             <Text style={{ color: 'white' }}>Log in</Text>
           </Button>
-
           <Button
             style={{ marginTop: 10 }}
             full
             rounded
-            primary
+            success
             onPress={() => {
               navigation.navigate('SignUp');
             }}
