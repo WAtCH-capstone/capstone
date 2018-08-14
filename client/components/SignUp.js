@@ -115,13 +115,12 @@ class SignUp extends React.Component {
               style={{ marginTop: 10 }}
               full
               rounded
-              primary
+              info
               onPress={async () => {
                 const id = await this.signUpUser(
                   this.state.email,
                   this.state.password
                 );
-                // await this.createUser(id);
                 this.createUser(id).then(() =>
                   navigation.navigate('EmojiPicker')
                 );
