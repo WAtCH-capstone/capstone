@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import { Image, View } from 'react-native';
-import { Container, Content, Card, CardItem } from 'native-base';
+import { View } from 'react-native';
 import { Avatar } from 'react-native-elements';
 import { Col, Row, Grid } from 'react-native-easy-grid';
 import db from '../../firestore';
@@ -14,8 +13,7 @@ const emojis = [
   },
   {
     id: 2,
-    uri:
-      'http://cdn.shopify.com/s/files/1/1061/1924/products/Face_With_Rolling_Eyes_Emoji_grande.png?v=1481523400',
+    uri: 'https://data.whicdn.com/images/298328448/large.jpg',
   },
   {
     id: 3,
@@ -30,22 +28,22 @@ const emojis = [
   {
     id: 5,
     uri:
-      'https://www.telegraph.co.uk/content/dam/technology/2017/11/01/emoji_update_2017_12_trans_NvBQzQNjv4BqqVzuuqpFlyLIwiB6NTmJwfSVWeZ_vEN7c6bHu2jJnT8.png?imwidth=450',
+      'https://www.telegraph.co.uk/content/dam/technology/2017/11/01/monocle_trans_NvBQzQNjv4BqqVzuuqpFlyLIwiB6NTmJwfSVWeZ_vEN7c6bHu2jJnT8.png',
   },
   {
     id: 6,
     uri:
-      'http://s3.amazonaws.com/pix.iemoji.com/images/emoji/apple/ios-11/256/unamused-face.png',
+      'https://cdn.shopify.com/s/files/1/1061/1924/products/Angel_Halo_Emoji_Icon_0ff75c27-5416-4ac6-bf1a-2a2d44b0a32b_large.png?v=1513251030',
   },
   {
     id: 7,
     uri:
-      'http://s3.amazonaws.com/pix.iemoji.com/images/emoji/apple/ios-11/256/smiling-face-with-heart-eyes.png',
+      'https://cdn.shopify.com/s/files/1/1061/1924/files/Nerd_with_Glasses_Emoji.png?9898922749706957214',
   },
   {
     id: 8,
     uri:
-      'https://static.wixstatic.com/media/9f2b78_4fcc7a4e5b3245439e25e7fccd4a794e~mv2.png',
+      'https://cdn.shopify.com/s/files/1/1061/1924/files/Zipper-Mouth_Face_Emoji.png?9898922749706957214',
   },
   {
     id: 9,
@@ -54,7 +52,8 @@ const emojis = [
   },
   {
     id: 10,
-    uri: 'http://meredith.images.worldnow.com/images/15106083_G.png',
+    uri:
+      'https://cdn.shopify.com/s/files/1/1061/1924/files/Surprised_Face_Emoji.png?9898922749706957214',
   },
   {
     id: 11,
@@ -110,13 +109,15 @@ const emojis = [
 export default class EmojiPicker extends Component {
   constructor() {
     super();
-    this.state = { uri: '' };
     this.selectEmoji = this.selectEmoji.bind(this);
   }
 
-  selectEmoji(uri) {
-    this.setState({ uri });
-    console.log('uri', this.state.uri);
+  async selectEmoji(uri) {
+    const currUserId = await firebase.auth().currentUser.uid;
+    const currUserRef = db.collection('users').doc(currUserId);
+    currUserRef.update({ icon: uri });
+    alert(`Your account was created! Now you may login.`);
+    this.props.navigation.navigate('LogIn');
   }
 
   renderEmoji(num) {

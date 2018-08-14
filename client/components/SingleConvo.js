@@ -24,7 +24,6 @@ export default class SingleConvo extends React.Component {
   }
 
   async componentDidMount() {
-    console.log('mounting single convo');
     const navProps = this.props.navigation.state.params;
     const friend = navProps.friend;
     const id = navProps.id;
@@ -42,10 +41,11 @@ export default class SingleConvo extends React.Component {
     });
   }
   render() {
-    const userImage = {
-      uri:
-        'https://lh3.googleusercontent.com/vgv0EDmcYrsy-o7ZjRzKPbJzW2fC7uqSKsnMhrGcTaMImLIKM-1ePl0Gy-n-8SFmCYJKWUf-wu4ChBkJAQ',
-    };
+    // const userImage = {
+    //   uri:
+    //     'https://lh3.googleusercontent.com/vgv0EDmcYrsy-o7ZjRzKPbJzW2fC7uqSKsnMhrGcTaMImLIKM-1ePl0Gy-n-8SFmCYJKWUf-wu4ChBkJAQ',
+    // };
+    console.log('this.state.friend', this.state.friend);
     const menu = <SingleConvoPreferences navigator={navigator} />;
     if (this.state.id.length) {
       return (
@@ -54,7 +54,10 @@ export default class SingleConvo extends React.Component {
             {/* add padding, change to keyboard avoiding view*/}
             <View style={{ flex: 3, flexDirection: 'row' }}>
               <View style={{ width: 60, height: 60 }}>
-                <Image source={userImage} style={styles.image} />
+                <Image
+                  source={{ uri: this.state.friend.icon }}
+                  style={styles.image}
+                />
               </View>
               <View style={{ width: 170, height: 170 }}>
                 <Text>{this.state.friend.displayName}</Text>
@@ -73,7 +76,7 @@ export default class SingleConvo extends React.Component {
         </SideMenu>
       );
     } else {
-      return <Text>Lodeing...</Text>;
+      return <Text>Loading...</Text>;
     }
   }
 }

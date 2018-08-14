@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
 import {
   Container,
   Content,
@@ -12,26 +12,26 @@ import {
   Header,
   Item,
   Input,
-  Button
-} from "native-base";
-import db from "../../firestore";
-import firebase from "firebase";
+  Button,
+} from 'native-base';
+import db from '../../firestore';
+import firebase from 'firebase';
 
 export default class Convos extends Component {
   constructor() {
     super();
     this.state = {
       convos: [],
-      search: ""
+      search: '',
     };
     this.user = firebase.auth().currentUser;
     this.enterSearch = this.enterSearch.bind(this);
   }
 
   enterSearch(search) {
-    console.log("search: ", search);
+    console.log('search: ', search);
     console.log(
-      "this would filter the messages and only return ones relevant to the search"
+      'this would filter the messages and only return ones relevant to the search'
     );
   }
 
@@ -39,7 +39,7 @@ export default class Convos extends Component {
     // this.getUserName();
     const uid = await firebase.auth().currentUser.uid;
     const snapshot = await db
-      .collection("users")
+      .collection('users')
       .doc(uid)
       .get();
     const userData = await snapshot.data();
@@ -55,14 +55,14 @@ export default class Convos extends Component {
 
   async getData(id) {
     const convo = await db
-      .collection("conversations")
+      .collection('conversations')
       .doc(id)
       .get();
     const data = convo.data();
     const firstMessage = data.firstMessage;
     const friendID = data.users.find(uid => uid !== this.user.uid);
     const friendQuery = await db
-      .collection("users")
+      .collection('users')
       .doc(friendID)
       .get();
     const friend = friendQuery.data();
@@ -100,14 +100,14 @@ export default class Convos extends Component {
           key={id}
           avatar
           onPress={() =>
-            navigation.navigate("SingleConvo", {
+            navigation.navigate('SingleConvo', {
               id,
-              friend
+              friend,
             })
           }
         >
           <Left>
-            <Thumbnail source={{ uri: "https://placeimg.com/140/140/any" }} />
+            <Thumbnail source={{ uri: friend.icon }} />
           </Left>
           <Body>
             <Text>{friend.displayName}</Text>
@@ -140,7 +140,7 @@ export default class Convos extends Component {
           </Button>
           <Button
             transparent
-            onPress={() => navigation.navigate("CreateConvo")}
+            onPress={() => navigation.navigate('CreateConvo')}
           >
             <Text>+</Text>
           </Button>

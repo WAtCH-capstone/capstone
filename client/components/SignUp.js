@@ -12,6 +12,7 @@ class SignUp extends React.Component {
       userName: '',
       email: '',
       password: '',
+      icon: '',
       conversations: [],
     };
     this.signUpUser = this.signUpUser.bind(this);
@@ -22,7 +23,6 @@ class SignUp extends React.Component {
     try {
       await firebase.auth().createUserWithEmailAndPassword(email, password);
       const currentUser = await firebase.auth().currentUser;
-      alert(`Account created for ${email}. Now you may login.`);
       return currentUser.uid;
     } catch (err) {
       console.log(err.toString());
@@ -33,10 +33,7 @@ class SignUp extends React.Component {
     await db
       .collection('users')
       .doc(id)
-      .set(this.state)
-      .then(ref => {
-        console.log('Added document with ID: ', ref.id);
-      });
+      .set(this.state);
   }
 
   render() {
@@ -102,19 +99,7 @@ class SignUp extends React.Component {
             </Text>
           ) : null}
 
-          <Button
-            style={{ marginTop: 10 }}
-            full
-            rounded
-            success
-            onPress={() => {
-              navigation.navigate('EmojiPicker');
-            }}
-          >
-            <Text style={{ color: 'white' }}>Pick Your Avatar</Text>
-          </Button>
-
-          {/* SIGN UP BUTTON DISABLED UNTIL CONCERNS ARE MET */}
+          {/* BUTTON DISABLED UNTIL CONCERNS ARE MET */}
           {this.state.password.length < 6 ? (
             <Button
               disabled={true}
@@ -123,7 +108,7 @@ class SignUp extends React.Component {
               rounded
               primary
             >
-              <Text style={{ color: 'white' }}>Sign up</Text>
+              <Text style={{ color: 'white' }}>Pick Your Avatar</Text>
             </Button>
           ) : (
             <Button
@@ -136,11 +121,13 @@ class SignUp extends React.Component {
                   this.state.email,
                   this.state.password
                 );
-                await this.createUser(id);
-                navigation.navigate('LogIn');
+                // await this.createUser(id);
+                this.createUser(id).then(() =>
+                  navigation.navigate('EmojiPicker')
+                );
               }}
             >
-              <Text style={{ color: 'white' }}>Sign up</Text>
+              <Text style={{ color: 'white' }}>Pick Your Avatar</Text>
             </Button>
           )}
         </Form>
