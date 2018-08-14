@@ -72,27 +72,27 @@ const emojis = [
   {
     id: 13,
     uri:
-      'http://cdn.shopify.com/s/files/1/1061/1924/products/Pirate_Skull_Emoji_Icon_b77a0005-472e-41e4-ad15-fd871038f91e_grande.png?v=1513249396',
+      'https://cdn.shopify.com/s/files/1/1061/1924/products/Dog_Emoji_large.png?v=1480481035',
   },
   {
     id: 14,
     uri:
-      'http://s3.amazonaws.com/pix.iemoji.com/images/emoji/apple/ios-11/256/butterfly.png',
+      'https://o.aolcdn.com/images/dims?quality=80&thumbnail=200%2C150&image_uri=http%3A%2F%2Fi.huffpost.com%2Fgen%2F2714370%2Fimages%2Fn-POOP-EMOJI-ICE-CREAM-628x314.jpg&client=cbc79c14efcebee57402&signature=4d62078ba97fef98f4040c7f89cdc2ab9d9419cb',
   },
   {
     id: 15,
     uri:
-      'http://s3.amazonaws.com/pix.iemoji.com/images/emoji/apple/ios-11/256/skull.png',
+      'https://cdn.shopify.com/s/files/1/1061/1924/products/Emoji_Icon_-_Sunglasses_cool_emoji_large.png?v=1513251060',
   },
   {
     id: 16,
     uri:
-      'http://s3.amazonaws.com/pix.iemoji.com/images/emoji/apple/ios-11/256/princess.png',
+      'https://cdn.shopify.com/s/files/1/1061/1924/products/Super_Angry_Face_Emoji_ios10_large.png?v=1513249402',
   },
   {
     id: 17,
     uri:
-      'http://s3.amazonaws.com/pix.iemoji.com/images/emoji/apple/ios-11/256/prince.png',
+      'https://cdn.shopify.com/s/files/1/1061/1924/products/OMG_Face_Emoji_large.png?v=1480481054',
   },
   {
     id: 18,
@@ -158,17 +158,12 @@ export default class EmojiPicker extends Component {
           <Row size={20}>{this.renderEmoji(10)}</Row>
           <Row size={20}>{this.renderEmoji(11)}</Row>
           <Row size={20}>{this.renderEmoji(12)}</Row>
-          {/* <text>Fix these</text> */}
           <Row size={20}>{this.renderEmoji(13)}</Row>
-          {/* <text>Fix these</text> */}
           <Row size={20}>{this.renderEmoji(14)}</Row>
         </Col>
         <Col size={25}>
-          {/* <text>Fix these</text> */}
           <Row size={20}>{this.renderEmoji(15)}</Row>
-          {/* <text>Fix these</text> */}
           <Row size={20}>{this.renderEmoji(16)}</Row>
-          {/* <text>Fix these</text> */}
           <Row size={20}>{this.renderEmoji(17)}</Row>
           <Row size={20}>{this.renderEmoji(18)}</Row>
           <Row size={20}>{this.renderEmoji(19)}</Row>

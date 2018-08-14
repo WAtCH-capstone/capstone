@@ -115,7 +115,7 @@ class SignUp extends React.Component {
               style={{ marginTop: 10 }}
               full
               rounded
-              success
+              info
               onPress={async () => {
                 const id = await this.signUpUser(
                   this.state.email,
