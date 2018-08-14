@@ -68,6 +68,7 @@ export default class Messages extends React.Component {
     console.log("renderrring messages", this.state.messages);
     return (
       <GiftedChat
+        style={{ paddingBottom: -50 }}
         messages={this.state.messages}
         onSend={this.onSend}
         user={{

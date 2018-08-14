@@ -70,7 +70,7 @@ export default class Home extends Component {
             />
           </View> */}
         </ScrollView>
-        <Navbar navigation={navigation} />
+        {/* <Navbar navigation={navigation} /> */}
       </View>
     );
   }
