@@ -29,7 +29,6 @@ export default class SingleConvo extends React.Component {
   }
 
   async componentDidMount() {
-    console.log("mounting single convo");
     const navProps = this.props.navigation.state.params;
     const friend = navProps.friend;
     const id = navProps.id;
