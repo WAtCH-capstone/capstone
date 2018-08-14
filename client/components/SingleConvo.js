@@ -16,6 +16,7 @@ import SingleConvoPreferences from "./SingleConvoPreferences";
 import SideMenu from "react-native-side-menu";
 import db from "../../firestore";
 import Navbar from "./Navbar";
+import MessagePreferences from "./MessagePreferences";
 
 export default class SingleConvo extends React.Component {
   constructor() {
@@ -55,7 +56,9 @@ export default class SingleConvo extends React.Component {
     if (this.state.id.length) {
       return (
         <SideMenu menu={menu} menuPosition="right" isOpen={this.state.menuOpen}>
-          <View style={{ flex: 1, backgroundColor: "white" }}>
+          <View
+            style={{ flex: 1, backgroundColor: "white", paddingBottom: 50 }}
+          >
             <Header style={{ backgroundColor: "white", paddingTop: -20 }}>
               <Left>
                 <Image source={userImage} style={styles.image} />
@@ -75,6 +78,7 @@ export default class SingleConvo extends React.Component {
               </Right>
             </Header>
             <Messages id={this.state.id} messages={this.state.messages} />
+            {/* <MessagePreferences /> */}
           </View>
           {/* <Navbar /> */}
         </SideMenu>
