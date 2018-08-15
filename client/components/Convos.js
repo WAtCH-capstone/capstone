@@ -13,11 +13,11 @@ import {
   Item,
   Input,
   Button,
-  View
-} from "native-base";
-import db from "../../firestore";
-import firebase from "firebase";
-import Navbar from "./Navbar";
+  View,
+} from 'native-base';
+import db from '../../firestore';
+import firebase from 'firebase';
+import Navbar from './Navbar';
 
 export default class Convos extends Component {
   constructor() {
@@ -92,8 +92,8 @@ export default class Convos extends Component {
     // const sorted = convos.sort(
     //   (a, b) => a.firstMessage.createdAt - b.firstMessage.createdAt || 0
     // );
+    const navigation = this.props.navigation;
     return convos.map(convoData => {
-      const navigation = this.props.navigation;
       const id = convoData.id;
       const friend = convoData.friend;
       const firstMessage = convoData.firstMessage;
