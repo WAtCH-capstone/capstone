@@ -6,7 +6,6 @@ import {
   Settings,
   SignUp,
   SingleConvo,
-  Messages,
   Navbar,
   CreateConvo,
   EmojiPicker,
@@ -47,12 +46,6 @@ const RootNavigator = createStackNavigator({
     screen: SingleConvo,
     navigationOptions: {
       headerTitle: 'Single Conversation',
-    },
-  },
-  Messages: {
-    screen: Messages,
-    navigationOptions: {
-      headerTitle: 'Messages',
     },
   },
   Navbar: {

@@ -57,3 +57,5 @@ buck-out/
 
 firestore.js
 secrets.js
+
+functions/index.js
