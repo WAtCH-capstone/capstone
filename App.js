@@ -1,4 +1,4 @@
-import { createStackNavigator } from 'react-navigation';
+import { createStackNavigator } from "react-navigation";
 import {
   Home,
   Convos,
@@ -9,70 +9,64 @@ import {
   Messages,
   Navbar,
   CreateConvo,
-  EmojiPicker,
-} from './client/components';
+  EmojiPicker
+} from "./client/components";
 
 const RootNavigator = createStackNavigator({
   Home: {
     screen: Home,
     navigationOptions: {
-      headerTitle: 'Home',
-    },
+      headerTitle: "Home"
+    }
   },
   Convos: {
     screen: Convos,
     navigationOptions: {
-      headerTitle: 'Conversations',
-    },
+      headerTitle: "Conversations"
+    }
   },
   LogIn: {
     screen: LogIn,
     navigationOptions: {
-      headerTitle: 'Log In',
-    },
+      headerTitle: "Log In"
+    }
   },
   Settings: {
     screen: Settings,
     navigationOptions: {
-      headerTitle: 'Settings',
-    },
+      headerTitle: "Settings"
+    }
   },
   SignUp: {
     screen: SignUp,
     navigationOptions: {
-      headerTitle: 'SignUp',
-    },
+      headerTitle: "SignUp"
+    }
   },
   SingleConvo: {
     screen: SingleConvo,
     navigationOptions: {
-      headerTitle: 'Single Conversation',
-    },
-  },
-  Messages: {
-    screen: Messages,
-    navigationOptions: {
-      headerTitle: 'Messages',
-    },
+      headerTitle: "Single Conversation"
+    }
   },
   Navbar: {
     screen: Navbar,
     navigationOptions: {
-      headerTitle: 'Navbar',
-    },
+      headerTitle: "Navbar"
+    }
   },
   CreateConvo: {
     screen: CreateConvo,
     navigationOptions: {
-      headerTitle: 'CreateConvo',
-    },
+      headerTitle: "CreateConvo"
+    }
   },
   EmojiPicker: {
     screen: EmojiPicker,
     navigationOptions: {
-      headerTitle: 'EmojiPicker',
-    },
-  },
+      headerTitle: "EmojiPicker"
+    }
+  }
 });
 
 export default RootNavigator;

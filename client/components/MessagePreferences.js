@@ -1,6 +1,3 @@
-// import React from "react";
-// import { Container, Header, Content, DatePicker, Text } from "native-base";
-
 // class MessagePreferences extends React.Component {
 //   constructor(props) {
 //     super(props);
@@ -49,7 +46,7 @@
 // export default MessagePreferences;
 
 import React, { Component } from "react";
-import { Text, TouchableOpacity, View } from "react-native";
+import { DatePickerIOS, Text, TouchableOpacity, View } from "react-native";
 import { Button } from "native-base";
 import DateTimePicker from "react-native-modal-datetime-picker";
 
@@ -89,7 +86,7 @@ export default class DateTimePickerTester extends Component {
 
         <Text>{selectedDate}</Text>
 
-        <DateTimePicker
+        <DatePickerIOS
           isVisible={isDateTimePickerVisible}
           onConfirm={this._handleDatePicked}
           onCancel={this._hideDateTimePicker}
