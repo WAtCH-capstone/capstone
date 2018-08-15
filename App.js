@@ -6,7 +6,6 @@ import {
   Settings,
   SignUp,
   SingleConvo,
-  Messages,
   Navbar,
   CreateConvo,
   EmojiPicker
