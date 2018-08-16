@@ -13,6 +13,7 @@ import {
   Body,
   List,
 } from 'native-base';
+import Navbar from './Navbar';
 import db from '../../firestore';
 import firebase from 'firebase';
 
@@ -21,40 +22,83 @@ export default class Settings extends Component {
     super();
     this.state = { userDoc: {}, userRef: {} };
     this.getUserDoc = this.getUserDoc.bind(this);
-    this.deleteUser = this.deleteUser.bind(this)
+    this.logout = this.logout.bind(this);
+    // this.deleteUser = this.deleteUser.bind(this);
   }
 
   async componentDidMount() {
+    const uid = await firebase.auth().currentUser.uid;
     this.setState({
-      userDoc: await this.getUserDoc(),
+      userDoc: await this.getUserDoc(uid),
       userRef: firebase.auth().currentUser,
     });
   }
 
-  async getUserDoc() {
-    const uid = await firebase.auth().currentUser.uid;
+  async getUserDoc(id) {
     const snapshot = await db
       .collection('users')
-      .doc(uid)
+      .doc(id)
       .get();
     const userData = await snapshot.data();
     return userData;
   }
 
-  async deleteUser() {
-    // array of conversations that the user is apart of
-    // for each conversation...
-        // grab the other participant
-        // delete the conversation id from their conversations array
-    
-
-    this.state.userRef
-      .delete()
-      .then(() => this.state.userDoc.conversations.forEach((conversation) => ))
-      .then(() => alert(`Your account was deleted.`))
-      .then(() => navigation.navigate('LogIn'))
+  logout() {
+    firebase
+      .auth()
+      .signOut()
+      .then(() => alert(`You've been logged out.`))
+      .then(() => this.props.navigation.navigate('LogIn'))
       .catch(err => console.error(err));
   }
+
+  // async deleteUser() {
+  //   const convoDocs = this.state.userDoc.conversations;
+  //   let convos = {};
+  //   let convosArr = [];
+  //   for (let i = 0; i < convoDocs.length; i++) {
+  //     const convo = await db
+  //       .collection('conversations')
+  //       .doc(convoDocs[i])
+  //       .get();
+  //     convos[convo.id] = [];
+  //     convosArr.push(convo.id);
+  //   }
+  //   convosArr.forEach(async convo => {
+  //     const snapshot = await db
+  //       .collection('conversations')
+  //       .doc(convo)
+  //       .get();
+  //     const convoData = await snapshot.data();
+  //     const users = convoData.users;
+  //     users.forEach(user => convos[convo].push(user));
+  //     convos[convo].forEach(async user => {
+  //       const userDoc = await this.getUserDoc(user);
+  //       const oldConvos = userDoc.conversations;
+  //       const newConvos = oldConvos.filter(convoInArr => convoInArr !== convo);
+  //       db.collection('users')
+  //         .doc(user)
+  //         .set({ conversations: newConvos })
+  //         .then(() =>
+  //           console.log(
+  //             `User ${userDoc.id} no longer is part of convo ${convo}`
+  //           )
+  //         )
+  //         .catch(err => console.error(err));
+  //     });
+  //     db.collection('conversations')
+  //       .doc(convo)
+  //       .delete()
+  //       .then(() => console.log(`Convo ${convo} was deleted`))
+  //       .catch(err => console.error(err));
+  //   });
+  //   this.state.userRef
+  //     .delete()
+  //     .then(() => console.log(`User ${this.state.userRef.id} was deleted`))
+  //     .then(() => alert(`Your account was deleted.`))
+  //     .then(() => this.props.navigation.navigate('LogIn'))
+  //     .catch(err => console.error(err));
+  // }
 
   render() {
     const userDoc = this.state.userDoc;
@@ -126,28 +170,19 @@ export default class Settings extends Component {
                 <Text>Change password</Text>
               </TouchableOpacity>
             </ListItem>
-            <ListItem>
-              <TouchableOpacity
-                onPress={() => {
-                  firebase
-                    .auth()
-                    .signOut()
-                    .then(() => alert(`You've been logged out.`))
-                    .catch(err => console.error(err));
-                }}
-              >
+            <ListItem last>
+              <TouchableOpacity onPress={() => this.logout()}>
                 <Text>Logout</Text>
               </TouchableOpacity>
             </ListItem>
-            <ListItem last>
-              <TouchableOpacity
-                onPress={() => this.deleteUser()}
-              >
+            {/* <ListItem last>
+              <TouchableOpacity onPress={() => this.deleteUser()}>
                 <Text>Delete account</Text>
               </TouchableOpacity>
-            </ListItem>
+            </ListItem> */}
           </List>
         </Content>
+        <Navbar navigation={this.props.navigation} />
       </Container>
     );
   }
