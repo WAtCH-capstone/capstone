@@ -12,7 +12,6 @@ import { Button } from 'native-base';
 import DateTimePicker from 'react-native-modal-datetime-picker';
 import { GoogleAutoComplete } from 'react-native-google-autocomplete';
 import key from '../../googleMaps';
-const UserContext = React.createContext();
 
 export default class MessagePreferences extends Component {
   constructor() {
@@ -21,16 +20,21 @@ export default class MessagePreferences extends Component {
       isDateTimePickerVisible: false,
       selectedDate: '',
       locationDetails: '',
+      textInput: '',
+      showResults: true,
+      triggers: {
+        date: '',
+      },
     };
+    this.setTrigger = this.setTrigger.bind(this);
+  }
+  setTrigger(date) {
+    this.setState({ triggers: { date } });
   }
 
   _showDateTimePicker = () => this.setState({ isDateTimePickerVisible: true });
 
   _hideDateTimePicker = () => this.setState({ isDateTimePickerVisible: false });
-
-  // _showMapLookup = () => this.setState({ isMapLookupVisible: true });
-
-  // _hideMapLookup = () => this.setState({ isMapLookupVisible: false });
 
   _handleDatePicked = date => {
     this.props.setTrigger(date.toString());
@@ -40,7 +44,11 @@ export default class MessagePreferences extends Component {
 
   _handlePress = async (el, fetchDetails) => {
     const res = await fetchDetails(el.place_id);
-    this.setState({ locationDetails: res });
+    this.setState({
+      locationDetails: res,
+      textInput: el.description,
+      showResults: false,
+    });
     console.log(this.state.locationDetails);
   };
 
@@ -69,12 +77,7 @@ export default class MessagePreferences extends Component {
           />
         </View>
         <View style={styles.container}>
-          <Button style={styles.blueButton} full rounded primary>
-            <View>
-              <Text style={{ color: 'white' }}>Pick a Location</Text>
-            </View>
-          </Button>
-          <GoogleAutoComplete apiKey={key} debounce={500} minLength={3}>
+          <GoogleAutoComplete apiKey={key} debounce={500} minLength={0}>
             {({
               handleTextChange,
               locationResults,
@@ -85,8 +88,9 @@ export default class MessagePreferences extends Component {
                 <View style={styles.inputWrapper}>
                   <TextInput
                     style={styles.mapTextInput}
-                    placeholder="Search"
+                    placeholder="Enter a Location..."
                     onChangeText={handleTextChange}
+                    value={this.state.textInput}
                   />
                 </View>
                 {isSearching && <ActivityIndicator />}
@@ -104,6 +108,12 @@ export default class MessagePreferences extends Component {
               </React.Fragment>
             )}
           </GoogleAutoComplete>
+          <Text>{this.state.textInput}</Text>
+          <Button style={styles.blueButton} full rounded primary>
+            <View>
+              <Text style={{ color: 'white' }}>Schedule Message</Text>
+            </View>
+          </Button>
         </View>
       </View>
     );

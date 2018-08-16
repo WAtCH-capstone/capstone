@@ -17,14 +17,14 @@ export default class SingleConvo extends React.Component {
       messages: [],
       friend: {},
       menuOpen: false,
-      triggers: {
-        date: '',
-      },
+      // triggers: {
+      //   date: '',
+      // },
     };
     this.user = firebase.auth().currentUser;
     this.onSend = this.onSend.bind(this);
     this.listen = this.listen.bind(this);
-    this.setTrigger = this.setTrigger.bind(this);
+    // this.setTrigger = this.setTrigger.bind(this);
   }
 
   getRef(id) {
@@ -51,9 +51,9 @@ export default class SingleConvo extends React.Component {
       });
   }
 
-  setTrigger(date) {
-    this.setState({ triggers: { date } });
-  }
+  // setTrigger(date) {
+  //   this.setState({ triggers: { date } });
+  // }
 
   componentDidMount() {
     this.listen();
@@ -132,7 +132,22 @@ export default class SingleConvo extends React.Component {
               }}
             />
           </View>
-          <MessagePreferences setTrigger={this.setTrigger} />
+          {/* <MessagePreferences setTrigger={this.setTrigger} /> */}
+          <View style={styles.scheduleButton}>
+            <Button
+              style={styles.blueButton}
+              full
+              rounded
+              primary
+              onPress={() =>
+                this.props.navigation.navigate('MessagePreferences')
+              }
+            >
+              <View>
+                <Text style={{ color: 'white' }}>Schedule this Message</Text>
+              </View>
+            </Button>
+          </View>
         </SideMenu>
       );
     } else {
@@ -149,5 +164,14 @@ const styles = StyleSheet.create({
   image: {
     width: 50,
     height: 50,
+  },
+  blueButton: {
+    marginTop: 5,
+  },
+  scheduleButton: {
+    backgroundColor: 'white',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingBottom: 50,
   },
 });
