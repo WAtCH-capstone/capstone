@@ -59,15 +59,26 @@ export default class SingleConvo extends React.Component {
   }
 
   onSend(messages = []) {
-    const createdAt = new Date().getTime();
-    const newMessage = {
-      _id: createdAt,
-      text: messages[0].text,
-      createdAt,
-      user: { _id: this.user.uid },
-    };
-    this.state.ref.collection('messages').add(newMessage);
-    this.state.ref.set({ firstMessage: newMessage }, { merge: true });
+    if (this.state.triggers.date.length) {
+      const date = new Date(2018, 7, 16, 11, 50, 0);
+      schedule.scheduleJob(date, () =>
+        db
+          .collection('conversations')
+          .doc('856OQe9Vin9Br9fXoo9q')
+          .collection('messages')
+          .add({ text: 'test trigger' })
+      );
+    } else {
+      const createdAt = new Date().getTime();
+      const newMessage = {
+        _id: createdAt,
+        text: messages[0].text,
+        createdAt,
+        user: { _id: this.user.uid },
+      };
+      this.state.ref.collection('messages').add(newMessage);
+      this.state.ref.set({ firstMessage: newMessage }, { merge: true });
+    }
   }
 
   render() {
