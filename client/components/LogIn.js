@@ -60,12 +60,12 @@ export default class LogIn extends React.Component {
               }}
             />
           </Item>
-          {!this.state.email.includes('@' && '.') &&
+          {/* {!this.state.email.includes('@' && '.') &&
           this.state.email.length > 0 ? (
             <Text style={{ color: 'red' }}>
               Please enter a valid e-mail address
             </Text>
-          ) : null}
+          ) : null} */}
           <Item floatingLabel>
             <Label>Password</Label>
             <Input

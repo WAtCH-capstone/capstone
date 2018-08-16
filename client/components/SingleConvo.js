@@ -120,16 +120,20 @@ export default class SingleConvo extends React.Component {
                     this.setState({ menuOpen: true });
                   }}
                 >
-                  <Text>Preferences</Text>
+                  <Image
+                    source={{
+                      uri:
+                        'https://img.freepik.com/free-icon/information-symbol_318-123095.jpg?size=338&ext=jpg',
+                    }}
+                    style={styles.smallImage}
+                  />
                 </Button>
               </Right>
             </Header>
             <GiftedChat
               messages={this.state.messages}
               onSend={this.onSend}
-              user={{
-                _id: this.user.uid,
-              }}
+              user={{ _id: this.user.uid }}
             />
           </View>
           {/* <MessagePreferences setTrigger={this.setTrigger} /> */}
@@ -173,5 +177,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingBottom: 50,
+  smallImage: {
+    width: 30,
+    height: 30,
   },
 });

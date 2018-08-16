@@ -13,43 +13,95 @@ import {
   Body,
   List,
 } from 'native-base';
+import Navbar from './Navbar';
 import db from '../../firestore';
 import firebase from 'firebase';
 
 export default class Settings extends Component {
   constructor() {
     super();
-    this.state = {
-      user: {},
-    };
-    this.getUser = this.getUser.bind(this);
-    this.changeEmail = this.changeEmail.bind(this);
-    this.changePassword = this.changePassword.bind(this);
+    this.state = { userDoc: {}, userRef: {} };
+    this.getUserDoc = this.getUserDoc.bind(this);
     this.logout = this.logout.bind(this);
+    // this.deleteUser = this.deleteUser.bind(this);
   }
 
   async componentDidMount() {
-    this.setState({ user: await this.getUser() });
+    const uid = await firebase.auth().currentUser.uid;
+    this.setState({
+      userDoc: await this.getUserDoc(uid),
+      userRef: firebase.auth().currentUser,
+    });
   }
 
-  async getUser() {
-    const uid = await firebase.auth().currentUser.uid;
+  async getUserDoc(id) {
     const snapshot = await db
       .collection('users')
-      .doc(uid)
+      .doc(id)
       .get();
     const userData = await snapshot.data();
     return userData;
   }
 
-  changeEmail() {}
+  logout() {
+    firebase
+      .auth()
+      .signOut()
+      .then(() => alert(`You've been logged out.`))
+      .then(() => this.props.navigation.navigate('LogIn'))
+      .catch(err => console.error(err));
+  }
 
-  changePassword() {}
-
-  logout() {}
+  // async deleteUser() {
+  //   const convoDocs = this.state.userDoc.conversations;
+  //   let convos = {};
+  //   let convosArr = [];
+  //   for (let i = 0; i < convoDocs.length; i++) {
+  //     const convo = await db
+  //       .collection('conversations')
+  //       .doc(convoDocs[i])
+  //       .get();
+  //     convos[convo.id] = [];
+  //     convosArr.push(convo.id);
+  //   }
+  //   convosArr.forEach(async convo => {
+  //     const snapshot = await db
+  //       .collection('conversations')
+  //       .doc(convo)
+  //       .get();
+  //     const convoData = await snapshot.data();
+  //     const users = convoData.users;
+  //     users.forEach(user => convos[convo].push(user));
+  //     convos[convo].forEach(async user => {
+  //       const userDoc = await this.getUserDoc(user);
+  //       const oldConvos = userDoc.conversations;
+  //       const newConvos = oldConvos.filter(convoInArr => convoInArr !== convo);
+  //       db.collection('users')
+  //         .doc(user)
+  //         .set({ conversations: newConvos })
+  //         .then(() =>
+  //           console.log(
+  //             `User ${userDoc.id} no longer is part of convo ${convo}`
+  //           )
+  //         )
+  //         .catch(err => console.error(err));
+  //     });
+  //     db.collection('conversations')
+  //       .doc(convo)
+  //       .delete()
+  //       .then(() => console.log(`Convo ${convo} was deleted`))
+  //       .catch(err => console.error(err));
+  //   });
+  //   this.state.userRef
+  //     .delete()
+  //     .then(() => console.log(`User ${this.state.userRef.id} was deleted`))
+  //     .then(() => alert(`Your account was deleted.`))
+  //     .then(() => this.props.navigation.navigate('LogIn'))
+  //     .catch(err => console.error(err));
+  // }
 
   render() {
-    const user = this.state.user;
+    const userDoc = this.state.userDoc;
     const navigation = this.props.navigation;
     return (
       <Container>
@@ -60,11 +112,11 @@ export default class Settings extends Component {
           <Card>
             <CardItem>
               <Left>
-                <Thumbnail source={{ uri: user.icon }} />
+                <Thumbnail source={{ uri: userDoc.icon }} />
                 <Body>
-                  <Text>{user.displayName}</Text>
-                  <Text note>{user.userName}</Text>
-                  <Text note>{user.email}</Text>
+                  <Text>{userDoc.displayName}</Text>
+                  <Text note>{userDoc.userName}</Text>
+                  <Text note>{userDoc.email}</Text>
                 </Body>
               </Left>
             </CardItem>
@@ -73,15 +125,6 @@ export default class Settings extends Component {
             <Text>Options</Text>
           </Separator>
           <List>
-            <ListItem>
-              <TouchableOpacity
-                onPress={() => {
-                  navigation.navigate('EmojiPicker');
-                }}
-              >
-                <Text>Choose new icon</Text>
-              </TouchableOpacity>
-            </ListItem>
             <ListItem>
               <TouchableOpacity
                 onPress={() => {
@@ -103,7 +146,16 @@ export default class Settings extends Component {
             <ListItem>
               <TouchableOpacity
                 onPress={() => {
-                  this.changeEmail();
+                  navigation.navigate('EmojiPicker');
+                }}
+              >
+                <Text>Change icon</Text>
+              </TouchableOpacity>
+            </ListItem>
+            <ListItem>
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate('EditEmail');
                 }}
               >
                 <Text>Change email</Text>
@@ -112,23 +164,25 @@ export default class Settings extends Component {
             <ListItem>
               <TouchableOpacity
                 onPress={() => {
-                  this.changePassword();
+                  navigation.navigate('EditPassword');
                 }}
               >
                 <Text>Change password</Text>
               </TouchableOpacity>
             </ListItem>
             <ListItem last>
-              <TouchableOpacity
-                onPress={() => {
-                  this.logout();
-                }}
-              >
+              <TouchableOpacity onPress={() => this.logout()}>
                 <Text>Logout</Text>
               </TouchableOpacity>
             </ListItem>
+            {/* <ListItem last>
+              <TouchableOpacity onPress={() => this.deleteUser()}>
+                <Text>Delete account</Text>
+              </TouchableOpacity>
+            </ListItem> */}
           </List>
         </Content>
+        <Navbar navigation={this.props.navigation} />
       </Container>
     );
   }
