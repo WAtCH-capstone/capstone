@@ -54,7 +54,6 @@ export default class EditEmail extends Component {
               rounded
               primary
               onPress={() => {
-                console.log('email', this.state.email);
                 currUserRef
                   .update({ email: this.state.email })
                   .then(() => currUser.updateEmail(this.state.email))

@@ -21,6 +21,7 @@ export default class Settings extends Component {
     super();
     this.state = { userDoc: {}, userRef: {} };
     this.getUserDoc = this.getUserDoc.bind(this);
+    this.deleteUser = this.deleteUser.bind(this)
   }
 
   async componentDidMount() {
@@ -38,6 +39,21 @@ export default class Settings extends Component {
       .get();
     const userData = await snapshot.data();
     return userData;
+  }
+
+  async deleteUser() {
+    // array of conversations that the user is apart of
+    // for each conversation...
+        // grab the other participant
+        // delete the conversation id from their conversations array
+    
+
+    this.state.userRef
+      .delete()
+      .then(() => this.state.userDoc.conversations.forEach((conversation) => ))
+      .then(() => alert(`Your account was deleted.`))
+      .then(() => navigation.navigate('LogIn'))
+      .catch(err => console.error(err));
   }
 
   render() {
@@ -125,13 +141,7 @@ export default class Settings extends Component {
             </ListItem>
             <ListItem last>
               <TouchableOpacity
-                onPress={() => {
-                  this.state.userRef
-                    .delete()
-                    .then(() => alert(`Your account was deleted.`))
-                    .then(() => navigation.navigate('LogIn'))
-                    .catch(err => console.error(err));
-                }}
+                onPress={() => this.deleteUser()}
               >
                 <Text>Delete account</Text>
               </TouchableOpacity>
