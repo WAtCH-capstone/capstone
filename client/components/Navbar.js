@@ -27,7 +27,7 @@ export default class Navbar extends Component {
                 style={{ width: 50, height: 50 }}
               />
             </Button>
-            <Button
+            {/* <Button
               onPress={() => {
                 navigation.navigate('LogIn');
               }}
@@ -38,7 +38,7 @@ export default class Navbar extends Component {
                 }}
                 style={{ width: 50, height: 50 }}
               />
-            </Button>
+            </Button> */}
             <Button
               onPress={() => {
                 navigation.navigate('Settings');
