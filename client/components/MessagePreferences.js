@@ -12,7 +12,6 @@ import { Button } from 'native-base';
 import DateTimePicker from 'react-native-modal-datetime-picker';
 import { GoogleAutoComplete } from 'react-native-google-autocomplete';
 import key from '../../googleMaps';
-import LocationItem from './LocationItem';
 const UserContext = React.createContext();
 
 export default class MessagePreferences extends Component {
@@ -29,9 +28,9 @@ export default class MessagePreferences extends Component {
 
   _hideDateTimePicker = () => this.setState({ isDateTimePickerVisible: false });
 
-  _showMapLookup = () => this.setState({ isMapLookupVisible: true });
+  // _showMapLookup = () => this.setState({ isMapLookupVisible: true });
 
-  _hideMapLookup = () => this.setState({ isMapLookupVisible: false });
+  // _hideMapLookup = () => this.setState({ isMapLookupVisible: false });
 
   _handleDatePicked = date => {
     this.props.setTrigger(date.toString());
@@ -70,17 +69,17 @@ export default class MessagePreferences extends Component {
           />
         </View>
         <View style={styles.container}>
-          {/* <Button
+          <Button
             style={styles.blueButton}
             full
             rounded
             primary
-            onPress={this._handleMapPress}
+            // onPress={this._handleMapPress}
           >
             <View>
               <Text style={{ color: 'white' }}>Pick a Location</Text>
             </View>
-          </Button> */}
+          </Button>
           <GoogleAutoComplete apiKey={key} debounce={500} minLength={3}>
             {({
               handleTextChange,
