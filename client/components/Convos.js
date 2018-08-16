@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
 import {
   Container,
   Content,
@@ -13,27 +13,27 @@ import {
   Item,
   Input,
   Button,
-  View
-} from "native-base";
-import db from "../../firestore";
-import firebase from "firebase";
-import Navbar from "./Navbar";
+  View,
+} from 'native-base';
+import db from '../../firestore';
+import firebase from 'firebase';
+import Navbar from './Navbar';
 
 export default class Convos extends Component {
   constructor() {
     super();
     this.state = {
       convos: [],
-      search: ""
+      search: '',
     };
     this.user = firebase.auth().currentUser;
     this.enterSearch = this.enterSearch.bind(this);
   }
 
   enterSearch(search) {
-    console.log("search: ", search);
+    console.log('search: ', search);
     console.log(
-      "this would filter the messages and only return ones relevant to the search"
+      'this would filter the messages and only return ones relevant to the search'
     );
   }
 
@@ -41,7 +41,7 @@ export default class Convos extends Component {
     // this.getUserName();
     const uid = await firebase.auth().currentUser.uid;
     const snapshot = await db
-      .collection("users")
+      .collection('users')
       .doc(uid)
       .get();
     const userData = await snapshot.data();
@@ -57,14 +57,14 @@ export default class Convos extends Component {
 
   async getData(id) {
     const convo = await db
-      .collection("conversations")
+      .collection('conversations')
       .doc(id)
       .get();
     const data = convo.data();
     const firstMessage = data.firstMessage;
     const friendID = data.users.find(uid => uid !== this.user.uid);
     const friendQuery = await db
-      .collection("users")
+      .collection('users')
       .doc(friendID)
       .get();
     const friend = friendQuery.data();
@@ -102,9 +102,9 @@ export default class Convos extends Component {
           key={id}
           avatar
           onPress={() =>
-            navigation.navigate("SingleConvo", {
+            navigation.navigate('SingleConvo', {
               id,
-              friend
+              friend,
             })
           }
         >
@@ -142,7 +142,7 @@ export default class Convos extends Component {
           </Button>
           <Button
             transparent
-            onPress={() => navigation.navigate("CreateConvo")}
+            onPress={() => navigation.navigate('CreateConvo')}
           >
             <Text>+</Text>
           </Button>

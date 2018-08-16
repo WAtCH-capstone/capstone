@@ -1,14 +1,14 @@
-import React from "react";
-import { Image } from "react-native";
-import { Container, Form, Input, Item, Button, Label, Text } from "native-base";
-const firebase = require("firebase");
+import React from 'react';
+import { Image } from 'react-native';
+import { Container, Form, Input, Item, Button, Label, Text } from 'native-base';
+const firebase = require('firebase');
 
 export default class LogIn extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      email: "",
-      password: ""
+      email: '',
+      password: '',
     };
     this.loginUser = this.loginUser.bind(this);
   }
@@ -18,13 +18,13 @@ export default class LogIn extends React.Component {
       firebase
         .auth()
         .signInWithEmailAndPassword(email, password)
-        .then(() => this.props.navigation.navigate("Convos"));
+        .then(() => this.props.navigation.navigate('Convos'));
     } catch (error) {
       console.log(error.toString());
       const errorCode = error.code;
       const errorMessage = error.message;
-      if (errorCode === "auth/wrong-password") {
-        alert("Wrong Password");
+      if (errorCode === 'auth/wrong-password') {
+        alert('Wrong Password');
       } else {
         alert(errorMessage);
       }
@@ -39,13 +39,13 @@ export default class LogIn extends React.Component {
         <Image
           source={{
             uri:
-              "https://lh3.googleusercontent.com/vgv0EDmcYrsy-o7ZjRzKPbJzW2fC7uqSKsnMhrGcTaMImLIKM-1ePl0Gy-n-8SFmCYJKWUf-wu4ChBkJAQ"
+              'https://lh3.googleusercontent.com/vgv0EDmcYrsy-o7ZjRzKPbJzW2fC7uqSKsnMhrGcTaMImLIKM-1ePl0Gy-n-8SFmCYJKWUf-wu4ChBkJAQ',
           }}
           style={{
-            width: "100%",
-            height: "50%",
-            justifyContent: "center",
-            alignItems: "center"
+            width: '100%',
+            height: '50%',
+            justifyContent: 'center',
+            alignItems: 'center',
           }}
         />
         <Form>
@@ -60,9 +60,9 @@ export default class LogIn extends React.Component {
               }}
             />
           </Item>
-          {!this.state.email.includes("@" && ".") &&
+          {!this.state.email.includes('@' && '.') &&
           this.state.email.length > 0 ? (
-            <Text style={{ color: "red" }}>
+            <Text style={{ color: 'red' }}>
               Please enter a valid e-mail address
             </Text>
           ) : null}
@@ -87,7 +87,7 @@ export default class LogIn extends React.Component {
               this.loginUser(this.state.email, this.state.password);
             }}
           >
-            <Text style={{ color: "white" }}>Log in</Text>
+            <Text style={{ color: 'white' }}>Log in</Text>
           </Button>
           <Button
             style={{ marginTop: 10 }}
@@ -95,13 +95,13 @@ export default class LogIn extends React.Component {
             rounded
             success
             onPress={() => {
-              navigation.navigate("SignUp");
+              navigation.navigate('SignUp');
             }}
           >
-            <Text style={{ color: "white" }}>Sign up</Text>
+            <Text style={{ color: 'white' }}>Sign up</Text>
           </Button>
           <Button
-            onPress={() => this.props.navigation.navigate("SignUp")}
+            onPress={() => this.props.navigation.navigate('SignUp')}
             title="Sign up"
           />
         </Form>

@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
 import {
   Container,
   Content,
@@ -9,14 +9,14 @@ import {
   Picker,
   Right,
   Left,
-  Button
-} from "native-base";
-import { TouchableOpacity } from "react-native";
+  Button,
+} from 'native-base';
+import { TouchableOpacity } from 'react-native';
 
 export default class SingleConvoPreferences extends Component {
   constructor(props) {
     super(props);
-    this.state = { selected: "key1" };
+    this.state = { selected: 'key1' };
   }
   onValueChange() {
     this.setState({ selected: value });
@@ -54,9 +54,9 @@ export default class SingleConvoPreferences extends Component {
             full
             rounded
             primary
-            onPress={() => console.log("preferences have been saved")}
+            onPress={() => console.log('preferences have been saved')}
           >
-            <Text style={{ color: "white" }}>Save preferences</Text>
+            <Text style={{ color: 'white' }}>Save preferences</Text>
           </Button>
         </Content>
       </Container>

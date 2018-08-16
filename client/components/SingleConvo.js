@@ -1,21 +1,21 @@
-import React from "react";
-import { View, StyleSheet, Image } from "react-native";
-import { Header, Left, Body, Right, Button, Title, Text } from "native-base";
-import SingleConvoPreferences from "./SingleConvoPreferences";
-import SideMenu from "react-native-side-menu";
-import db from "../../firestore";
-import { GiftedChat } from "react-native-gifted-chat";
-import firebase from "firebase";
-import MessagePreferences from "./MessagePreferences";
+import React from 'react';
+import { View, StyleSheet, Image } from 'react-native';
+import { Header, Left, Body, Right, Button, Title, Text } from 'native-base';
+import SingleConvoPreferences from './SingleConvoPreferences';
+import SideMenu from 'react-native-side-menu';
+import db from '../../firestore';
+import { GiftedChat } from 'react-native-gifted-chat';
+import firebase from 'firebase';
+import MessagePreferences from './MessagePreferences';
 
 export default class SingleConvo extends React.Component {
   constructor() {
     super();
     this.state = {
-      id: "",
+      id: '',
       messages: [],
       friend: {},
-      menuOpen: false
+      menuOpen: false,
     };
     this.user = firebase.auth().currentUser;
     this.onSend = this.onSend.bind(this);
@@ -23,15 +23,15 @@ export default class SingleConvo extends React.Component {
   }
 
   getRef(id) {
-    return db.collection("conversations").doc(id);
+    return db.collection('conversations').doc(id);
   }
 
   listen() {
     this.unsubscribe = db
-      .collection("conversations")
+      .collection('conversations')
       .doc(this.props.navigation.state.params.id)
-      .collection("messages")
-      .orderBy("createdAt", "desc")
+      .collection('messages')
+      .orderBy('createdAt', 'desc')
       .limit(20)
       .onSnapshot(snap => {
         let messages;
@@ -41,7 +41,7 @@ export default class SingleConvo extends React.Component {
           messages = snap.docs[0].data();
         }
         this.setState(prevState => ({
-          messages: GiftedChat.append(prevState.messages, messages)
+          messages: GiftedChat.append(prevState.messages, messages),
         }));
       });
   }
@@ -50,7 +50,7 @@ export default class SingleConvo extends React.Component {
     this.listen();
     this.setState({
       friend: this.props.navigation.state.params.friend,
-      id: this.props.navigation.state.params.id
+      id: this.props.navigation.state.params.id,
     });
   }
 
@@ -64,9 +64,9 @@ export default class SingleConvo extends React.Component {
       _id: createdAt,
       text: messages[0].text,
       createdAt,
-      user: { _id: this.user.uid }
+      user: { _id: this.user.uid },
     };
-    this.state.ref.collection("messages").add(newMessage);
+    this.state.ref.collection('messages').add(newMessage);
     this.state.ref.set({ firstMessage: newMessage }, { merge: true });
   }
 
@@ -76,9 +76,9 @@ export default class SingleConvo extends React.Component {
       return (
         <SideMenu menu={menu} menuPosition="right" isOpen={this.state.menuOpen}>
           <View
-            style={{ flex: 1, backgroundColor: "white", paddingBottom: 50 }}
+            style={{ flex: 1, backgroundColor: 'white', paddingBottom: 50 }}
           >
-            <Header style={{ backgroundColor: "white", paddingTop: -20 }}>
+            <Header style={{ backgroundColor: 'white', paddingTop: -20 }}>
               <Left>
                 <Image
                   source={{ uri: this.state.friend.icon }}
@@ -103,7 +103,7 @@ export default class SingleConvo extends React.Component {
               messages={this.state.messages}
               onSend={this.onSend}
               user={{
-                _id: this.user.uid
+                _id: this.user.uid,
               }}
             />
           </View>
@@ -119,10 +119,10 @@ export default class SingleConvo extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "white"
+    backgroundColor: 'white',
   },
   image: {
     width: 50,
-    height: 50
-  }
+    height: 50,
+  },
 });

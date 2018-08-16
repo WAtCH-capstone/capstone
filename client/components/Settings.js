@@ -1,5 +1,5 @@
-import React, { Component } from "react";
-import { TouchableOpacity } from "react-native";
+import React, { Component } from 'react';
+import { TouchableOpacity } from 'react-native';
 import {
   Container,
   Content,
@@ -11,16 +11,15 @@ import {
   Thumbnail,
   Left,
   Body,
-  List
-} from "native-base";
-import db from "../../firestore";
-import firebase from "firebase";
+  List,
+} from 'native-base';
+import db from '../../firestore';
+import firebase from 'firebase';
 
 export default class Settings extends Component {
   constructor() {
     super();
     this.getUser = this.getUser.bind(this);
-    this.editProfile = this.editProfile.bind(this);
     this.changePassword = this.changePassword.bind(this);
     this.logout = this.logout.bind(this);
   }
@@ -28,17 +27,11 @@ export default class Settings extends Component {
   async getUser() {
     const uid = await firebase.auth().currentUser.uid;
     const snapshot = await db
-      .collection("users")
+      .collection('users')
       .doc(uid)
       .get();
     const userData = await snapshot.data();
     return userData;
-  }
-
-  editProfile() {
-    // this.state.currUserRef.update({
-    //   conversations: firebase.firestore.FieldValue.arrayUnion(docRef.id),
-    // });
   }
 
   changePassword() {}
@@ -60,7 +53,7 @@ export default class Settings extends Component {
                 <Thumbnail
                   source={{
                     uri:
-                      "https://lh3.googleusercontent.com/vgv0EDmcYrsy-o7ZjRzKPbJzW2fC7uqSKsnMhrGcTaMImLIKM-1ePl0Gy-n-8SFmCYJKWUf-wu4ChBkJAQ"
+                      'https://lh3.googleusercontent.com/vgv0EDmcYrsy-o7ZjRzKPbJzW2fC7uqSKsnMhrGcTaMImLIKM-1ePl0Gy-n-8SFmCYJKWUf-wu4ChBkJAQ',
                   }}
                 />
                 <Body>
@@ -82,7 +75,7 @@ export default class Settings extends Component {
             <ListItem>
               <TouchableOpacity
                 onPress={() => {
-                  this.editProfile();
+                  navigation.navigate('EditProfile');
                 }}
               >
                 <Text>Edit your profile</Text>
