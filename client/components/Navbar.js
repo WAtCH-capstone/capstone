@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Image } from 'react-native';
 import { Footer, FooterTab, Button, View } from 'native-base';
-import styles from './styles';
+import styles from './Styles';
 
 export default class Navbar extends Component {
   constructor() {

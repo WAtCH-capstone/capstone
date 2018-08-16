@@ -23,6 +23,7 @@ export default class Settings extends Component {
       user: {},
     };
     this.getUser = this.getUser.bind(this);
+    this.changeEmail = this.changeEmail.bind(this);
     this.changePassword = this.changePassword.bind(this);
     this.logout = this.logout.bind(this);
   }
@@ -41,11 +42,14 @@ export default class Settings extends Component {
     return userData;
   }
 
+  changeEmail() {}
+
   changePassword() {}
 
   logout() {}
 
   render() {
+    const user = this.state.user;
     const navigation = this.props.navigation;
     return (
       <Container>
@@ -56,11 +60,11 @@ export default class Settings extends Component {
           <Card>
             <CardItem>
               <Left>
-                <Thumbnail source={{ uri: this.state.user.icon }} />
+                <Thumbnail source={{ uri: user.icon }} />
                 <Body>
-                  <Text>{this.state.user.displayName}</Text>
-                  <Text note>{this.state.user.userName}</Text>
-                  <Text note>{this.state.user.email}</Text>
+                  <Text>{user.displayName}</Text>
+                  <Text note>{user.userName}</Text>
+                  <Text note>{user.email}</Text>
                 </Body>
               </Left>
             </CardItem>
@@ -72,10 +76,37 @@ export default class Settings extends Component {
             <ListItem>
               <TouchableOpacity
                 onPress={() => {
-                  navigation.navigate('EditProfile');
+                  navigation.navigate('EmojiPicker');
                 }}
               >
-                <Text>Edit profile</Text>
+                <Text>Choose new icon</Text>
+              </TouchableOpacity>
+            </ListItem>
+            <ListItem>
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate('EditDisplayName');
+                }}
+              >
+                <Text>Edit display name</Text>
+              </TouchableOpacity>
+            </ListItem>
+            <ListItem>
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate('EditUserName');
+                }}
+              >
+                <Text>Edit username</Text>
+              </TouchableOpacity>
+            </ListItem>
+            <ListItem>
+              <TouchableOpacity
+                onPress={() => {
+                  this.changeEmail();
+                }}
+              >
+                <Text>Change email</Text>
               </TouchableOpacity>
             </ListItem>
             <ListItem>

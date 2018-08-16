@@ -1,4 +1,4 @@
-import { createStackNavigator } from "react-navigation";
+import { createStackNavigator } from 'react-navigation';
 import {
   Home,
   Convos,
@@ -9,57 +9,58 @@ import {
   Navbar,
   CreateConvo,
   EmojiPicker,
-  EditProfile,
+  EditDisplayName,
+  EditUserName,
 } from './client/components';
 
 const RootNavigator = createStackNavigator({
   Home: {
     screen: Home,
     navigationOptions: {
-      headerTitle: "Home"
-    }
+      headerTitle: 'Home',
+    },
   },
   Convos: {
     screen: Convos,
     navigationOptions: {
-      headerTitle: "Conversations"
-    }
+      headerTitle: 'Conversations',
+    },
   },
   LogIn: {
     screen: LogIn,
     navigationOptions: {
-      headerTitle: "Log In"
-    }
+      headerTitle: 'Log In',
+    },
   },
   Settings: {
     screen: Settings,
     navigationOptions: {
-      headerTitle: "Settings"
-    }
+      headerTitle: 'Settings',
+    },
   },
   SignUp: {
     screen: SignUp,
     navigationOptions: {
-      headerTitle: "SignUp"
-    }
+      headerTitle: 'SignUp',
+    },
   },
   SingleConvo: {
     screen: SingleConvo,
     navigationOptions: {
-      headerTitle: "Single Conversation"
-    }
+      headerTitle: 'Single Conversation',
+    },
   },
   Navbar: {
     screen: Navbar,
     navigationOptions: {
-      headerTitle: "Navbar"
-    }
+      headerTitle: 'Navbar',
+    },
   },
   CreateConvo: {
     screen: CreateConvo,
     navigationOptions: {
-      headerTitle: "CreateConvo"
-    }
+      headerTitle: 'CreateConvo',
+    },
   },
   EmojiPicker: {
     screen: EmojiPicker,
@@ -67,10 +68,16 @@ const RootNavigator = createStackNavigator({
       headerTitle: 'EmojiPicker',
     },
   },
-  EditProfile: {
-    screen: EditProfile,
+  EditDisplayName: {
+    screen: EditDisplayName,
     navigationOptions: {
-      headerTitle: 'EditProfile',
+      headerTitle: 'EditDisplayName',
+    },
+  },
+  EditUserName: {
+    screen: EditUserName,
+    navigationOptions: {
+      headerTitle: 'EditUserName',
     },
   },
 });

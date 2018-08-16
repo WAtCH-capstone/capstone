@@ -7,4 +7,5 @@ export { default as SingleConvo } from './SingleConvo';
 export { default as Navbar } from './Navbar';
 export { default as CreateConvo } from './CreateConvo';
 export { default as EmojiPicker } from './EmojiPicker';
-export { default as EditProfile } from './EditProfile';
+export { default as EditDisplayName } from './EditDisplayName';
+export { default as EditUserName } from './EditUserName';
