@@ -19,9 +19,16 @@ import firebase from 'firebase';
 export default class Settings extends Component {
   constructor() {
     super();
+    this.state = {
+      user: {},
+    };
     this.getUser = this.getUser.bind(this);
     this.changePassword = this.changePassword.bind(this);
     this.logout = this.logout.bind(this);
+  }
+
+  async componentDidMount() {
+    this.setState({ user: await this.getUser() });
   }
 
   async getUser() {
@@ -40,7 +47,6 @@ export default class Settings extends Component {
 
   render() {
     const navigation = this.props.navigation;
-    const userData = this.getUser();
     return (
       <Container>
         <Content>
@@ -50,20 +56,11 @@ export default class Settings extends Component {
           <Card>
             <CardItem>
               <Left>
-                <Thumbnail
-                  source={{
-                    uri:
-                      'https://lh3.googleusercontent.com/vgv0EDmcYrsy-o7ZjRzKPbJzW2fC7uqSKsnMhrGcTaMImLIKM-1ePl0Gy-n-8SFmCYJKWUf-wu4ChBkJAQ',
-                  }}
-                />
+                <Thumbnail source={{ uri: this.state.user.icon }} />
                 <Body>
-                  <Text>
-                    {userData.displayName ? userData.displayName : null}
-                  </Text>
-                  <Text note>
-                    {userData.username ? userData.username : null}
-                  </Text>
-                  <Text note>{userData.email ? userData.email : null}</Text>
+                  <Text>{this.state.user.displayName}</Text>
+                  <Text note>{this.state.user.userName}</Text>
+                  <Text note>{this.state.user.email}</Text>
                 </Body>
               </Left>
             </CardItem>
@@ -78,7 +75,7 @@ export default class Settings extends Component {
                   navigation.navigate('EditProfile');
                 }}
               >
-                <Text>Edit your profile</Text>
+                <Text>Edit profile</Text>
               </TouchableOpacity>
             </ListItem>
             <ListItem>
@@ -87,7 +84,7 @@ export default class Settings extends Component {
                   this.changePassword();
                 }}
               >
-                <Text>Change your password</Text>
+                <Text>Change password</Text>
               </TouchableOpacity>
             </ListItem>
             <ListItem last>

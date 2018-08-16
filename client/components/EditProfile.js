@@ -3,6 +3,7 @@ import { Container, Form, Item, Label, Input, Button } from 'native-base';
 import { Text } from 'react-native';
 const firebase = require('firebase');
 import db from '../../firestore';
+import { user } from 'firebase-functions/lib/providers/auth';
 
 export default class EditProfile extends Component {
   constructor() {
@@ -17,8 +18,26 @@ export default class EditProfile extends Component {
     };
   }
 
+  async componentDidMount() {
+    const uid = await firebase.auth().currentUser.uid;
+    const snapshot = await db
+      .collection('users')
+      .doc(uid)
+      .get();
+    const userData = await snapshot.data();
+    this.setState = {
+      displayName: userData.displayName,
+      userName: userData.userName,
+      email: userData.email,
+      password: userData.password,
+      icon: userData.icon,
+      conversations: userData.conversations,
+    };
+  }
+
   render() {
     const navigation = this.props.navigation;
+    console.log('this.state: ', this.state);
     return (
       <Container>
         <Form>
@@ -28,6 +47,7 @@ export default class EditProfile extends Component {
               autoCorrect={false}
               autoCapitalize="none"
               clearButtonMode="always"
+              value={user.displayName}
               onChangeText={displayName => this.setState({ displayName })}
             />
           </Item>
@@ -37,6 +57,7 @@ export default class EditProfile extends Component {
               autoCorrect={false}
               autoCapitalize="none"
               clearButtonMode="always"
+              value={user.userName}
               onChangeText={userName => this.setState({ userName })}
             />
           </Item>
@@ -46,6 +67,7 @@ export default class EditProfile extends Component {
               autoCorrect={false}
               autoCapitalize="none"
               clearButtonMode="always"
+              value={user.email}
               onChangeText={email => {
                 this.setState({ email });
               }}
@@ -60,28 +82,8 @@ export default class EditProfile extends Component {
             </Text>
           ) : null}
 
-          <Item floatingLabel>
-            <Label>Password</Label>
-            <Input
-              autoCorrect={false}
-              autoCapitalize="none"
-              clearButtonMode="always"
-              secureTextEntry={true}
-              onChangeText={password => {
-                this.setState({ password });
-              }}
-            />
-          </Item>
-
-          {/* PASSWORD ERROR MESSAGE */}
-          {this.state.password.length < 6 && this.state.password.length > 0 ? (
-            <Text style={{ color: 'red' }}>
-              Password must be at least 6 characters
-            </Text>
-          ) : null}
-
           {/* BUTTON DISABLED UNTIL CONCERNS ARE MET */}
-          {this.state.password.length < 6 ? (
+          {!this.state.email.includes('@' && '.') ? (
             <Button
               disabled={true}
               style={{ marginTop: 10, backgroundColor: '#D1D1D1' }}
