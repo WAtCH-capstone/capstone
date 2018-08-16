@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import { TouchableOpacity } from 'react-native';
+import React, { Component } from "react";
+import { TouchableOpacity } from "react-native";
 import {
   Container,
   Content,
@@ -11,31 +11,43 @@ import {
   Thumbnail,
   Left,
   Body,
-  List,
-} from 'native-base';
+  List
+} from "native-base";
+import db from "../../firestore";
+import firebase from "firebase";
 
 export default class Settings extends Component {
   constructor() {
     super();
+    this.getUser = this.getUser.bind(this);
     this.editProfile = this.editProfile.bind(this);
     this.changePassword = this.changePassword.bind(this);
     this.logout = this.logout.bind(this);
   }
 
+  async getUser() {
+    const uid = await firebase.auth().currentUser.uid;
+    const snapshot = await db
+      .collection("users")
+      .doc(uid)
+      .get();
+    const userData = await snapshot.data();
+    return userData;
+  }
+
   editProfile() {
-    console.log('this will allow the user to edit their profile');
+    // this.state.currUserRef.update({
+    //   conversations: firebase.firestore.FieldValue.arrayUnion(docRef.id),
+    // });
   }
 
-  changePassword() {
-    console.log('this will allow the user to change their password');
-  }
+  changePassword() {}
 
-  logout() {
-    console.log('this will allow the user to logout');
-  }
+  logout() {}
 
   render() {
     const navigation = this.props.navigation;
+    const userData = this.getUser();
     return (
       <Container>
         <Content>
@@ -48,13 +60,17 @@ export default class Settings extends Component {
                 <Thumbnail
                   source={{
                     uri:
-                      'https://lh3.googleusercontent.com/vgv0EDmcYrsy-o7ZjRzKPbJzW2fC7uqSKsnMhrGcTaMImLIKM-1ePl0Gy-n-8SFmCYJKWUf-wu4ChBkJAQ',
+                      "https://lh3.googleusercontent.com/vgv0EDmcYrsy-o7ZjRzKPbJzW2fC7uqSKsnMhrGcTaMImLIKM-1ePl0Gy-n-8SFmCYJKWUf-wu4ChBkJAQ"
                   }}
                 />
                 <Body>
-                  <Text>Filler Name</Text>
-                  <Text note>username123</Text>
-                  <Text note>email@gmail.com</Text>
+                  <Text>
+                    {userData.displayName ? userData.displayName : null}
+                  </Text>
+                  <Text note>
+                    {userData.username ? userData.username : null}
+                  </Text>
+                  <Text note>{userData.email ? userData.email : null}</Text>
                 </Body>
               </Left>
             </CardItem>
