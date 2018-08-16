@@ -11,7 +11,7 @@ export default class MessagePreferences extends Component {
     super();
     this.state = {
       isDateTimePickerVisible: false,
-      selectedDate: ""
+      selectedDate: '',
     };
   }
 
