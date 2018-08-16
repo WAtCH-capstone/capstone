@@ -27,19 +27,23 @@ const convos = [
 ];
 
 export default class Home extends Component {
-  state = {
-    initialPosition: '',
-    lastPosition: '',
-  };
+  constructor() {
+    super();
+    this.state = {
+      initialPosition: '',
+      lastPosition: '',
+    };
+  }
 
   componentDidMount() {
-    console.log(navigator);
     const position = navigator.geolocation.getCurrentPosition(position => {
-      const initialPosition = JSON.stringify(position);
-      this.setState({ initialPosition });
+      // const initialPosition = JSON.stringify(position);
+      this.setState({ initialPosition: position }, () => {
+        console.log(this.state);
+      });
     });
-    console.log('this.state', this.state);
   }
+
   render() {
     // console.log("navigator", location);
 
