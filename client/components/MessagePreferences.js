@@ -69,13 +69,7 @@ export default class MessagePreferences extends Component {
           />
         </View>
         <View style={styles.container}>
-          <Button
-            style={styles.blueButton}
-            full
-            rounded
-            primary
-            // onPress={this._handleMapPress}
-          >
+          <Button style={styles.blueButton} full rounded primary>
             <View>
               <Text style={{ color: 'white' }}>Pick a Location</Text>
             </View>
