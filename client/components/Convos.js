@@ -18,7 +18,6 @@ import {
 import db from "../../firestore";
 import firebase from "firebase";
 import Navbar from "./Navbar";
-import MessagePreferences from "./MessagePreferences";
 
 export default class Convos extends Component {
   constructor() {
@@ -155,7 +154,6 @@ export default class Convos extends Component {
             <Text>No conversations yet</Text>
           )}
         </Content>
-        <MessagePreferences />
         <Navbar />
       </Container>
     );
