@@ -57,7 +57,7 @@ export default class MessagePreferences extends Component {
             onPress={this._showDateTimePicker}
           >
             <View>
-              <Text style={{ color: 'white' }}>Pick a Date</Text>
+              <Text style={{ color: 'white' }}>Pick a Date and Time</Text>
             </View>
           </Button>
           <Text>{selectedDate}</Text>
