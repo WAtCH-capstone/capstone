@@ -13,7 +13,7 @@ import DateTimePicker from 'react-native-modal-datetime-picker';
 import { GoogleAutoComplete } from 'react-native-google-autocomplete';
 import key from '../../googleMaps';
 import LocationItem from './LocationItem';
-const UserContext = React.createContext()
+const UserContext = React.createContext();
 
 export default class MessagePreferences extends Component {
   constructor() {
@@ -21,6 +21,7 @@ export default class MessagePreferences extends Component {
     this.state = {
       isDateTimePickerVisible: false,
       selectedDate: '',
+      locationDetails: '',
     };
   }
 
@@ -33,50 +34,17 @@ export default class MessagePreferences extends Component {
   _hideMapLookup = () => this.setState({ isMapLookupVisible: false });
 
   _handleDatePicked = date => {
+    this.props.setTrigger(date.toString());
     this.setState({ selectedDate: date.toString() });
     this._hideDateTimePicker();
   };
 
-  _handlePress = async () => {
+  _handlePress = async (el, fetchDetails) => {
     const res = await fetchDetails(el.place_id);
-    console.log(res);
     this.setState({ locationDetails: res });
     console.log(this.state.locationDetails);
   };
 
-  // _handleMapPress = () => {
-  //   return (
-  //     <GoogleAutoComplete apiKey={key} debounce={500} minLength={3}>
-  //       {({ handleTextChange, locationResults, fetchDetails, isSearching }) => (
-  //         <React.Fragment>
-  //           <View style={styles.inputWrapper}>
-  //             <TextInput
-  //               style={styles.mapTextInput}
-  //               placeholder="Search"
-  //               onChangeText={handleTextChange}
-  //             />
-  //           </View>
-  //           {isSearching && <ActivityIndicator />}
-  //           <ScrollView>
-  //             {/* {fetchDetails} = {fetchDetails} */}
-  //             {locationResults.map(el => (
-  //               <LocationItem {...el} key={el.id} fetchDetails={fetchDetails} />
-
-  //               // <TouchableOpacity
-  //               //   key={el.id}
-  //               //   style={styles.root}
-  //               //   // fetchDetails={fetchDetails}
-  //               //   onPress={this._handlePress}
-  //               // >
-  //               //   <Text>{el.description}</Text>
-  //               // </TouchableOpacity>
-  //             ))}
-  //           </ScrollView>
-  //         </React.Fragment>
-  //       )}
-  //     </GoogleAutoComplete>
-  //   );
-  // };
   render() {
     const { isDateTimePickerVisible, selectedDate } = this.state;
     return (
@@ -95,6 +63,7 @@ export default class MessagePreferences extends Component {
           </Button>
           <Text>{selectedDate}</Text>
           <DateTimePicker
+            mode="datetime"
             isVisible={isDateTimePickerVisible}
             onConfirm={this._handleDatePicked}
             onCancel={this._hideDateTimePicker}
@@ -130,11 +99,13 @@ export default class MessagePreferences extends Component {
                 {isSearching && <ActivityIndicator />}
                 <ScrollView>
                   {locationResults.map(el => (
-                    <LocationItem
-                      {...el}
+                    <TouchableOpacity
                       key={el.id}
-                      fetchDetails={fetchDetails}
-                    />
+                      style={styles.root}
+                      onPress={() => this._handlePress(el, fetchDetails)}
+                    >
+                      <Text>{el.description}</Text>
+                    </TouchableOpacity>
                   ))}
                 </ScrollView>
               </React.Fragment>
@@ -163,7 +134,11 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingTop: -50
+    paddingTop: -50,
   },
-
+  root: {
+    height: 40,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    justifyContent: 'center',
+  },
 });
