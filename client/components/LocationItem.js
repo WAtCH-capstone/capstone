@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import { Text, StyleSheet, TouchableOpacity } from "react-native";
+const UserContext = React.createContext()
+
 
 export default class LocationItem extends Component {
   constructor(props) {

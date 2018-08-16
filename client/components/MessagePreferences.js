@@ -13,6 +13,7 @@ import DateTimePicker from 'react-native-modal-datetime-picker';
 import { GoogleAutoComplete } from 'react-native-google-autocomplete';
 import key from '../../googleMaps';
 import LocationItem from './LocationItem';
+const UserContext = React.createContext()
 
 export default class MessagePreferences extends Component {
   constructor() {
@@ -20,8 +21,6 @@ export default class MessagePreferences extends Component {
     this.state = {
       isDateTimePickerVisible: false,
       selectedDate: '',
-      isMapLookupVisible: false,
-      locationDetails: '',
     };
   }
 
@@ -38,45 +37,46 @@ export default class MessagePreferences extends Component {
     this._hideDateTimePicker();
   };
 
-  // _handlePress = async () => {
-  //   const res = await fetchDetails(el.place_id);
-  //   console.log(res);
-  //   this.setState({ locationDetails: res });
-  //   console.log(this.state.locationDetails);
-  // };
-  _handleMapPress = () => {
-    return (
-      <GoogleAutoComplete apiKey={key} debounce={500} minLength={3}>
-        {({ handleTextChange, locationResults, fetchDetails, isSearching }) => (
-          <React.Fragment>
-            <View style={styles.inputWrapper}>
-              <TextInput
-                style={styles.mapTextInput}
-                placeholder="Search"
-                onChangeText={handleTextChange}
-              />
-            </View>
-            {isSearching && <ActivityIndicator />}
-            <ScrollView>
-              {/* {fetchDetails} = {fetchDetails} */}
-              {locationResults.map(el => (
-                <LocationItem {...el} key={el.id} fetchDetails={fetchDetails} />
-
-                // <TouchableOpacity
-                //   key={el.id}
-                //   style={styles.root}
-                //   // fetchDetails={fetchDetails}
-                //   onPress={this._handlePress}
-                // >
-                //   <Text>{el.description}</Text>
-                // </TouchableOpacity>
-              ))}
-            </ScrollView>
-          </React.Fragment>
-        )}
-      </GoogleAutoComplete>
-    );
+  _handlePress = async () => {
+    const res = await fetchDetails(el.place_id);
+    console.log(res);
+    this.setState({ locationDetails: res });
+    console.log(this.state.locationDetails);
   };
+
+  // _handleMapPress = () => {
+  //   return (
+  //     <GoogleAutoComplete apiKey={key} debounce={500} minLength={3}>
+  //       {({ handleTextChange, locationResults, fetchDetails, isSearching }) => (
+  //         <React.Fragment>
+  //           <View style={styles.inputWrapper}>
+  //             <TextInput
+  //               style={styles.mapTextInput}
+  //               placeholder="Search"
+  //               onChangeText={handleTextChange}
+  //             />
+  //           </View>
+  //           {isSearching && <ActivityIndicator />}
+  //           <ScrollView>
+  //             {/* {fetchDetails} = {fetchDetails} */}
+  //             {locationResults.map(el => (
+  //               <LocationItem {...el} key={el.id} fetchDetails={fetchDetails} />
+
+  //               // <TouchableOpacity
+  //               //   key={el.id}
+  //               //   style={styles.root}
+  //               //   // fetchDetails={fetchDetails}
+  //               //   onPress={this._handlePress}
+  //               // >
+  //               //   <Text>{el.description}</Text>
+  //               // </TouchableOpacity>
+  //             ))}
+  //           </ScrollView>
+  //         </React.Fragment>
+  //       )}
+  //     </GoogleAutoComplete>
+  //   );
+  // };
   render() {
     const { isDateTimePickerVisible, selectedDate } = this.state;
     return (
@@ -101,17 +101,17 @@ export default class MessagePreferences extends Component {
           />
         </View>
         <View style={styles.container}>
-          <Button
+          {/* <Button
             style={styles.blueButton}
             full
             rounded
             primary
-            // onPress={this._showDateTimePicker}
+            onPress={this._handleMapPress}
           >
             <View>
               <Text style={{ color: 'white' }}>Pick a Location</Text>
             </View>
-          </Button>
+          </Button> */}
           <GoogleAutoComplete apiKey={key} debounce={500} minLength={3}>
             {({
               handleTextChange,
@@ -129,22 +129,12 @@ export default class MessagePreferences extends Component {
                 </View>
                 {isSearching && <ActivityIndicator />}
                 <ScrollView>
-                  {/* {fetchDetails} = {fetchDetails} */}
                   {locationResults.map(el => (
                     <LocationItem
                       {...el}
                       key={el.id}
                       fetchDetails={fetchDetails}
                     />
-
-                    // <TouchableOpacity
-                    //   key={el.id}
-                    //   style={styles.root}
-                    //   // fetchDetails={fetchDetails}
-                    //   onPress={this._handlePress}
-                    // >
-                    //   <Text>{el.description}</Text>
-                    // </TouchableOpacity>
                   ))}
                 </ScrollView>
               </React.Fragment>
@@ -161,11 +151,11 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
   inputWrapper: {
-    marginTop: 80,
+    marginTop: 10,
   },
   mapTextInput: {
     height: 40,
-    width: 300,
+    width: 350,
     borderWidth: 1,
     paddingHorizontal: 16,
   },
@@ -173,10 +163,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     alignItems: 'center',
     justifyContent: 'center',
+    paddingTop: -50
   },
-  root: {
-    height: 40,
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    justifyContent: 'center',
-  },
+
 });

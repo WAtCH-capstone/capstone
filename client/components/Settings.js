@@ -13,28 +13,43 @@ import {
   Body,
   List,
 } from 'native-base';
+import db from '../../firestore';
+import firebase from 'firebase';
 
 export default class Settings extends Component {
   constructor() {
     super();
-    this.editProfile = this.editProfile.bind(this);
+    this.state = {
+      user: {},
+    };
+    this.getUser = this.getUser.bind(this);
+    this.changeEmail = this.changeEmail.bind(this);
     this.changePassword = this.changePassword.bind(this);
     this.logout = this.logout.bind(this);
   }
 
-  editProfile() {
-    console.log('this will allow the user to edit their profile');
+  async componentDidMount() {
+    this.setState({ user: await this.getUser() });
   }
 
-  changePassword() {
-    console.log('this will allow the user to change their password');
+  async getUser() {
+    const uid = await firebase.auth().currentUser.uid;
+    const snapshot = await db
+      .collection('users')
+      .doc(uid)
+      .get();
+    const userData = await snapshot.data();
+    return userData;
   }
 
-  logout() {
-    console.log('this will allow the user to logout');
-  }
+  changeEmail() {}
+
+  changePassword() {}
+
+  logout() {}
 
   render() {
+    const user = this.state.user;
     const navigation = this.props.navigation;
     return (
       <Container>
@@ -45,16 +60,11 @@ export default class Settings extends Component {
           <Card>
             <CardItem>
               <Left>
-                <Thumbnail
-                  source={{
-                    uri:
-                      'https://lh3.googleusercontent.com/vgv0EDmcYrsy-o7ZjRzKPbJzW2fC7uqSKsnMhrGcTaMImLIKM-1ePl0Gy-n-8SFmCYJKWUf-wu4ChBkJAQ',
-                  }}
-                />
+                <Thumbnail source={{ uri: user.icon }} />
                 <Body>
-                  <Text>Filler Name</Text>
-                  <Text note>username123</Text>
-                  <Text note>email@gmail.com</Text>
+                  <Text>{user.displayName}</Text>
+                  <Text note>{user.userName}</Text>
+                  <Text note>{user.email}</Text>
                 </Body>
               </Left>
             </CardItem>
@@ -66,10 +76,37 @@ export default class Settings extends Component {
             <ListItem>
               <TouchableOpacity
                 onPress={() => {
-                  this.editProfile();
+                  navigation.navigate('EmojiPicker');
                 }}
               >
-                <Text>Edit your profile</Text>
+                <Text>Choose new icon</Text>
+              </TouchableOpacity>
+            </ListItem>
+            <ListItem>
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate('EditDisplayName');
+                }}
+              >
+                <Text>Edit display name</Text>
+              </TouchableOpacity>
+            </ListItem>
+            <ListItem>
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate('EditUserName');
+                }}
+              >
+                <Text>Edit username</Text>
+              </TouchableOpacity>
+            </ListItem>
+            <ListItem>
+              <TouchableOpacity
+                onPress={() => {
+                  this.changeEmail();
+                }}
+              >
+                <Text>Change email</Text>
               </TouchableOpacity>
             </ListItem>
             <ListItem>
@@ -78,7 +115,7 @@ export default class Settings extends Component {
                   this.changePassword();
                 }}
               >
-                <Text>Change your password</Text>
+                <Text>Change password</Text>
               </TouchableOpacity>
             </ListItem>
             <ListItem last>

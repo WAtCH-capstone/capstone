@@ -9,6 +9,8 @@ import {
   Navbar,
   CreateConvo,
   EmojiPicker,
+  EditDisplayName,
+  EditUserName,
 } from './client/components';
 
 const RootNavigator = createStackNavigator({
@@ -64,6 +66,18 @@ const RootNavigator = createStackNavigator({
     screen: EmojiPicker,
     navigationOptions: {
       headerTitle: 'EmojiPicker',
+    },
+  },
+  EditDisplayName: {
+    screen: EditDisplayName,
+    navigationOptions: {
+      headerTitle: 'EditDisplayName',
+    },
+  },
+  EditUserName: {
+    screen: EditUserName,
+    navigationOptions: {
+      headerTitle: 'EditUserName',
     },
   },
 });
