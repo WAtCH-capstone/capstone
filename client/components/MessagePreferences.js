@@ -1,10 +1,18 @@
 import React, { Component } from 'react';
-import { Text, View, StyleSheet, TextInput, ScrollView } from 'react-native';
+import {
+  Text,
+  View,
+  StyleSheet,
+  TextInput,
+  ScrollView,
+  ActivityIndicator,
+  TouchableOpacity,
+} from 'react-native';
 import { Button } from 'native-base';
 import DateTimePicker from 'react-native-modal-datetime-picker';
 import { GoogleAutoComplete } from 'react-native-google-autocomplete';
 import key from '../../googleMaps';
-import LocationItem from './LocationItem';
+const UserContext = React.createContext();
 
 export default class MessagePreferences extends Component {
   constructor() {
@@ -12,6 +20,7 @@ export default class MessagePreferences extends Component {
     this.state = {
       isDateTimePickerVisible: false,
       selectedDate: '',
+      locationDetails: '',
     };
   }
 
@@ -19,19 +28,29 @@ export default class MessagePreferences extends Component {
 
   _hideDateTimePicker = () => this.setState({ isDateTimePickerVisible: false });
 
+  // _showMapLookup = () => this.setState({ isMapLookupVisible: true });
+
+  // _hideMapLookup = () => this.setState({ isMapLookupVisible: false });
+
   _handleDatePicked = date => {
     this.props.setTrigger(date.toString());
     this.setState({ selectedDate: date.toString() });
     this._hideDateTimePicker();
   };
 
+  _handlePress = async (el, fetchDetails) => {
+    const res = await fetchDetails(el.place_id);
+    this.setState({ locationDetails: res });
+    console.log(this.state.locationDetails);
+  };
+
   render() {
     const { isDateTimePickerVisible, selectedDate } = this.state;
     return (
-      <View style={{ backgroundColor: 'white', marginBottom: 200 }}>
+      <View style={{ backgroundColor: 'white', paddingBottom: 30 }}>
         <View>
           <Button
-            style={{ marginTop: 10 }}
+            style={styles.blueButton}
             full
             rounded
             primary
@@ -50,8 +69,24 @@ export default class MessagePreferences extends Component {
           />
         </View>
         <View style={styles.container}>
+          <Button
+            style={styles.blueButton}
+            full
+            rounded
+            primary
+            // onPress={this._handleMapPress}
+          >
+            <View>
+              <Text style={{ color: 'white' }}>Pick a Location</Text>
+            </View>
+          </Button>
           <GoogleAutoComplete apiKey={key} debounce={500} minLength={3}>
-            {({ handleTextChange, locationResults, fetchDetails }) => (
+            {({
+              handleTextChange,
+              locationResults,
+              fetchDetails,
+              isSearching,
+            }) => (
               <React.Fragment>
                 <View style={styles.inputWrapper}>
                   <TextInput
@@ -60,13 +95,16 @@ export default class MessagePreferences extends Component {
                     onChangeText={handleTextChange}
                   />
                 </View>
+                {isSearching && <ActivityIndicator />}
                 <ScrollView>
                   {locationResults.map(el => (
-                    <LocationItem
-                      {...el}
+                    <TouchableOpacity
                       key={el.id}
-                      fetchDetails={fetchDetails}
-                    />
+                      style={styles.root}
+                      onPress={() => this._handlePress(el, fetchDetails)}
+                    >
+                      <Text>{el.description}</Text>
+                    </TouchableOpacity>
                   ))}
                 </ScrollView>
               </React.Fragment>
@@ -79,18 +117,27 @@ export default class MessagePreferences extends Component {
 }
 
 const styles = StyleSheet.create({
+  blueButton: {
+    marginTop: 5,
+  },
   inputWrapper: {
-    marginTop: 80,
+    marginTop: 10,
   },
   mapTextInput: {
     height: 40,
-    width: 300,
+    width: 350,
     borderWidth: 1,
     paddingHorizontal: 16,
   },
   container: {
     backgroundColor: 'white',
     alignItems: 'center',
+    justifyContent: 'center',
+    paddingTop: -50,
+  },
+  root: {
+    height: 40,
+    borderBottomWidth: StyleSheet.hairlineWidth,
     justifyContent: 'center',
   },
 });
