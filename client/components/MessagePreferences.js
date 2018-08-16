@@ -20,8 +20,7 @@ export default class MessagePreferences extends Component {
   _hideDateTimePicker = () => this.setState({ isDateTimePickerVisible: false });
 
   _handleDatePicked = date => {
-    console.log('setting triggers in MessagePref');
-    this.props.setTrigger(date);
+    this.props.setTrigger(date.toString());
     this.setState({ selectedDate: date.toString() });
     this._hideDateTimePicker();
   };
@@ -44,6 +43,7 @@ export default class MessagePreferences extends Component {
           </Button>
           <Text>{selectedDate}</Text>
           <DateTimePicker
+            mode="datetime"
             isVisible={isDateTimePickerVisible}
             onConfirm={this._handleDatePicked}
             onCancel={this._hideDateTimePicker}
