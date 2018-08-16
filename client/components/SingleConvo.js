@@ -7,6 +7,7 @@ import db from '../../firestore';
 import { GiftedChat } from 'react-native-gifted-chat';
 import firebase from 'firebase';
 import MessagePreferences from './MessagePreferences';
+import schedule from 'node-schedule';
 
 export default class SingleConvo extends React.Component {
   constructor() {
@@ -16,10 +17,14 @@ export default class SingleConvo extends React.Component {
       messages: [],
       friend: {},
       menuOpen: false,
+      triggers: {
+        date: '',
+      },
     };
     this.user = firebase.auth().currentUser;
     this.onSend = this.onSend.bind(this);
     this.listen = this.listen.bind(this);
+    this.setTrigger = this.setTrigger.bind(this);
   }
 
   getRef(id) {
@@ -46,11 +51,18 @@ export default class SingleConvo extends React.Component {
       });
   }
 
+  setTrigger(date) {
+    console.log('setting trigger in SingleConvo with', date);
+    this.setState({ triggers: { date } });
+  }
+
   componentDidMount() {
     this.listen();
+    const ref = this.getRef(this.props.navigation.state.params.id);
     this.setState({
       friend: this.props.navigation.state.params.friend,
       id: this.props.navigation.state.params.id,
+      ref,
     });
   }
 
@@ -59,8 +71,10 @@ export default class SingleConvo extends React.Component {
   }
 
   onSend(messages = []) {
-    if (this.state.triggers.date.length) {
-      const date = new Date(2018, 7, 16, 11, 50, 0);
+    console.log(this.state.triggers);
+    if (this.state.triggers.date) {
+      console.log('date', this.state.triggers.date);
+      const date = new Date(2018, 7, 16, 12, 18, 0);
       schedule.scheduleJob(date, () =>
         db
           .collection('conversations')
@@ -118,7 +132,7 @@ export default class SingleConvo extends React.Component {
               }}
             />
           </View>
-          <MessagePreferences />
+          <MessagePreferences setTrigger={this.setTrigger} />
         </SideMenu>
       );
     } else {

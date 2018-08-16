@@ -48,17 +48,17 @@
 
 // export default MessagePreferences;
 
-import React, { Component } from "react";
-import { Text, TouchableOpacity, View } from "react-native";
-import { Button } from "native-base";
-import DateTimePicker from "react-native-modal-datetime-picker";
+import React, { Component } from 'react';
+import { Text, TouchableOpacity, View } from 'react-native';
+import { Button } from 'native-base';
+import DateTimePicker from 'react-native-modal-datetime-picker';
 
 export default class DateTimePickerTester extends Component {
   constructor(props) {
     super(props);
     this.state = {
       isDateTimePickerVisible: false,
-      selectedDate: ""
+      selectedDate: '',
     };
   }
 
@@ -67,6 +67,8 @@ export default class DateTimePickerTester extends Component {
   _hideDateTimePicker = () => this.setState({ isDateTimePickerVisible: false });
 
   _handleDatePicked = date => {
+    console.log('setting triggers in MessagePref');
+    this.props.setTrigger(date);
     this.setState({ selectedDate: date.toString() });
     this._hideDateTimePicker();
   };
@@ -83,7 +85,7 @@ export default class DateTimePickerTester extends Component {
           onPress={this._showDateTimePicker}
         >
           <View>
-            <Text style={{ color: "white" }}>Pick a Date</Text>
+            <Text style={{ color: 'white' }}>Pick a Date</Text>
           </View>
         </Button>
 
