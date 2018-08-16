@@ -19,20 +19,18 @@ import firebase from 'firebase';
 export default class Settings extends Component {
   constructor() {
     super();
-    this.state = {
-      user: {},
-    };
-    this.getUser = this.getUser.bind(this);
-    this.changeEmail = this.changeEmail.bind(this);
-    this.changePassword = this.changePassword.bind(this);
-    this.logout = this.logout.bind(this);
+    this.state = { userDoc: {}, userRef: {} };
+    this.getUserDoc = this.getUserDoc.bind(this);
   }
 
   async componentDidMount() {
-    this.setState({ user: await this.getUser() });
+    this.setState({
+      userDoc: await this.getUserDoc(),
+      userRef: firebase.auth().currentUser,
+    });
   }
 
-  async getUser() {
+  async getUserDoc() {
     const uid = await firebase.auth().currentUser.uid;
     const snapshot = await db
       .collection('users')
@@ -42,14 +40,8 @@ export default class Settings extends Component {
     return userData;
   }
 
-  changeEmail() {}
-
-  changePassword() {}
-
-  logout() {}
-
   render() {
-    const user = this.state.user;
+    const userDoc = this.state.userDoc;
     const navigation = this.props.navigation;
     return (
       <Container>
@@ -60,11 +52,11 @@ export default class Settings extends Component {
           <Card>
             <CardItem>
               <Left>
-                <Thumbnail source={{ uri: user.icon }} />
+                <Thumbnail source={{ uri: userDoc.icon }} />
                 <Body>
-                  <Text>{user.displayName}</Text>
-                  <Text note>{user.userName}</Text>
-                  <Text note>{user.email}</Text>
+                  <Text>{userDoc.displayName}</Text>
+                  <Text note>{userDoc.userName}</Text>
+                  <Text note>{userDoc.email}</Text>
                 </Body>
               </Left>
             </CardItem>
@@ -73,15 +65,6 @@ export default class Settings extends Component {
             <Text>Options</Text>
           </Separator>
           <List>
-            <ListItem>
-              <TouchableOpacity
-                onPress={() => {
-                  navigation.navigate('EmojiPicker');
-                }}
-              >
-                <Text>Choose new icon</Text>
-              </TouchableOpacity>
-            </ListItem>
             <ListItem>
               <TouchableOpacity
                 onPress={() => {
@@ -103,7 +86,16 @@ export default class Settings extends Component {
             <ListItem>
               <TouchableOpacity
                 onPress={() => {
-                  this.changeEmail();
+                  navigation.navigate('EmojiPicker');
+                }}
+              >
+                <Text>Change icon</Text>
+              </TouchableOpacity>
+            </ListItem>
+            <ListItem>
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate('EditEmail');
                 }}
               >
                 <Text>Change email</Text>
@@ -112,19 +104,36 @@ export default class Settings extends Component {
             <ListItem>
               <TouchableOpacity
                 onPress={() => {
-                  this.changePassword();
+                  navigation.navigate('EditPassword');
                 }}
               >
                 <Text>Change password</Text>
               </TouchableOpacity>
             </ListItem>
-            <ListItem last>
+            <ListItem>
               <TouchableOpacity
                 onPress={() => {
-                  this.logout();
+                  firebase
+                    .auth()
+                    .signOut()
+                    .then(() => alert(`You've been logged out.`))
+                    .catch(err => console.error(err));
                 }}
               >
                 <Text>Logout</Text>
+              </TouchableOpacity>
+            </ListItem>
+            <ListItem last>
+              <TouchableOpacity
+                onPress={() => {
+                  this.state.userRef
+                    .delete()
+                    .then(() => alert(`Your account was deleted.`))
+                    .then(() => navigation.navigate('LogIn'))
+                    .catch(err => console.error(err));
+                }}
+              >
+                <Text>Delete account</Text>
               </TouchableOpacity>
             </ListItem>
           </List>

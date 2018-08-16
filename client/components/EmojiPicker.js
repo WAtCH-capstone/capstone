@@ -115,9 +115,15 @@ export default class EmojiPicker extends Component {
   async selectEmoji(uri) {
     const currUserId = await firebase.auth().currentUser.uid;
     const currUserRef = db.collection('users').doc(currUserId);
-    currUserRef.update({ icon: uri });
-    alert(`Your account was created! Now you may login.`);
-    this.props.navigation.navigate('LogIn');
+    if (currUserRef.icon === '') {
+      currUserRef.update({ icon: uri });
+      alert(`Your account was created! Now you may login.`);
+      this.props.navigation.navigate('LogIn');
+    } else {
+      currUserRef.update({ icon: uri });
+      alert(`Your icon was updated!`);
+      this.props.navigation.navigate('Convos');
+    }
   }
 
   renderEmoji(num) {

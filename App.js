@@ -11,6 +11,8 @@ import {
   EmojiPicker,
   EditDisplayName,
   EditUserName,
+  EditEmail,
+  EditPassword,
 } from './client/components';
 
 const RootNavigator = createStackNavigator({
@@ -78,6 +80,18 @@ const RootNavigator = createStackNavigator({
     screen: EditUserName,
     navigationOptions: {
       headerTitle: 'EditUserName',
+    },
+  },
+  EditEmail: {
+    screen: EditEmail,
+    navigationOptions: {
+      headerTitle: 'EditEmail',
+    },
+  },
+  EditPassword: {
+    screen: EditPassword,
+    navigationOptions: {
+      headerTitle: 'EditPassword',
     },
   },
 });
