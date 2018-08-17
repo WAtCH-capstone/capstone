@@ -15,6 +15,7 @@ import key from '../../googleMaps';
 import schedule from 'node-schedule';
 import db from '../../firestore';
 import firebase from 'firebase';
+import Navbar from './Navbar';
 
 export default class MessagePreferences extends Component {
   constructor() {
@@ -22,7 +23,6 @@ export default class MessagePreferences extends Component {
     this.state = {
       id: '',
       isDateTimePickerVisible: false,
-      // selectedDate: '',
       locationDetails: '',
       textInput: '',
       showResults: true,
@@ -93,72 +93,75 @@ export default class MessagePreferences extends Component {
   render() {
     const { isDateTimePickerVisible, triggers } = this.state;
     return (
-      <View style={{ backgroundColor: 'white', paddingBottom: 600 }}>
-        <View>
-          <Button
-            style={styles.blueButton}
-            full
-            rounded
-            primary
-            onPress={this._showDateTimePicker}
-          >
-            <View>
-              <Text style={{ color: 'white' }}>Pick a Date and Time</Text>
-            </View>
-          </Button>
-          <Text>{triggers.date}</Text>
-          <DateTimePicker
-            mode="datetime"
-            isVisible={isDateTimePickerVisible}
-            onConfirm={this._handleDatePicked}
-            onCancel={this._hideDateTimePicker}
-          />
+      <View>
+        <View style={{ backgroundColor: 'white', paddingBottom: 540 }}>
+          <View>
+            <Button
+              style={styles.blueButton}
+              full
+              rounded
+              primary
+              onPress={this._showDateTimePicker}
+            >
+              <View>
+                <Text style={{ color: 'white' }}>Pick a Date and Time</Text>
+              </View>
+            </Button>
+            <Text>{triggers.date}</Text>
+            <DateTimePicker
+              mode="datetime"
+              isVisible={isDateTimePickerVisible}
+              onConfirm={this._handleDatePicked}
+              onCancel={this._hideDateTimePicker}
+            />
+          </View>
+          <View style={styles.container}>
+            <GoogleAutoComplete apiKey={key} debounce={500} minLength={0}>
+              {({
+                handleTextChange,
+                locationResults,
+                fetchDetails,
+                isSearching,
+              }) => (
+                <React.Fragment>
+                  <View style={styles.inputWrapper}>
+                    <TextInput
+                      style={styles.mapTextInput}
+                      placeholder="Enter a Location..."
+                      onChangeText={handleTextChange}
+                      value={this.state.textInput}
+                    />
+                  </View>
+                  {isSearching && <ActivityIndicator />}
+                  <ScrollView>
+                    {locationResults.map(el => (
+                      <TouchableOpacity
+                        key={el.id}
+                        style={styles.root}
+                        onPress={() => this._handlePress(el, fetchDetails)}
+                      >
+                        <Text>{el.description}</Text>
+                      </TouchableOpacity>
+                    ))}
+                  </ScrollView>
+                </React.Fragment>
+              )}
+            </GoogleAutoComplete>
+            <Text>{this.state.textInput}</Text>
+            <Button
+              style={styles.blueButton}
+              full
+              rounded
+              primary
+              onPress={() => this.onSend()}
+            >
+              <View>
+                <Text style={{ color: 'white' }}>Submit</Text>
+              </View>
+            </Button>
+          </View>
         </View>
-        <View style={styles.container}>
-          <GoogleAutoComplete apiKey={key} debounce={500} minLength={0}>
-            {({
-              handleTextChange,
-              locationResults,
-              fetchDetails,
-              isSearching,
-            }) => (
-              <React.Fragment>
-                <View style={styles.inputWrapper}>
-                  <TextInput
-                    style={styles.mapTextInput}
-                    placeholder="Enter a Location..."
-                    onChangeText={handleTextChange}
-                    value={this.state.textInput}
-                  />
-                </View>
-                {isSearching && <ActivityIndicator />}
-                <ScrollView>
-                  {locationResults.map(el => (
-                    <TouchableOpacity
-                      key={el.id}
-                      style={styles.root}
-                      onPress={() => this._handlePress(el, fetchDetails)}
-                    >
-                      <Text>{el.description}</Text>
-                    </TouchableOpacity>
-                  ))}
-                </ScrollView>
-              </React.Fragment>
-            )}
-          </GoogleAutoComplete>
-          <Text>{this.state.textInput}</Text>
-          <Button
-            style={styles.blueButton}
-            full
-            rounded
-            primary
-            onPress={() => this.onSend()}
-          >
-            <View>
-              <Text style={{ color: 'white' }}>Submit</Text>
-            </View>
-          </Button>
-        </View>
+        <Navbar navigation={this.props.navigation} />
       </View>
     );
   }

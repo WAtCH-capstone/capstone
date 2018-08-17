@@ -137,7 +137,7 @@ export default class SingleConvo extends React.Component {
               </View>
             </Button>
           </View>
-          {/* <Navbar /> */}
+          <Navbar navigation={this.props.navigation} />
         </SideMenu>
       );
     } else {
@@ -162,7 +162,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingBottom: 50,
+    paddingBottom: 100,
   },
   smallImage: {
     width: 30,
