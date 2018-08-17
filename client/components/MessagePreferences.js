@@ -12,22 +12,40 @@ import { Button } from 'native-base';
 import DateTimePicker from 'react-native-modal-datetime-picker';
 import { GoogleAutoComplete } from 'react-native-google-autocomplete';
 import key from '../../googleMaps';
+import schedule from 'node-schedule';
+import db from '../../firestore';
+import firebase from 'firebase';
 
 export default class MessagePreferences extends Component {
   constructor() {
     super();
     this.state = {
+      id: '',
       isDateTimePickerVisible: false,
-      selectedDate: '',
+      // selectedDate: '',
       locationDetails: '',
       textInput: '',
       showResults: true,
+      ref: '',
       triggers: {
         date: '',
       },
     };
     this.setTrigger = this.setTrigger.bind(this);
+    this._handleDatePicked = this._handleDatePicked.bind(this);
+    this._handlePress = this._handlePress.bind(this);
+    this.onSend = this.onSend.bind(this);
   }
+
+  componentDidMount() {
+    const ref = this.getRef(this.props.navigation.state.params.id);
+    this.setState({ ref });
+  }
+
+  getRef(id) {
+    return db.collection('conversations').doc(id);
+  }
+
   setTrigger(date) {
     this.setState({ triggers: { date } });
   }
@@ -37,8 +55,9 @@ export default class MessagePreferences extends Component {
   _hideDateTimePicker = () => this.setState({ isDateTimePickerVisible: false });
 
   _handleDatePicked = date => {
-    this.props.setTrigger(date.toString());
-    this.setState({ selectedDate: date.toString() });
+    this.setTrigger(date.toString());
+    this.setState({ triggers: { date: date.toString() } });
+    console.log(this.state.triggers);
     this._hideDateTimePicker();
   };
 
@@ -49,13 +68,31 @@ export default class MessagePreferences extends Component {
       textInput: el.description,
       showResults: false,
     });
-    console.log(this.state.locationDetails);
   };
 
+  onSend() {
+    let createdAt;
+    const date = new Date(this.state.triggers.date);
+    createdAt = date.getTime();
+    console.log('createdAt', createdAt); //TAKE OUT CONSOLE LOGS
+    const newMessage = {
+      _id: createdAt,
+      text: this.props.navigation.state.params.messageContent,
+      createdAt,
+      user: { _id: this.props.navigation.state.params.user.uid },
+    };
+    console.log('newMessage', newMessage);
+    schedule.scheduleJob(date, () => {
+      this.state.ref.collection('messages').add(newMessage);
+      this.state.ref.set({ firstMessage: newMessage }, { merge: true });
+    });
+  }
+
   render() {
-    const { isDateTimePickerVisible, selectedDate } = this.state;
+    console.log(this.props.navigation.state.params);
+    const { isDateTimePickerVisible, triggers } = this.state;
     return (
-      <View style={{ backgroundColor: 'white', paddingBottom: 30 }}>
+      <View style={{ backgroundColor: 'white', paddingBottom: 600 }}>
         <View>
           <Button
             style={styles.blueButton}
@@ -68,7 +105,7 @@ export default class MessagePreferences extends Component {
               <Text style={{ color: 'white' }}>Pick a Date and Time</Text>
             </View>
           </Button>
-          <Text>{selectedDate}</Text>
+          <Text>{triggers.date}</Text>
           <DateTimePicker
             mode="datetime"
             isVisible={isDateTimePickerVisible}
@@ -109,9 +146,15 @@ export default class MessagePreferences extends Component {
             )}
           </GoogleAutoComplete>
           <Text>{this.state.textInput}</Text>
-          <Button style={styles.blueButton} full rounded primary>
+          <Button
+            style={styles.blueButton}
+            full
+            rounded
+            primary
+            onPress={() => this.onSend()}
+          >
             <View>
-              <Text style={{ color: 'white' }}>Schedule Message</Text>
+              <Text style={{ color: 'white' }}>Submit</Text>
             </View>
           </Button>
         </View>
