@@ -7,12 +7,9 @@
     "test": "jest"
   },
   "dependencies": {
-<<<<<<< HEAD
     "@google/maps": "^0.5.5",
     "axios": "^0.18.0",
-=======
     "events": "^3.0.0",
->>>>>>> master
     "firebase": "^5.3.1",
     "firebase-admin": "^6.0.0",
     "firebase-functions": "^2.0.4",
