@@ -1,70 +1,60 @@
-import React from "react";
-import { Image, StyleSheet } from "react-native";
-import {
-  Container,
-  Header,
-  Content,
-  Footer,
-  FooterTab,
-  Button,
-  Text,
-  View
-} from "native-base";
+import React, { Component } from 'react';
+import { Image } from 'react-native';
+import { Footer, FooterTab, Button, View } from 'native-base';
+import styles from './Styles';
 
-const settingsPic = {
-  uri:
-    "https://cdn0.iconfinder.com/data/icons/thin-essentials/57/thin-053_settings_gear_preferences-512.png"
-};
+export default class Navbar extends Component {
+  constructor() {
+    super();
+  }
 
-const profilePic = {
-  uri: "https://static.thenounproject.com/png/538846-200.png"
-};
-
-const messagesPic = {
-  uri:
-    "https://cdn.icon-icons.com/icons2/935/PNG/512/speech-bubble-oval-symbol-with-three-dots_icon-icons.com_73151.png"
-};
-
-class Navbar extends React.Component {
   render() {
+    const navigation = this.props.navigation;
     return (
       <View>
-        <Footer
-          style={{
-            backgroundColor: "white",
-            position: "absolute",
-            left: 0,
-            right: 0,
-            bottom: 0
-          }}
-        >
+        <Footer style={styles.navbar}>
           <FooterTab>
-            <Button>
-              <Image source={messagesPic} style={{ width: 50, height: 50 }} />
+            <Button
+              onPress={() => {
+                navigation.navigate('Convos');
+              }}
+            >
+              <Image
+                source={{
+                  uri:
+                    'https://cdn.icon-icons.com/icons2/935/PNG/512/speech-bubble-oval-symbol-with-three-dots_icon-icons.com_73151.png',
+                }}
+                style={{ width: 50, height: 50 }}
+              />
             </Button>
-            <Button>
-              <Image source={profilePic} style={{ width: 50, height: 50 }} />
-            </Button>
-            <Button>
-              <Image source={settingsPic} style={{ width: 50, height: 50 }} />
+            {/* <Button
+              onPress={() => {
+                navigation.navigate('LogIn');
+              }}
+            >
+              <Image
+                source={{
+                  uri: 'https://static.thenounproject.com/png/538846-200.png',
+                }}
+                style={{ width: 50, height: 50 }}
+              />
+            </Button> */}
+            <Button
+              onPress={() => {
+                navigation.navigate('Settings');
+              }}
+            >
+              <Image
+                source={{
+                  uri:
+                    'https://cdn0.iconfinder.com/data/icons/thin-essentials/57/thin-053_settings_gear_preferences-512.png',
+                }}
+                style={{ width: 50, height: 50 }}
+              />
             </Button>
           </FooterTab>
         </Footer>
       </View>
-
-      ///FUNCTIONALITY
     );
   }
 }
-
-const styles = StyleSheet.create({
-  footer: {
-    backgroundColor: "white",
-    position: "absolute",
-    bottom: 0,
-    left: 0,
-    right: 0
-  }
-});
-
-export default Navbar;

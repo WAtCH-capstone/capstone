@@ -13,28 +13,95 @@ import {
   Body,
   List,
 } from 'native-base';
+import Navbar from './Navbar';
+import db from '../../firestore';
+import firebase from 'firebase';
 
 export default class Settings extends Component {
   constructor() {
     super();
-    this.editProfile = this.editProfile.bind(this);
-    this.changePassword = this.changePassword.bind(this);
+    this.state = { userDoc: {}, userRef: {} };
+    this.getUserDoc = this.getUserDoc.bind(this);
     this.logout = this.logout.bind(this);
+    // this.deleteUser = this.deleteUser.bind(this);
   }
 
-  editProfile() {
-    console.log('this will allow the user to edit their profile');
+  async componentDidMount() {
+    const uid = await firebase.auth().currentUser.uid;
+    this.setState({
+      userDoc: await this.getUserDoc(uid),
+      userRef: firebase.auth().currentUser,
+    });
   }
 
-  changePassword() {
-    console.log('this will allow the user to change their password');
+  async getUserDoc(id) {
+    const snapshot = await db
+      .collection('users')
+      .doc(id)
+      .get();
+    const userData = await snapshot.data();
+    return userData;
   }
 
   logout() {
-    console.log('this will allow the user to logout');
+    firebase
+      .auth()
+      .signOut()
+      .then(() => alert(`You've been logged out.`))
+      .then(() => this.props.navigation.navigate('LogIn'))
+      .catch(err => console.error(err));
   }
 
+  // async deleteUser() {
+  //   const convoDocs = this.state.userDoc.conversations;
+  //   let convos = {};
+  //   let convosArr = [];
+  //   for (let i = 0; i < convoDocs.length; i++) {
+  //     const convo = await db
+  //       .collection('conversations')
+  //       .doc(convoDocs[i])
+  //       .get();
+  //     convos[convo.id] = [];
+  //     convosArr.push(convo.id);
+  //   }
+  //   convosArr.forEach(async convo => {
+  //     const snapshot = await db
+  //       .collection('conversations')
+  //       .doc(convo)
+  //       .get();
+  //     const convoData = await snapshot.data();
+  //     const users = convoData.users;
+  //     users.forEach(user => convos[convo].push(user));
+  //     convos[convo].forEach(async user => {
+  //       const userDoc = await this.getUserDoc(user);
+  //       const oldConvos = userDoc.conversations;
+  //       const newConvos = oldConvos.filter(convoInArr => convoInArr !== convo);
+  //       db.collection('users')
+  //         .doc(user)
+  //         .set({ conversations: newConvos })
+  //         .then(() =>
+  //           console.log(
+  //             `User ${userDoc.id} no longer is part of convo ${convo}`
+  //           )
+  //         )
+  //         .catch(err => console.error(err));
+  //     });
+  //     db.collection('conversations')
+  //       .doc(convo)
+  //       .delete()
+  //       .then(() => console.log(`Convo ${convo} was deleted`))
+  //       .catch(err => console.error(err));
+  //   });
+  //   this.state.userRef
+  //     .delete()
+  //     .then(() => console.log(`User ${this.state.userRef.id} was deleted`))
+  //     .then(() => alert(`Your account was deleted.`))
+  //     .then(() => this.props.navigation.navigate('LogIn'))
+  //     .catch(err => console.error(err));
+  // }
+
   render() {
+    const userDoc = this.state.userDoc;
     const navigation = this.props.navigation;
     return (
       <Container>
@@ -45,16 +112,11 @@ export default class Settings extends Component {
           <Card>
             <CardItem>
               <Left>
-                <Thumbnail
-                  source={{
-                    uri:
-                      'https://lh3.googleusercontent.com/vgv0EDmcYrsy-o7ZjRzKPbJzW2fC7uqSKsnMhrGcTaMImLIKM-1ePl0Gy-n-8SFmCYJKWUf-wu4ChBkJAQ',
-                  }}
-                />
+                <Thumbnail source={{ uri: userDoc.icon }} />
                 <Body>
-                  <Text>Filler Name</Text>
-                  <Text note>username123</Text>
-                  <Text note>email@gmail.com</Text>
+                  <Text>{userDoc.displayName}</Text>
+                  <Text note>{userDoc.userName}</Text>
+                  <Text note>{userDoc.email}</Text>
                 </Body>
               </Left>
             </CardItem>
@@ -66,32 +128,61 @@ export default class Settings extends Component {
             <ListItem>
               <TouchableOpacity
                 onPress={() => {
-                  this.editProfile();
+                  navigation.navigate('EditDisplayName');
                 }}
               >
-                <Text>Edit your profile</Text>
+                <Text>Edit display name</Text>
               </TouchableOpacity>
             </ListItem>
             <ListItem>
               <TouchableOpacity
                 onPress={() => {
-                  this.changePassword();
+                  navigation.navigate('EditUserName');
                 }}
               >
-                <Text>Change your password</Text>
+                <Text>Edit username</Text>
+              </TouchableOpacity>
+            </ListItem>
+            <ListItem>
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate('EmojiPicker');
+                }}
+              >
+                <Text>Change icon</Text>
+              </TouchableOpacity>
+            </ListItem>
+            <ListItem>
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate('EditEmail');
+                }}
+              >
+                <Text>Change email</Text>
+              </TouchableOpacity>
+            </ListItem>
+            <ListItem>
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate('EditPassword');
+                }}
+              >
+                <Text>Change password</Text>
               </TouchableOpacity>
             </ListItem>
             <ListItem last>
-              <TouchableOpacity
-                onPress={() => {
-                  this.logout();
-                }}
-              >
+              <TouchableOpacity onPress={() => this.logout()}>
                 <Text>Logout</Text>
               </TouchableOpacity>
             </ListItem>
+            {/* <ListItem last>
+              <TouchableOpacity onPress={() => this.deleteUser()}>
+                <Text>Delete account</Text>
+              </TouchableOpacity>
+            </ListItem> */}
           </List>
         </Content>
+        <Navbar navigation={this.props.navigation} />
       </Container>
     );
   }

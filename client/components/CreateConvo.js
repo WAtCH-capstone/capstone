@@ -3,6 +3,8 @@ import { Container, Form, Input, Item, Button, Label, Text } from 'native-base';
 import db from '../../firestore';
 import firebase from 'firebase';
 
+// Need to have a way to check if that conversation already exists
+
 export default class CreateConvo extends Component {
   constructor(props) {
     super(props);
@@ -37,8 +39,8 @@ export default class CreateConvo extends Component {
       .then(id =>
         this.props.navigation.navigate('SingleConvo', {
           id,
-          convo: { messages: [] },
-          user: { uid: currUserId },
+          // convo: { messages: [] },
+          // user: { uid: currUserId },
           friend: { displayName: recipient.displayName },
         })
       )
