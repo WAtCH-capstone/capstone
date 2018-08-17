@@ -56,8 +56,6 @@ export default class MessagePreferences extends Component {
 
   _handleDatePicked = date => {
     this.setTrigger(date.toString());
-    this.setState({ triggers: { date: date.toString() } });
-    console.log(this.state.triggers);
     this._hideDateTimePicker();
   };
 
@@ -74,14 +72,12 @@ export default class MessagePreferences extends Component {
     let createdAt;
     const date = new Date(this.state.triggers.date);
     createdAt = date.getTime();
-    console.log('createdAt', createdAt); //TAKE OUT CONSOLE LOGS
     const newMessage = {
       _id: createdAt,
       text: this.props.navigation.state.params.messageContent,
       createdAt,
       user: { _id: this.props.navigation.state.params.user.uid },
     };
-    console.log('newMessage', newMessage);
     schedule.scheduleJob(date, () => {
       this.state.ref.collection('messages').add(newMessage);
       this.state.ref.set({ firstMessage: newMessage }, { merge: true });
@@ -89,7 +85,6 @@ export default class MessagePreferences extends Component {
   }
 
   render() {
-    console.log(this.props.navigation.state.params);
     const { isDateTimePickerVisible, triggers } = this.state;
     return (
       <View style={{ backgroundColor: 'white', paddingBottom: 600 }}>
