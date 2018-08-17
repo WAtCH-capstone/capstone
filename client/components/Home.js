@@ -13,37 +13,20 @@ import {
   // Text
 } from 'native-base';
 
-const convos = [
-  {
-    id: 1,
-    name: 'Mom',
-    messages: [{ id: 1, time: '3:30pm', text: 'Hello World' }],
-  },
-  {
-    id: 2,
-    name: 'Jack',
-    messages: [{ id: 1, time: '11:17am', text: 'Dlrow Olleh' }],
-  },
-];
+// const convos = [
+//   {
+//     id: 1,
+//     name: 'Mom',
+//     messages: [{ id: 1, time: '3:30pm', text: 'Hello World' }],
+//   },
+//   {
+//     id: 2,
+//     name: 'Jack',
+//     messages: [{ id: 1, time: '11:17am', text: 'Dlrow Olleh' }],
+//   },
+// ];
 
 export default class Home extends Component {
-  constructor() {
-    super();
-    this.state = {
-      initialPosition: '',
-      lastPosition: '',
-    };
-  }
-
-  componentDidMount() {
-    const position = navigator.geolocation.getCurrentPosition(position => {
-      // const initialPosition = JSON.stringify(position);
-      this.setState({ initialPosition: position }, () => {
-        console.log(this.state);
-      });
-    });
-  }
-
   render() {
     // console.log("navigator", location);
 
@@ -52,6 +35,7 @@ export default class Home extends Component {
       <View>
         <ScrollView>
           <LogIn navigation={this.props.navigation} />
+          {/* <Test /> */}
           {/* <View style={styles.container}>
             <Text style={styles.welcome}>You're home!</Text>
           </View> */}
