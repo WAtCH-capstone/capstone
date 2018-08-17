@@ -11,6 +11,7 @@ import {
   EmojiPicker,
   EditDisplayName,
   EditUserName,
+  MessagePreferences,
   EditEmail,
   EditPassword,
 } from './client/components';
@@ -104,6 +105,13 @@ const RootNavigator = createStackNavigator({
     screen: EditPassword,
     navigationOptions: {
       headerTitle: 'EditPassword',
+      headerLeft: null,
+    },
+  },
+  MessagePreferences: {
+    screen: MessagePreferences,
+    navigationOptions: {
+      headerTitle: 'Message Preferences',
       headerLeft: null,
     },
   },

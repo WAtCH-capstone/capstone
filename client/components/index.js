@@ -9,5 +9,6 @@ export { default as CreateConvo } from './CreateConvo';
 export { default as EmojiPicker } from './EmojiPicker';
 export { default as EditDisplayName } from './EditDisplayName';
 export { default as EditUserName } from './EditUserName';
+export { default as MessagePreferences } from './MessagePreferences';
 export { default as EditEmail } from './EditEmail';
 export { default as EditPassword } from './EditPassword';

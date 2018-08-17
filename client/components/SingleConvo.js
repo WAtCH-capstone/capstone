@@ -8,6 +8,7 @@ import { GiftedChat } from 'react-native-gifted-chat';
 import firebase from 'firebase';
 import MessagePreferences from './MessagePreferences';
 import schedule from 'node-schedule';
+import Navbar from './Navbar';
 
 export default class SingleConvo extends React.Component {
   constructor() {
@@ -17,14 +18,12 @@ export default class SingleConvo extends React.Component {
       messages: [],
       friend: {},
       menuOpen: false,
-      triggers: {
-        date: '',
-      },
+      messageContent: '',
+      ref: '',
     };
     this.user = firebase.auth().currentUser;
     this.onSend = this.onSend.bind(this);
     this.listen = this.listen.bind(this);
-    this.setTrigger = this.setTrigger.bind(this);
   }
 
   getRef(id) {
@@ -51,10 +50,6 @@ export default class SingleConvo extends React.Component {
       });
   }
 
-  setTrigger(date) {
-    this.setState({ triggers: { date } });
-  }
-
   componentDidMount() {
     this.listen();
     const ref = this.getRef(this.props.navigation.state.params.id);
@@ -70,31 +65,15 @@ export default class SingleConvo extends React.Component {
   }
 
   onSend(messages = []) {
-    let createdAt;
-    if (this.state.triggers.date.length) {
-      const date = new Date(this.state.triggers.date);
-      createdAt = date.getTime();
-      const newMessage = {
-        _id: createdAt,
-        text: messages[0].text,
-        createdAt,
-        user: { _id: this.user.uid },
-      };
-      schedule.scheduleJob(date, () => {
-        this.state.ref.collection('messages').add(newMessage);
-        this.state.ref.set({ firstMessage: newMessage }, { merge: true });
-      });
-    } else {
-      createdAt = new Date().getTime();
-      const newMessage = {
-        _id: createdAt,
-        text: messages[0].text,
-        createdAt,
-        user: { _id: this.user.uid },
-      };
-      this.state.ref.collection('messages').add(newMessage);
-      this.state.ref.set({ firstMessage: newMessage }, { merge: true });
-    }
+    createdAt = new Date().getTime();
+    const newMessage = {
+      _id: createdAt,
+      text: messages[0].text,
+      createdAt,
+      user: { _id: this.user.uid },
+    };
+    this.state.ref.collection('messages').add(newMessage);
+    this.state.ref.set({ firstMessage: newMessage }, { merge: true });
   }
 
   render() {
@@ -134,9 +113,31 @@ export default class SingleConvo extends React.Component {
               messages={this.state.messages}
               onSend={this.onSend}
               user={{ _id: this.user.uid }}
+              onInputTextChanged={message =>
+                this.setState({ messageContent: message })
+              }
             />
           </View>
-          <MessagePreferences setTrigger={this.setTrigger} />
+          <View style={styles.scheduleButton}>
+            <Button
+              style={styles.blueButton}
+              full
+              rounded
+              primary
+              onPress={() => {
+                this.props.navigation.navigate('MessagePreferences', {
+                  user: this.user,
+                  messageContent: this.state.messageContent,
+                  id: this.state.id,
+                });
+              }}
+            >
+              <View>
+                <Text style={{ color: 'white' }}>Schedule this Message</Text>
+              </View>
+            </Button>
+          </View>
+          {/* <Navbar /> */}
         </SideMenu>
       );
     } else {
@@ -154,8 +155,45 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
   },
+  blueButton: {
+    marginTop: 5,
+  },
+  scheduleButton: {
+    backgroundColor: 'white',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingBottom: 50,
+  },
   smallImage: {
     width: 30,
     height: 30,
   },
 });
+
+// onSend(messages = []) {
+//   let createdAt;
+//   if (this.state.triggers.date.length) {
+//     const date = new Date(this.state.triggers.date);
+//     createdAt = date.getTime();
+// const newMessage = {
+//   _id: createdAt,
+//   text: messages[0].text,
+//   createdAt,
+//   user: { _id: this.user.uid },
+// };
+//     schedule.scheduleJob(date, () => {
+//       this.state.ref.collection('messages').add(newMessage);
+//       this.state.ref.set({ firstMessage: newMessage }, { merge: true });
+//     });
+//   } else {
+//     createdAt = new Date().getTime();
+//     const newMessage = {
+//       _id: createdAt,
+//       text: messages[0].text,
+//       createdAt,
+//       user: { _id: this.user.uid },
+//     };
+//     this.state.ref.collection('messages').add(newMessage);
+//     this.state.ref.set({ firstMessage: newMessage }, { merge: true });
+//   }
+// }
