@@ -70,7 +70,7 @@ export default class MessagePreferences extends Component {
     });
   };
 
-  onSend() {
+  async onSend() {
     let createdAt;
     const date = new Date(this.state.triggers.date);
     createdAt = date.getTime();
@@ -83,7 +83,7 @@ export default class MessagePreferences extends Component {
     db.collection('users')
       .doc(this.user.uid)
       .collection('scheduled')
-      .add(newMessage);
+      .add({ newMessage, convoID: this.props.navigation.state.params.id });
     schedule.scheduleJob(date, () => {
       this.state.ref.collection('messages').add(newMessage);
       this.state.ref.set({ firstMessage: newMessage }, { merge: true });
