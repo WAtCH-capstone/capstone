@@ -14,6 +14,7 @@ import {
   MessagePreferences,
   EditEmail,
   EditPassword,
+  ScheduledMessages,
 } from './client/components';
 
 const RootNavigator = createStackNavigator({
@@ -112,6 +113,13 @@ const RootNavigator = createStackNavigator({
     screen: MessagePreferences,
     navigationOptions: {
       headerTitle: 'Message Preferences',
+      // headerLeft: null,
+    },
+  },
+  ScheduledMessages: {
+    screen: ScheduledMessages,
+    navigationOptions: {
+      headerTitle: 'Scheduled Messages',
       headerLeft: null,
     },
   },

@@ -43,6 +43,7 @@ export default class MessagePreferences extends Component {
     this._handleDatePicked = this._handleDatePicked.bind(this);
     this._handlePress = this._handlePress.bind(this);
     this.onSend = this.onSend.bind(this);
+    this.user = firebase.auth().currentUser;
   }
 
   componentDidMount() {
@@ -69,6 +70,7 @@ export default class MessagePreferences extends Component {
   _hideDateTimePicker = () => this.setState({ isDateTimePickerVisible: false });
 
   _handleDatePicked = date => {
+    // this.setState({ triggers: { date: date.toString() } });
     this.setTrigger(date.toString());
     this._hideDateTimePicker();
   };
@@ -82,9 +84,7 @@ export default class MessagePreferences extends Component {
     });
   };
 
-  onSend() {
-    if (this.state.locationDetails) {
-    }
+  async onSend() {
     let createdAt;
     const date = new Date(this.state.triggers.date);
     createdAt = date.getTime();
@@ -94,6 +94,10 @@ export default class MessagePreferences extends Component {
       createdAt,
       user: { _id: this.props.navigation.state.params.user.uid },
     };
+    db.collection('users')
+      .doc(this.user.uid)
+      .collection('scheduled')
+      .add({ newMessage, convoID: this.props.navigation.state.params.id });
     schedule.scheduleJob(date, () => {
       this.state.ref.collection('messages').add(newMessage);
       this.state.ref.set({ firstMessage: newMessage }, { merge: true });
@@ -205,7 +209,14 @@ export default class MessagePreferences extends Component {
               full
               rounded
               primary
-              onPress={() => this.onSend()}
+              onPress={() =>
+                this.onSend()
+                  .then(() => {
+                    alert('Your message has been scheduled!');
+                    this.props.navigation.navigate('ScheduledMessages');
+                  })
+                  .catch(err => console.error(err))
+              }
             >
               <View>
                 <Text style={{ color: 'white' }}>Submit</Text>
