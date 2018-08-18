@@ -1,14 +1,11 @@
 import React from 'react';
 import { View, StyleSheet, Image } from 'react-native';
 import { Header, Left, Body, Right, Button, Title, Text } from 'native-base';
-import SingleConvoPreferences from './SingleConvoPreferences';
-import SideMenu from 'react-native-side-menu';
 import db from '../../firestore';
 import { GiftedChat } from 'react-native-gifted-chat';
 import firebase from 'firebase';
-import MessagePreferences from './MessagePreferences';
-import schedule from 'node-schedule';
 import Navbar from './Navbar';
+import SideMenu from 'react-native-side-menu';
 
 export default class SingleConvo extends React.Component {
   constructor() {
@@ -20,10 +17,12 @@ export default class SingleConvo extends React.Component {
       menuOpen: false,
       messageContent: '',
       ref: '',
+      convoPrefs: {},
     };
     this.user = firebase.auth().currentUser;
     this.onSend = this.onSend.bind(this);
     this.listen = this.listen.bind(this);
+    this.setConvoPrefs = this.setConvoPrefs.bind(this);
   }
 
   getRef(id) {
@@ -76,11 +75,20 @@ export default class SingleConvo extends React.Component {
     this.state.ref.set({ firstMessage: newMessage }, { merge: true });
   }
 
+  async setConvoPrefs(prefs) {
+    let objToSet = {};
+    const key = `${this.user.uid}-prefs`;
+    objToSet[key] = prefs;
+    await db
+      .collection('conversations')
+      .doc(this.state.id)
+      .set(objToSet, { merge: true });
+  }
+
   render() {
-    const menu = <SingleConvoPreferences navigator={navigator} />;
     if (this.state.id.length) {
       return (
-        <SideMenu menu={menu} menuPosition="right" isOpen={this.state.menuOpen}>
+        <SideMenu>
           <View style={{ flex: 1, backgroundColor: 'white' }}>
             <Header style={{ backgroundColor: 'white', paddingTop: -20 }}>
               <Left>
@@ -95,9 +103,11 @@ export default class SingleConvo extends React.Component {
               <Right>
                 <Button
                   transparent
-                  onPress={() => {
-                    this.setState({ menuOpen: true });
-                  }}
+                  onPress={() =>
+                    this.props.navigation.navigate('SingleConvoPreferences', {
+                      setConvoPrefs: this.setConvoPrefs,
+                    })
+                  }
                 >
                   <Image
                     source={{
@@ -169,31 +179,3 @@ const styles = StyleSheet.create({
     height: 30,
   },
 });
-
-// onSend(messages = []) {
-//   let createdAt;
-//   if (this.state.triggers.date.length) {
-//     const date = new Date(this.state.triggers.date);
-//     createdAt = date.getTime();
-// const newMessage = {
-//   _id: createdAt,
-//   text: messages[0].text,
-//   createdAt,
-//   user: { _id: this.user.uid },
-// };
-//     schedule.scheduleJob(date, () => {
-//       this.state.ref.collection('messages').add(newMessage);
-//       this.state.ref.set({ firstMessage: newMessage }, { merge: true });
-//     });
-//   } else {
-//     createdAt = new Date().getTime();
-//     const newMessage = {
-//       _id: createdAt,
-//       text: messages[0].text,
-//       createdAt,
-//       user: { _id: this.user.uid },
-//     };
-//     this.state.ref.collection('messages').add(newMessage);
-//     this.state.ref.set({ firstMessage: newMessage }, { merge: true });
-//   }
-// }

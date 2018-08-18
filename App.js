@@ -15,6 +15,7 @@ import {
   EditEmail,
   EditPassword,
   ScheduledMessages,
+  SingleConvoPreferences,
 } from './client/components';
 
 const RootNavigator = createStackNavigator({
@@ -121,6 +122,13 @@ const RootNavigator = createStackNavigator({
     navigationOptions: {
       headerTitle: 'Scheduled Messages',
       headerLeft: null,
+    },
+  },
+  SingleConvoPreferences: {
+    screen: SingleConvoPreferences,
+    navigationOptions: {
+      headerTitle: 'Conversation Preferences',
+      // headerLeft: null,
     },
   },
 });

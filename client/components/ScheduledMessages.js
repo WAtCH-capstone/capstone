@@ -29,10 +29,8 @@ export default class ScheduledMesages extends Component {
       .collection('scheduled')
       .get();
     const data = snapshot.docs.map(doc => doc.data());
-    console.log(data);
     let messages = [];
     for (let message of data) {
-      console.log(message);
       const friend = await this.getFriend(message.convoID);
       messages.push({ message, friend });
     }
