@@ -28,9 +28,9 @@ export default class Navbar extends Component {
               />
             </Button>
             <Button
-            // onPress={() => {
-            //   navigation.navigate('LogIn');
-            // }}
+              onPress={() => {
+                navigation.navigate('ScheduledMessages');
+              }}
             >
               <Image
                 source={{
