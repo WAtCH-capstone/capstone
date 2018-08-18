@@ -144,6 +144,11 @@ export default class Convos extends Component {
       const id = convoData.id;
       const friend = convoData.friend;
       const firstMessage = convoData.firstMessage;
+      const date = new Date(firstMessage.createdAt);
+      const time = this.dateToTime(date);
+      const timeArr = date.toString().split(' ');
+      const displayTime =
+        timeArr[0] + ' ' + timeArr[1] + ' ' + timeArr[2] + ' at ' + time;
       return (
         <ListItem
           key={id}
@@ -162,10 +167,28 @@ export default class Convos extends Component {
             <Text>{friend.displayName}</Text>
             <Text note>{firstMessage && firstMessage.text}</Text>
           </Body>
-          <Right>{/* <Text note>{firstMessage.time}</Text> */}</Right>
+          <Right>
+            <Text note>{displayTime}</Text>
+          </Right>
         </ListItem>
       );
     });
+  }
+
+  dateToTime(date) {
+    let dateArr = date.toString().split(' ');
+    console.log(dateArr[4]);
+    let [hour, minute, second] = dateArr[4]
+      .split(':')
+      .map(str => parseInt(str));
+    if (hour > 12) {
+      hour = hour - 12;
+      if (minute < 10) return `${hour}:0${minute} pm`;
+      else return `${hour}:${minute} pm`;
+    } else {
+      if (minute < 10) return `${hour}:0${minute} am`;
+      else return `${hour}:${minute} am`;
+    }
   }
 
   render() {

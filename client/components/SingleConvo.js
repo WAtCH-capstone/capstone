@@ -43,7 +43,6 @@ export default class SingleConvo extends React.Component {
           messages = snap.docs.map(message => message.data());
         } else {
           messages = snap.docs[0].data();
-          console.log('messages: ', messages);
         }
         this.setState(prevState => ({
           messages: GiftedChat.append(prevState.messages, messages),

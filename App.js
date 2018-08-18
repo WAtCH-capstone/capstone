@@ -44,13 +44,13 @@ const RootNavigator = createStackNavigator({
     screen: Settings,
     navigationOptions: {
       headerTitle: 'Settings',
-      headerLeft: null,
+      // headerLeft: null,
     },
   },
   SignUp: {
     screen: SignUp,
     navigationOptions: {
-      headerTitle: 'SignUp',
+      headerTitle: 'Sign Up',
       headerLeft: null,
     },
   },
@@ -71,8 +71,8 @@ const RootNavigator = createStackNavigator({
   CreateConvo: {
     screen: CreateConvo,
     navigationOptions: {
-      headerTitle: 'CreateConvo',
-      headerLeft: null,
+      headerTitle: 'New Conversations',
+      // headerLeft: null,
     },
   },
   EmojiPicker: {
@@ -85,28 +85,28 @@ const RootNavigator = createStackNavigator({
   EditDisplayName: {
     screen: EditDisplayName,
     navigationOptions: {
-      headerTitle: 'EditDisplayName',
+      headerTitle: 'Edit Display Name',
       headerLeft: null,
     },
   },
   EditUserName: {
     screen: EditUserName,
     navigationOptions: {
-      headerTitle: 'EditUserName',
+      headerTitle: 'Edit Username',
       headerLeft: null,
     },
   },
   EditEmail: {
     screen: EditEmail,
     navigationOptions: {
-      headerTitle: 'EditEmail',
+      headerTitle: 'Edit Email',
       headerLeft: null,
     },
   },
   EditPassword: {
     screen: EditPassword,
     navigationOptions: {
-      headerTitle: 'EditPassword',
+      headerTitle: 'Edit Password',
       headerLeft: null,
     },
   },
@@ -127,7 +127,7 @@ const RootNavigator = createStackNavigator({
   SingleConvoPreferences: {
     screen: SingleConvoPreferences,
     navigationOptions: {
-      headerTitle: 'Conversation Preferences',
+      headerTitle: 'Receipt Preferences',
       // headerLeft: null,
     },
   },

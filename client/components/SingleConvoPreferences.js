@@ -83,7 +83,7 @@ export default class SingleConvoPreferences extends Component {
           <List>
             <ListItem>
               <Left>
-                <Text>Location sharing</Text>
+                <Text>Share location with friend</Text>
               </Left>
               <Right>
                 <TouchableOpacity>
