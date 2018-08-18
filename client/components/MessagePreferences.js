@@ -153,7 +153,14 @@ export default class MessagePreferences extends Component {
               full
               rounded
               primary
-              onPress={() => this.onSend()}
+              onPress={() =>
+                this.onSend()
+                  .then(() => {
+                    alert('Your message has been scheduled!');
+                    this.props.navigation.navigate('ScheduledMessages');
+                  })
+                  .catch(err => console.error(err))
+              }
             >
               <View>
                 <Text style={{ color: 'white' }}>Submit</Text>
