@@ -10,7 +10,6 @@ import {
   Left,
   Body,
   Right,
-  Thumbnail,
 } from 'native-base';
 import Navbar from './Navbar';
 
@@ -22,6 +21,7 @@ export default class ScheduledMesages extends Component {
     };
     this.user = firebase.auth().currentUser;
   }
+
   async getMessages() {
     const snapshot = await db
       .collection('users')
@@ -44,7 +44,6 @@ export default class ScheduledMesages extends Component {
       .get();
     const data = convo.data();
     const friendID = data.users.find(id => id !== this.user.uid);
-    console.log(friendID);
     const friend = await db
       .collection('users')
       .doc(friendID)
@@ -57,7 +56,6 @@ export default class ScheduledMesages extends Component {
   }
 
   renderScheduled(messages) {
-    console.log(messages);
     return messages.map(data => {
       const time = new Date(data.message.newMessage.createdAt).toString();
       return (

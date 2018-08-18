@@ -23,6 +23,7 @@ export default class SingleConvo extends React.Component {
     this.onSend = this.onSend.bind(this);
     this.listen = this.listen.bind(this);
     this.setConvoPrefs = this.setConvoPrefs.bind(this);
+    this.getCurrUserRef = this.getCurrUserRef.bind(this);
   }
 
   getRef(id) {
@@ -42,6 +43,7 @@ export default class SingleConvo extends React.Component {
           messages = snap.docs.map(message => message.data());
         } else {
           messages = snap.docs[0].data();
+          console.log('messages: ', messages);
         }
         this.setState(prevState => ({
           messages: GiftedChat.append(prevState.messages, messages),
@@ -63,13 +65,26 @@ export default class SingleConvo extends React.Component {
     this.unsubscribe();
   }
 
-  onSend(messages = []) {
-    createdAt = new Date().getTime();
+  async getCurrUserRef() {
+    const currUserRef = await db
+      .collection('users')
+      .doc(this.user.uid)
+      .get();
+    return currUserRef.data();
+  }
+
+  async onSend(messages = []) {
+    const currUserRef = await this.getCurrUserRef();
+    const createdAt = new Date().getTime();
     const newMessage = {
       _id: createdAt,
       text: messages[0].text,
       createdAt,
-      user: { _id: this.user.uid },
+      user: {
+        _id: this.user.uid,
+        name: currUserRef.displayName,
+        avatar: currUserRef.icon,
+      },
     };
     this.state.ref.collection('messages').add(newMessage);
     this.state.ref.set({ firstMessage: newMessage }, { merge: true });
