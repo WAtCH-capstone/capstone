@@ -25,6 +25,7 @@ export default class Convos extends Component {
     super();
     this.state = { convos: [], search: '', results: [] };
     this.user = firebase.auth().currentUser;
+    this.getUserData = this.getUserData.bind(this);
     this.enterSearch = this.enterSearch.bind(this);
     this.getData = this.getData.bind(this);
     this.renderConvos = this.renderConvos.bind(this);
@@ -32,13 +33,17 @@ export default class Convos extends Component {
     this.setConvos = this.setConvos.bind(this);
   }
 
-  async listen() {
+  async getUserData() {
     const uid = await firebase.auth().currentUser.uid;
     const snapshot = await db
       .collection('users')
       .doc(uid)
       .get();
     const userData = await snapshot.data();
+    return userData;
+  }
+
+  async listen(userData) {
     for (let id of userData.conversations) {
       this.unsubscribe = db
         .collection('conversations')
@@ -52,13 +57,7 @@ export default class Convos extends Component {
     }
   }
 
-  async setConvos() {
-    const uid = await firebase.auth().currentUser.uid;
-    const snapshot = await db
-      .collection('users')
-      .doc(uid)
-      .get();
-    const userData = await snapshot.data();
+  async setConvos(userData) {
     let convosArr = [];
     for (let id of userData.conversations) {
       const convoData = await this.getData(id);
@@ -74,8 +73,9 @@ export default class Convos extends Component {
   }
 
   async componentDidMount() {
-    this.setConvos();
-    this.listen();
+    const userData = await this.getUserData();
+    this.setConvos(userData);
+    this.listen(userData);
   }
 
   // async listenNotifications() {
