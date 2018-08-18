@@ -31,13 +31,6 @@ export default class Convos extends Component {
     this.enterSearch = this.enterSearch.bind(this);
   }
 
-  enterSearch(search) {
-    console.log('search: ', search);
-    console.log(
-      'this would filter the messages and only return ones relevant to the search'
-    );
-  }
-
   async componentDidMount() {
     // this.getUserName();
     const uid = await firebase.auth().currentUser.uid;
@@ -72,27 +65,7 @@ export default class Convos extends Component {
     return { firstMessage, friend };
   }
 
-  // async getFirstMessage(id) {
-  //   const convo = await db
-  //     .collection('conversations')
-  //     .doc(id)
-  //     .get();
-  //   return convo.data().firstMessage;
-  // }
-
-  // async getFriend(id) {
-  //   const friendID = convo.users.find(id => id !== this.user.uid);
-  //   const friend = await db
-  //     .collection('users')
-  //     .doc(friendID)
-  //     .get();
-  //   return friend.data();
-  // }
-
   renderConvos(convos) {
-    // const sorted = convos.sort(
-    //   (a, b) => a.firstMessage.createdAt - b.firstMessage.createdAt || 0
-    // );
     const navigation = this.props.navigation;
     return convos.map(convoData => {
       const id = convoData.id;
@@ -120,6 +93,24 @@ export default class Convos extends Component {
         </ListItem>
       );
     });
+  }
+
+  enterSearch(search) {
+    console.log('search: ', search);
+    // console.log(
+    //   'this would filter the messages and only return ones relevant to the search'
+    // );
+
+    let convos = this.state.convos;
+    console.log('HERE', this.state.convos);
+
+    // let allConvos = 4;
+
+    for (let i = 0; i < convos.length; i++) {
+      console.log('NAMES', convos[i].friend.displayName);
+      // this.setState({ convos: convos[1] });
+      // console.log(convos);
+    }
   }
 
   render() {
