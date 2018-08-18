@@ -113,7 +113,7 @@ const RootNavigator = createStackNavigator({
     screen: MessagePreferences,
     navigationOptions: {
       headerTitle: 'Message Preferences',
-      headerLeft: null,
+      // headerLeft: null,
     },
   },
   ScheduledMessages: {
