@@ -26,6 +26,7 @@ export default class Convos extends Component {
     this.state = {
       convos: [],
       search: '',
+      results: [],
     };
     this.user = firebase.auth().currentUser;
     this.enterSearch = this.enterSearch.bind(this);
@@ -65,8 +66,23 @@ export default class Convos extends Component {
     return { firstMessage, friend };
   }
 
+  enterSearch(search) {
+    let convos = this.state.convos;
+    let searchResult = [];
+    if (!search.length) {
+      this.setState({ results: convos });
+    }
+    for (let i = 0; i < convos.length; i++) {
+      if (search === convos[i].friend.displayName) {
+        searchResult.push(convos[i]);
+      }
+      this.setState({ results: searchResult });
+    }
+  }
+
   renderConvos(convos) {
     const navigation = this.props.navigation;
+
     return convos.map(convoData => {
       const id = convoData.id;
       const friend = convoData.friend;
@@ -95,26 +111,9 @@ export default class Convos extends Component {
     });
   }
 
-  enterSearch(search) {
-    console.log('search: ', search);
-    // console.log(
-    //   'this would filter the messages and only return ones relevant to the search'
-    // );
-
-    let convos = this.state.convos;
-    console.log('HERE', this.state.convos);
-
-    // let allConvos = 4;
-
-    for (let i = 0; i < convos.length; i++) {
-      console.log('NAMES', convos[i].friend.displayName);
-      // this.setState({ convos: convos[1] });
-      // console.log(convos);
-    }
-  }
-
   render() {
     const convos = this.state.convos;
+    const results = this.state.results;
     const navigation = this.props.navigation;
     return (
       <Container>
@@ -140,7 +139,9 @@ export default class Convos extends Component {
           </Button>
         </Header>
         <Content>
-          {convos && convos.length ? (
+          {results && results.length ? (
+            <List>{this.renderConvos(results)}</List>
+          ) : convos && convos.length ? (
             <List>{this.renderConvos(convos)}</List>
           ) : (
             <Text>No conversations yet</Text>
