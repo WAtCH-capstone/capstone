@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
 import {
   Container,
   Content,
@@ -15,6 +15,7 @@ import {
   Button,
   View,
 } from 'native-base';
+import { StyleSheet } from 'react-native';
 import db from '../../firestore';
 import firebase from 'firebase';
 import Navbar from './Navbar';
@@ -24,24 +25,18 @@ export default class Convos extends Component {
     super();
     this.state = {
       convos: [],
-      search: ""
+      search: '',
+      results: [],
     };
     this.user = firebase.auth().currentUser;
     this.enterSearch = this.enterSearch.bind(this);
-  }
-
-  enterSearch(search) {
-    console.log("search: ", search);
-    console.log(
-      "this would filter the messages and only return ones relevant to the search"
-    );
   }
 
   async componentDidMount() {
     // this.getUserName();
     const uid = await firebase.auth().currentUser.uid;
     const snapshot = await db
-      .collection("users")
+      .collection('users')
       .doc(uid)
       .get();
     const userData = await snapshot.data();
@@ -57,42 +52,37 @@ export default class Convos extends Component {
 
   async getData(id) {
     const convo = await db
-      .collection("conversations")
+      .collection('conversations')
       .doc(id)
       .get();
     const data = convo.data();
     const firstMessage = data.firstMessage;
     const friendID = data.users.find(uid => uid !== this.user.uid);
     const friendQuery = await db
-      .collection("users")
+      .collection('users')
       .doc(friendID)
       .get();
     const friend = friendQuery.data();
     return { firstMessage, friend };
   }
 
-  // async getFirstMessage(id) {
-  //   const convo = await db
-  //     .collection('conversations')
-  //     .doc(id)
-  //     .get();
-  //   return convo.data().firstMessage;
-  // }
-
-  // async getFriend(id) {
-  //   const friendID = convo.users.find(id => id !== this.user.uid);
-  //   const friend = await db
-  //     .collection('users')
-  //     .doc(friendID)
-  //     .get();
-  //   return friend.data();
-  // }
+  enterSearch(search) {
+    let convos = this.state.convos;
+    let searchResult = [];
+    if (!search.length) {
+      this.setState({ results: convos });
+    }
+    for (let i = 0; i < convos.length; i++) {
+      if (search === convos[i].friend.displayName) {
+        searchResult.push(convos[i]);
+      }
+      this.setState({ results: searchResult });
+    }
+  }
 
   renderConvos(convos) {
-    // const sorted = convos.sort(
-    //   (a, b) => a.firstMessage.createdAt - b.firstMessage.createdAt || 0
-    // );
     const navigation = this.props.navigation;
+
     return convos.map(convoData => {
       const id = convoData.id;
       const friend = convoData.friend;
@@ -102,9 +92,9 @@ export default class Convos extends Component {
           key={id}
           avatar
           onPress={() =>
-            navigation.navigate("SingleConvo", {
+            navigation.navigate('SingleConvo', {
               id,
-              friend
+              friend,
             })
           }
         >
@@ -123,10 +113,11 @@ export default class Convos extends Component {
 
   render() {
     const convos = this.state.convos;
+    const results = this.state.results;
     const navigation = this.props.navigation;
     return (
       <Container>
-        <Header searchBar rounded>
+        <Header style={styles.header} searchBar rounded>
           <Item>
             <Input
               clearButtonMode="always"
@@ -142,13 +133,15 @@ export default class Convos extends Component {
           </Button>
           <Button
             transparent
-            onPress={() => navigation.navigate("CreateConvo")}
+            onPress={() => navigation.navigate('CreateConvo')}
           >
             <Text>+</Text>
           </Button>
         </Header>
         <Content>
-          {convos && convos.length ? (
+          {results && results.length ? (
+            <List>{this.renderConvos(results)}</List>
+          ) : convos && convos.length ? (
             <List>{this.renderConvos(convos)}</List>
           ) : (
             <Text>No conversations yet</Text>
@@ -159,3 +152,11 @@ export default class Convos extends Component {
     );
   }
 }
+
+const styles = StyleSheet.create({
+  header: {
+    backgroundColor: 'white',
+    paddingTop: -20,
+    marginBottom: 8,
+  },
+});
