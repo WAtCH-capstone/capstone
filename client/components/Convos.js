@@ -13,27 +13,46 @@ import {
   Item,
   Input,
   Button,
-  View,
 } from 'native-base';
 import { StyleSheet } from 'react-native';
 import db from '../../firestore';
 import firebase from 'firebase';
 import Navbar from './Navbar';
+import Notification from 'react-native-in-app-notification';
 
 export default class Convos extends Component {
   constructor() {
     super();
-    this.state = {
-      convos: [],
-      search: '',
-      results: [],
-    };
+    this.state = { convos: [], search: '', results: [] };
     this.user = firebase.auth().currentUser;
     this.enterSearch = this.enterSearch.bind(this);
+    this.getData = this.getData.bind(this);
+    this.renderConvos = this.renderConvos.bind(this);
+    this.listen = this.listen.bind(this);
+    this.setConvos = this.setConvos.bind(this);
   }
 
-  async componentDidMount() {
-    // this.getUserName();
+  async listen() {
+    const uid = await firebase.auth().currentUser.uid;
+    const snapshot = await db
+      .collection('users')
+      .doc(uid)
+      .get();
+    const userData = await snapshot.data();
+    for (let id of userData.conversations) {
+      this.unsubscribe = db
+        .collection('conversations')
+        .doc(id)
+        .collection('messages')
+        .orderBy('createdAt', 'desc')
+        .limit(20)
+        .onSnapshot(() => {
+          this.setConvos();
+        });
+    }
+  }
+
+  async setConvos() {
     const uid = await firebase.auth().currentUser.uid;
     const snapshot = await db
       .collection('users')
@@ -45,10 +64,50 @@ export default class Convos extends Component {
       const convoData = await this.getData(id);
       const firstMessage = convoData.firstMessage;
       const friend = convoData.friend;
-      convosArr.push({ id, firstMessage, friend });
+      convosArr.push({
+        id,
+        firstMessage,
+        friend,
+      });
     }
     this.setState({ convos: convosArr });
   }
+
+  async componentDidMount() {
+    this.setConvos();
+    this.listen();
+  }
+
+  // async listenNotifications() {
+  //   const uid = await firebase.auth().currentUser.uid;
+  //   const snapshot = await db
+  //     .collection('users')
+  //     .doc(uid)
+  //     .get();
+  //   const userData = await snapshot.data();
+  //   let userConvos = [];
+  //   for (let id of userData.conversations) {
+  //     const convoData = await this.getData(id);
+  //     userConvos.push(convoData);
+  //   }
+  //   console.log('userConvos: ', userConvos);
+  //   userConvos.forEach(convo => {
+  //     this.unsubscribe = db
+  //       .collection('conversations')
+  //       .doc(convo._id)
+  //       .collection('messages')
+  //       .onSnapshot(snap => {
+  //         console.log('snap: ', snap);
+  //         // this.notification &&
+  //         //   this.notification.show({
+  //         //     title: 'You pressed it!',
+  //         //     message: 'The notification has been triggered',
+  //         //     // onPress: () =>
+  //         //     //   Alert.alert('Alert', 'You clicked the notification!'),
+  //         //   });
+  //       });
+  //   });
+  // }
 
   async getData(id) {
     const convo = await db
@@ -81,8 +140,6 @@ export default class Convos extends Component {
   }
 
   renderConvos(convos) {
-    const navigation = this.props.navigation;
-
     return convos.map(convoData => {
       const id = convoData.id;
       const friend = convoData.friend;
@@ -92,7 +149,7 @@ export default class Convos extends Component {
           key={id}
           avatar
           onPress={() =>
-            navigation.navigate('SingleConvo', {
+            this.props.navigation.navigate('SingleConvo', {
               id,
               friend,
             })
@@ -148,6 +205,11 @@ export default class Convos extends Component {
           )}
         </Content>
         <Navbar navigation={this.props.navigation} />
+        {/* <Notification
+          ref={ref => {
+            this.notification = ref;
+          }}
+        /> */}
       </Container>
     );
   }

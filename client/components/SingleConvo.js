@@ -76,7 +76,7 @@ export default class SingleConvo extends React.Component {
 
   async onSend(messages = []) {
     const currUserRef = await this.getCurrUserRef();
-    createdAt = new Date().getTime();
+    const createdAt = new Date().getTime();
     const newMessage = {
       _id: createdAt,
       text: messages[0].text,
