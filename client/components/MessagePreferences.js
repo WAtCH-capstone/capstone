@@ -16,7 +16,9 @@ import schedule from 'node-schedule';
 import db from '../../firestore';
 import firebase from 'firebase';
 import Navbar from './Navbar';
-
+const geodist = require('geodist');
+// const timer = require('react-native-timer');
+//
 export default class MessagePreferences extends Component {
   constructor() {
     super();
@@ -30,6 +32,12 @@ export default class MessagePreferences extends Component {
       triggers: {
         date: '',
       },
+      distanceFromAtoB: '',
+      currentLat: null,
+      currentLong: null,
+      error: null,
+      distanceLeft: '',
+      showMsg: false,
     };
     this.setTrigger = this.setTrigger.bind(this);
     this._handleDatePicked = this._handleDatePicked.bind(this);
@@ -40,6 +48,12 @@ export default class MessagePreferences extends Component {
   componentDidMount() {
     const ref = this.getRef(this.props.navigation.state.params.id);
     this.setState({ ref });
+  }
+
+  getDistanceFromDestination() {}
+
+  componentWillUnmount() {
+    navigator.geolocation.clearWatch(this.watchId);
   }
 
   getRef(id) {
@@ -69,6 +83,8 @@ export default class MessagePreferences extends Component {
   };
 
   onSend() {
+    if (this.state.locationDetails) {
+    }
     let createdAt;
     const date = new Date(this.state.triggers.date);
     createdAt = date.getTime();
@@ -86,6 +102,48 @@ export default class MessagePreferences extends Component {
 
   render() {
     const { isDateTimePickerVisible, triggers } = this.state;
+
+    this.watchId = navigator.geolocation.watchPosition(
+      position => {
+        // const initialPosition = JSON.stringify(position);
+        this.setState(
+          {
+            currentLat: position.coords.latitude,
+            currentLong: position.coords.longitude,
+          },
+          () => {
+            console.log('this.state', this.state);
+          }
+        );
+      },
+      error => this.setState({ error: error.message }),
+      {
+        enableHighAccuracy: true,
+        timeout: 20000,
+        maximumAge: 1000,
+        distanceFilter: 10,
+      }
+    );
+
+    if (this.state.locationDetails.hasOwnProperty('geometry')) {
+      const dist = geodist(
+        { lat: this.state.currentLat, long: this.state.currentLong },
+        {
+          lat: this.state.locationDetails.geometry.location.lat,
+          long: this.state.locationDetails.geometry.location.lng,
+        },
+        { unit: 'feet' }
+      );
+      // console.log('first coord', this.state.locationDetails.geometry.location.lat);
+      // this.setState({ distanceFromAtoB: dist });
+      console.log(typeof dist);
+      console.log('distance from current to destination: ', dist);
+      if (dist <= 528) {
+        // less than a foot
+        console.log('true!');
+      }
+    }
+
     return (
       <View>
         <View style={{ backgroundColor: 'white', paddingBottom: 540 }}>
