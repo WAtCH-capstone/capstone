@@ -22,26 +22,37 @@ export default class SingleConvoPreferences extends Component {
     super(props);
     this.state = {
       selected: 'key1',
-      isDateTimePickerVisible: false,
+      startTimePicker: false,
+      endTimePicker: false,
+      startTime: '',
+      endTime: '',
       prefs: {
-        times: [],
+        startTimes: [],
+        endTimes: [],
         location: '',
       },
     };
-    this.prefRef = `${firebase.auth().currentUser.uid}-pref`;
+    this.deleteTime = this.deleteTime.bind(this);
   }
 
   async componentDidMount() {
     const uid = firebase.auth().currentUser.uid;
     const prefRef = `${uid}-prefs`;
+    console.log('key:', prefRef);
     const convoRef = await db
       .collection('conversations')
       .doc(this.props.navigation.state.params.id)
       .get();
-    console.log(convoRef.data());
-    const data = convoRef.data()[this.prefRef];
+    console.log('convo:', convoRef.data());
+    const data = convoRef.data()[prefRef];
     console.log(data);
-    this.setState({ prefs: { times: data.times, location: data.location } });
+    this.setState({
+      prefs: {
+        startTimes: data.startTimes,
+        endTimes: data.endTimes,
+        location: data.location,
+      },
+    });
   }
 
   async onValueChange() {
@@ -50,17 +61,30 @@ export default class SingleConvoPreferences extends Component {
 
   _showDateTimePicker = () => this.setState({ isDateTimePickerVisible: true });
 
-  _hideDateTimePicker = () => this.setState({ isDateTimePickerVisible: false });
+  _hideStartTimePicker = () => this.setState({ startTimePicker: false });
 
-  _handleDatePicked = async date => {
+  _hideEndTimePicker = () => this.setState({ endTimePicker: false });
+
+  _startTimePicked = async date => {
     const time = this.dateToTime(date);
     await this.setState(prevState => ({
       prefs: {
         ...prevState.prefs,
-        times: [...prevState.prefs.times, { date, time }],
+        startTimes: [...prevState.prefs.startTimes, { date, time }],
       },
     }));
-    this._hideDateTimePicker();
+    this._hideStartTimePicker();
+  };
+
+  _endTimePicked = async date => {
+    const time = this.dateToTime(date);
+    await this.setState(prevState => ({
+      prefs: {
+        ...prevState.prefs,
+        endTimes: [...prevState.prefs.endTimes, { date, time }],
+      },
+    }));
+    this._hideEndTimePicker();
   };
 
   dateToTime(date) {
@@ -78,24 +102,56 @@ export default class SingleConvoPreferences extends Component {
     }
   }
 
-  async deleteTime() {
-    // const convoRef = await db.collection('conversations').doc(this.props.navigation.state.params.id).get()
-    // const times = convoRef.data()[this.prefRef].times
-    console.log('this will delete a time from the db');
+  async deleteTime(index) {
+    await this.setState(prevState => ({
+      prefs: {
+        ...prevState.prefs,
+        startTimes: prevState.prefs.startTimes.splice(index, 1),
+        endTimes: prevState.prefs.endTimes.splice(index, 1),
+      },
+    }));
   }
 
   renderTimes() {
-    if (!this.state.prefs.times.length) {
-      return <Text>Messages welcome anytime!</Text>;
+    const startTimes = this.state.prefs.startTimes;
+    const endTimes = this.state.prefs.endTimes;
+    if (!startTimes.length && !endTimes.length) {
+      return <Text>Messages welcome anytime</Text>;
     }
-    return this.state.prefs.times.map(el => (
-      <ListItem>
-        <Text>{el.time}</Text>
-        <Right onPress={this.deleteTime}>
-          <Text>Delete</Text>
-        </Right>
-      </ListItem>
-    ));
+    return startTimes.map((el, ind) => {
+      if (!endTimes[ind]) {
+        return (
+          <ListItem>
+            <Left>
+              <Text>{startTimes[ind].time} - </Text>
+            </Left>
+          </ListItem>
+        );
+      }
+      if (!startTimes[ind]) {
+        return (
+          <ListItem>
+            <Left>
+              <Text> - {endTimes[ind].time}</Text>
+            </Left>
+          </ListItem>
+        );
+      }
+      return (
+        <ListItem>
+          <Left>
+            <Text>
+              {startTimes[ind].time} - {endTimes[ind].time}
+            </Text>
+          </Left>
+          <Right>
+            <Button onPress={() => this.deleteTime(ind)}>
+              <Text>X</Text>
+            </Button>
+          </Right>
+        </ListItem>
+      );
+    });
   }
 
   render() {
@@ -116,25 +172,46 @@ export default class SingleConvoPreferences extends Component {
                 </TouchableOpacity>
               </Right>
             </ListItem>
+          </List>
+          <Text>Do Not disturb:</Text>
+          <List>
+            {this.renderTimes()}
             <ListItem>
-              <Button
-                style={{ marginTop: 10 }}
-                full
-                rounded
-                primary
-                onPress={() => this.setState({ isDateTimePickerVisible: true })}
-              >
-                <Text style={{ color: 'white' }}>Add Receipt Times</Text>
-              </Button>
-              <DateTimePicker
-                mode="time"
-                isVisible={this.state.isDateTimePickerVisible}
-                onConfirm={this._handleDatePicked}
-                onCancel={this._hideDateTimePicker}
-              />
+              <Left>
+                <Button
+                  style={{ marginTop: 10 }}
+                  full
+                  rounded
+                  primary
+                  onPress={() => this.setState({ startTimePicker: true })}
+                >
+                  <Text style={{ color: 'white' }}>Add Start Time</Text>
+                  <DateTimePicker
+                    mode="time"
+                    isVisible={this.state.startTimePicker}
+                    onConfirm={this._startTimePicked}
+                    onCancel={this._hideStartTimePicker}
+                  />
+                </Button>
+                <Text>{'  '}</Text>
+                <Button
+                  style={{ marginTop: 10 }}
+                  full
+                  rounded
+                  primary
+                  onPress={() => this.setState({ endTimePicker: true })}
+                >
+                  <Text style={{ color: 'white' }}>Add End Time</Text>
+                </Button>
+                <DateTimePicker
+                  mode="time"
+                  isVisible={this.state.endTimePicker}
+                  onConfirm={this._endTimePicked}
+                  onCancel={this._hideEndTimePicker}
+                />
+              </Left>
             </ListItem>
           </List>
-          <List>{this.renderTimes()}</List>
           <Button
             style={{ marginTop: 10 }}
             full
