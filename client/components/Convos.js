@@ -52,7 +52,7 @@ export default class Convos extends Component {
         .orderBy('createdAt', 'desc')
         .limit(20)
         .onSnapshot(() => {
-          this.setConvos();
+          this.setConvos(userData);
         });
     }
   }
