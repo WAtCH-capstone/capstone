@@ -41,7 +41,7 @@ export default class CreateConvo extends Component {
           id,
           // convo: { messages: [] },
           // user: { uid: currUserId },
-          friend: { displayName: recipient.displayName },
+          friend: recipient,
         })
       )
       .catch(err => console.error(err));
