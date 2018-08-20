@@ -37,10 +37,7 @@ export default class LogIn extends React.Component {
     return (
       <Container style={{ paddingBottom: 100 }}>
         <Image
-          source={{
-            uri:
-              'https://lh3.googleusercontent.com/vgv0EDmcYrsy-o7ZjRzKPbJzW2fC7uqSKsnMhrGcTaMImLIKM-1ePl0Gy-n-8SFmCYJKWUf-wu4ChBkJAQ',
-          }}
+          source={require('../../public/now-or-later.png')}
           style={{
             width: '100%',
             height: '50%',
