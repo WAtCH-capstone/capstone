@@ -29,20 +29,12 @@ export default class Convos extends Component {
     this.enterSearch = this.enterSearch.bind(this);
     this.getData = this.getData.bind(this);
     this.renderConvos = this.renderConvos.bind(this);
-    this.listen = this.listen.bind(this);
+    this.listenToConvos = this.listenToConvos.bind(this);
     this.listenToUser = this.listenToUser.bind(this);
     this.setConvos = this.setConvos.bind(this);
   }
 
-  async getUserData() {
-    const snapshot = await db
-      .collection('users')
-      .doc(this.user.uid)
-      .get();
-    return snapshot.data();
-  }
-
-  async listen() {
+  async listenToConvos() {
     let userData = await this.getUserData();
     for (let id of userData.conversations) {
       this.unsubscribe = await db
@@ -53,7 +45,6 @@ export default class Convos extends Component {
         .limit(20)
         .onSnapshot(async () => {
           let userData = await this.getUserData();
-          console.log('updating through listener on convo');
           this.setConvos(userData);
         });
     }
@@ -64,7 +55,6 @@ export default class Convos extends Component {
       .collection('users')
       .doc(this.user.uid)
       .onSnapshot(snap => {
-        console.log('updating through listener on user', this.user.uid);
         this.setConvos(snap.data());
       });
   }
@@ -81,24 +71,12 @@ export default class Convos extends Component {
         friend,
       });
     }
-    console.log('setting state:', convosArr);
     this.setState({ convos: convosArr });
   }
 
   async componentDidMount() {
-    console.log('convos component mounting');
-    // const snapshot = await db
-    //   .collection('users')
-    //   .doc(this.user.uid)
-    //   .get();
-    // const userData = snapshot.data();
-    // this.setConvos(userData);
-    this.listen();
+    this.listenToConvos();
     this.listenToUser();
-  }
-
-  componentWillUnmount() {
-    console.log('convos is unmounting');
   }
 
   // async listenNotifications() {
@@ -131,22 +109,6 @@ export default class Convos extends Component {
   //       });
   //   });
   // }
-
-  async getData(id) {
-    const convo = await db
-      .collection('conversations')
-      .doc(id)
-      .get();
-    const data = convo.data();
-    const firstMessage = data.firstMessage;
-    const friendID = data.users.find(uid => uid !== this.user.uid);
-    const friendQuery = await db
-      .collection('users')
-      .doc(friendID)
-      .get();
-    const friend = friendQuery.data();
-    return { firstMessage, friend };
-  }
 
   enterSearch(search) {
     let convos = this.state.convos;
@@ -200,21 +162,6 @@ export default class Convos extends Component {
     });
   }
 
-  dateToTime(date) {
-    let dateArr = date.toString().split(' ');
-    let [hour, minute, second] = dateArr[4]
-      .split(':')
-      .map(str => parseInt(str));
-    if (hour > 12) {
-      hour = hour - 12;
-      if (minute < 10) return `${hour}:0${minute} pm`;
-      else return `${hour}:${minute} pm`;
-    } else {
-      if (minute < 10) return `${hour}:0${minute} am`;
-      else return `${hour}:${minute} am`;
-    }
-  }
-
   render() {
     const convos = this.state.convos;
     const results = this.state.results;
@@ -259,6 +206,45 @@ export default class Convos extends Component {
         /> */}
       </Container>
     );
+  }
+
+  async getUserData() {
+    const snapshot = await db
+      .collection('users')
+      .doc(this.user.uid)
+      .get();
+    return snapshot.data();
+  }
+
+  async getData(id) {
+    const convo = await db
+      .collection('conversations')
+      .doc(id)
+      .get();
+    const data = convo.data();
+    const firstMessage = data.firstMessage;
+    const friendID = data.users.find(uid => uid !== this.user.uid);
+    const friendQuery = await db
+      .collection('users')
+      .doc(friendID)
+      .get();
+    const friend = friendQuery.data();
+    return { firstMessage, friend };
+  }
+
+  dateToTime(date) {
+    let dateArr = date.toString().split(' ');
+    let [hour, minute, second] = dateArr[4]
+      .split(':')
+      .map(str => parseInt(str));
+    if (hour > 12) {
+      hour = hour - 12;
+      if (minute < 10) return `${hour}:0${minute} pm`;
+      else return `${hour}:${minute} pm`;
+    } else {
+      if (minute < 10) return `${hour}:0${minute} am`;
+      else return `${hour}:${minute} am`;
+    }
   }
 }
 
