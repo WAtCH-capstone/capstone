@@ -38,14 +38,11 @@ export default class SingleConvoPreferences extends Component {
   async componentDidMount() {
     const uid = firebase.auth().currentUser.uid;
     const prefRef = `${uid}-prefs`;
-    console.log('key:', prefRef);
     const convoRef = await db
       .collection('conversations')
       .doc(this.props.navigation.state.params.id)
       .get();
-    console.log('convo:', convoRef.data());
     const data = convoRef.data()[prefRef];
-    console.log(data);
     this.setState({
       prefs: {
         startTimes: data.startTimes,
