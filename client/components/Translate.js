@@ -86,7 +86,7 @@ export default class TranslateComponent extends React.Component {
           <Content>
             <Picker
               mode="dropdown"
-              selectedValue={this.state.selected1}
+              selectedValue={this.state.en}
               placeholder="Translate"
               onValueChange={(itemValue, itemIndex) => (
                 this.setState({
