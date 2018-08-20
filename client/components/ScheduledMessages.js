@@ -103,12 +103,8 @@ export default class ScheduledMesages extends Component {
             <ActivityIndicator size="large" color="#3B80FE" />
           ) : (
             <Container style={styles.noneContainer}>
-              <Image
-                source={{
-                  uri: 'https://media.giphy.com/media/WgTf8fPTjJZAI/giphy.gif',
-                }}
-              />
-              <Text style={styles.none}>No scheduled messages.</Text>
+              <Image source={require('../../public/no-messages.png')} />
+              <Text style={styles.none}>No scheduled messages yet</Text>
             </Container>
           )}
         </Content>

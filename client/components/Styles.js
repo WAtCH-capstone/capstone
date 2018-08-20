@@ -25,13 +25,14 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   none: {
-    fontSize: 20,
+    fontSize: 25,
     textAlign: 'center',
     textAlignVertical: 'center',
+    padding: 20,
   },
   noneContainer: {
     flex: 1,
-    justifyContent: 'center',
+    // justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#F5FCFF',
   },

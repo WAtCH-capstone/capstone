@@ -199,11 +199,7 @@ export default class Convos extends Component {
             <ActivityIndicator size="large" color="#3B80FE" />
           ) : (
             <Container style={styles.noneContainer}>
-              <Image
-                source={{
-                  uri: 'https://media.giphy.com/media/WgTf8fPTjJZAI/giphy.gif',
-                }}
-              />
+              <Image source={require('../../public/no-messages.png')} />
               <Text style={styles.none}>No conversations yet</Text>
             </Container>
           )}
