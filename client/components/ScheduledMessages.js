@@ -10,6 +10,7 @@ import {
   Left,
   Body,
 } from 'native-base';
+import { ActivityIndicator } from 'react-native';
 import Navbar from './Navbar';
 
 export default class ScheduledMesages extends Component {
@@ -17,6 +18,7 @@ export default class ScheduledMesages extends Component {
     super();
     this.state = {
       messages: [],
+      isLoading: true,
     };
     this.user = firebase.auth().currentUser;
   }
@@ -33,7 +35,7 @@ export default class ScheduledMesages extends Component {
       const friend = await this.getFriend(message.convoID);
       messages.push({ message, friend });
     }
-    this.setState({ messages });
+    this.setState({ messages, isLoading: false });
   }
 
   async getFriend(id) {
@@ -96,6 +98,8 @@ export default class ScheduledMesages extends Component {
         <Content>
           {this.state.messages && this.state.messages.length ? (
             <List>{this.renderScheduled(this.state.messages)}</List>
+          ) : this.state.isLoading ? (
+            <ActivityIndicator size="large" color="#3B80FE" />
           ) : (
             <Text>No scheduled messages.</Text>
           )}

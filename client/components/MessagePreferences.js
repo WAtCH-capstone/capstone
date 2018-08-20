@@ -245,7 +245,9 @@ export default class MessagePreferences extends Component {
                       value={this.state.textInput}
                     />
                   </View>
-                  {isSearching && <ActivityIndicator />}
+                  {isSearching && (
+                    <ActivityIndicator size="large" color="#3B80FE" />
+                  )}
                   <ScrollView>
                     {locationResults.map(el => (
                       <TouchableOpacity

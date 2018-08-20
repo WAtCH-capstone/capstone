@@ -19,6 +19,11 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
   },
+  header: {
+    backgroundColor: 'white',
+    paddingTop: -20,
+    marginBottom: 8,
+  },
 });
 
 export default styles;
