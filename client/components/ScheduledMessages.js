@@ -10,6 +10,7 @@ import {
   Left,
   Body,
   Right,
+  Thumbnail,
 } from 'native-base';
 import Navbar from './Navbar';
 
@@ -55,9 +56,29 @@ export default class ScheduledMesages extends Component {
     await this.getMessages();
   }
 
+  dateToTime(date) {
+    let dateArr = date.toString().split(' ');
+    console.log(dateArr[4]);
+    let [hour, minute, second] = dateArr[4]
+      .split(':')
+      .map(str => parseInt(str));
+    if (hour > 12) {
+      hour = hour - 12;
+      if (minute < 10) return `${hour}:0${minute} pm`;
+      else return `${hour}:${minute} pm`;
+    } else {
+      if (minute < 10) return `${hour}:0${minute} am`;
+      else return `${hour}:${minute} am`;
+    }
+  }
+
   renderScheduled(messages) {
     return messages.map(data => {
-      const time = new Date(data.message.newMessage.createdAt).toString();
+      const date = new Date(data.message.newMessage.createdAt);
+      const time = this.dateToTime(date);
+      const timeArr = date.toString().split(' ');
+      const displayTime =
+        timeArr[0] + ' ' + timeArr[1] + ' ' + timeArr[2] + ' at ' + time;
       return (
         <ListItem key={data.message.newMessage.createdAt}>
           <Left>
@@ -65,10 +86,8 @@ export default class ScheduledMesages extends Component {
           </Left>
           <Body>
             <Text>{data.message.newMessage.text}</Text>
+            <Text note>{displayTime}</Text>
           </Body>
-          <Right>
-            <Text note>{time}</Text>
-          </Right>
         </ListItem>
       );
     });
