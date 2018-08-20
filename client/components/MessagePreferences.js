@@ -137,6 +137,8 @@ export default class MessagePreferences extends Component {
       let createdAt;
       const date = new Date();
       createdAt = date.getTime();
+      const docID = createdAt.toString();
+
       const newMessage = {
         _id: createdAt,
         text: this.props.navigation.state.params.messageContent,
@@ -178,6 +180,12 @@ export default class MessagePreferences extends Component {
               console.log('message will get sent');
               this.state.ref.collection('messages').add(newMessage);
               this.state.ref.set({ firstMessage: newMessage }, { merge: true });
+              db.collection('users')
+                .doc(this.user.uid)
+                .collection('scheduled')
+                .doc(docID)
+                .delete();
+
               clearInterval(this.interval);
             } else {
               console.log('msg will not get sent');
@@ -189,6 +197,7 @@ export default class MessagePreferences extends Component {
       let createdAt;
       const date = new Date(this.state.triggers.date);
       createdAt = date.getTime();
+      const docID = createdAt.toString();
       const newMessage = {
         _id: createdAt,
         text: this.props.navigation.state.params.messageContent,
@@ -198,10 +207,19 @@ export default class MessagePreferences extends Component {
       db.collection('users')
         .doc(this.user.uid)
         .collection('scheduled')
-        .add({ newMessage, convoID: this.props.navigation.state.params.id });
+        .doc(docID)
+        .set({
+          newMessage,
+          convoID: this.props.navigation.state.params.id,
+        });
       schedule.scheduleJob(date, () => {
         this.state.ref.collection('messages').add(newMessage);
         this.state.ref.set({ firstMessage: newMessage }, { merge: true });
+        db.collection('users')
+          .doc(this.user.uid)
+          .collection('scheduled')
+          .doc(docID)
+          .delete();
       });
     }
   }
