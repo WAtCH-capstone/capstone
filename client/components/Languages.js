@@ -1,5 +1,5 @@
 const languages = [
-  ['auto', 'Automatic'],
+  // ['auto', 'Automatic'],
   ['af', 'Afrikaans'],
   ['sq', 'Albanian'],
   ['am', 'Amharic'],
