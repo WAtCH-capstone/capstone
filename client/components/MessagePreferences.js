@@ -18,7 +18,7 @@ import firebase from 'firebase';
 import Navbar from './Navbar';
 const geodist = require('geodist');
 // const timer = require('react-native-timer');
-
+//
 export default class MessagePreferences extends Component {
   constructor() {
     super();
@@ -64,6 +64,7 @@ export default class MessagePreferences extends Component {
         },
         { unit: 'feet' }
       );
+      console.log('distance from current to destination: ', dist);
       this.setState({
         distanceFromAtoB: dist,
       });
@@ -114,8 +115,11 @@ export default class MessagePreferences extends Component {
       db.collection('users')
         .doc(this.user.uid)
         .collection('scheduled')
-        .add({ newMessage, convoID: this.props.navigation.state.params.id });
-
+        .doc(docID)
+        .set({
+          newMessage,
+          convoID: this.props.navigation.state.params.id,
+        });
       this.interval = setInterval(() => {
         if (this.state.locationDetails) {
           this.watchId = navigator.geolocation.watchPosition(
@@ -148,12 +152,12 @@ export default class MessagePreferences extends Component {
           }
         }
       }, 1000);
-      // setTimeout(() => {
-      //   this.setState({
-      //     currentLat: 40.7051,
-      //     currentLong: -74.0092, // fullstack coords for testing after 20 seconds!
-      //   });
-      // }, 20000);
+      setTimeout(() => {
+        this.setState({
+          currentLat: 40.7051,
+          currentLong: -74.0092, // fullstack coords for testing after 20 seconds!
+        });
+      }, 20000);
     } else {
       let createdAt;
       const date = new Date(this.state.triggers.date);
@@ -245,9 +249,7 @@ export default class MessagePreferences extends Component {
                       value={this.state.textInput}
                     />
                   </View>
-                  {isSearching && (
-                    <ActivityIndicator size="large" color="#3B80FE" />
-                  )}
+                  {isSearching && <ActivityIndicator />}
                   <ScrollView>
                     {locationResults.map(el => (
                       <TouchableOpacity
