@@ -14,16 +14,17 @@ import {
   Input,
   Button,
 } from 'native-base';
-import { StyleSheet } from 'react-native';
+import { ActivityIndicator, Image } from 'react-native';
 import db from '../../firestore';
 import firebase from 'firebase';
 import Navbar from './Navbar';
+import styles from './Styles';
 import Notification from 'react-native-in-app-notification';
 
 export default class Convos extends Component {
   constructor() {
     super();
-    this.state = { convos: [], search: '', results: [] };
+    this.state = { convos: [], search: '', results: [], isLoading: true };
     this.user = firebase.auth().currentUser;
     this.getUserData = this.getUserData.bind(this);
     this.enterSearch = this.enterSearch.bind(this);
@@ -73,7 +74,7 @@ export default class Convos extends Component {
         userPrefs: convoData.userPrefs,
       });
     }
-    this.setState({ convos: convosArr });
+    this.setState({ convos: convosArr, isLoading: false });
   }
 
   async componentDidMount() {
@@ -122,7 +123,7 @@ export default class Convos extends Component {
       if (search === convos[i].friend.displayName) {
         searchResult.push(convos[i]);
       }
-      this.setState({ results: searchResult });
+      this.setState({ results: searchResult, isLoading: false });
     }
   }
 
@@ -198,8 +199,13 @@ export default class Convos extends Component {
             <List>{this.renderConvos(results)}</List>
           ) : convos && convos.length ? (
             <List>{this.renderConvos(convos)}</List>
+          ) : this.state.isLoading ? (
+            <ActivityIndicator size="large" color="#3B80FE" />
           ) : (
-            <Text>No conversations yet</Text>
+            <Container style={styles.noneContainer}>
+              <Image source={require('../../public/no-messages.png')} />
+              <Text style={styles.none}>No conversations yet</Text>
+            </Container>
           )}
         </Content>
         <Navbar navigation={this.props.navigation} />
@@ -253,11 +259,3 @@ export default class Convos extends Component {
     }
   }
 }
-
-const styles = StyleSheet.create({
-  header: {
-    backgroundColor: 'white',
-    paddingTop: -20,
-    marginBottom: 8,
-  },
-});
