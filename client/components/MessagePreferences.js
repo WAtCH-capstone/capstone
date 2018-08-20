@@ -52,36 +52,8 @@ export default class MessagePreferences extends Component {
   componentDidMount() {
     const ref = this.getRef(this.props.navigation.state.params.id);
     this.setState({ ref });
-    // setInterval(() => {
-    //   this.watchId = navigator.geolocation.watchPosition(
-    //     position => {
-    //       // const initialPosition = JSON.stringify(position);
-    //       this.setState({
-    //         currentLat: position.coords.latitude,
-    //         currentLong: position.coords.longitude,
-    //       });
-    //     },
-    //     error => this.setState({ error: error.message }),
-    //     {
-    //       enableHighAccuracy: true,
-    //       timeout: 20000,
-    //       maximumAge: 1000,
-    //       distanceFilter: 10,
-    //     }
-    //   );
-    //   if (this.state.currentLat && this.state.currentLong) {
-    //     this.getDistanceFromDestination();
-    //     if (this.state.distanceFromAtoB < 502) {
-    //       this.onSend();
-    //     } else {
-    //       console.log('msg will not get sent');
-    //     }
-    //   }
-    // }, 10000);
   }
-  // componentWillUnmount() {
-  //   navigator.geolocation.clearWatch(this.watchId);
-  // }
+
 
   getDistanceFromDestination() {
     if (this.state.locationDetails.hasOwnProperty('geometry')) {
@@ -93,9 +65,6 @@ export default class MessagePreferences extends Component {
         },
         { unit: 'feet' }
       );
-      // console.log('first coord', this.state.locationDetails.geometry.location.lat);
-      // this.setState({ distanceFromAtoB: dist });
-      console.log(typeof dist);
       console.log('distance from current to destination: ', dist);
       this.setState({
         distanceFromAtoB: dist,
@@ -132,7 +101,6 @@ export default class MessagePreferences extends Component {
   };
 
   async onSend() {
-    // checking current coordinates and send based on whether user is within 0.1 miles
     if (this.state.locationTrigger) {
       let createdAt;
       const date = new Date();
@@ -152,7 +120,6 @@ export default class MessagePreferences extends Component {
 
       this.interval = setInterval(() => {
         if (this.state.locationDetails) {
-          console.log('i am here');
           this.watchId = navigator.geolocation.watchPosition(
             position => {
               this.setState({
@@ -168,16 +135,9 @@ export default class MessagePreferences extends Component {
               distanceFilter: 10,
             }
           );
-          console.log(
-            'current coords,',
-            this.state.currentLong,
-            this.state.currentLat
-          );
           if (this.state.currentLat && this.state.currentLong) {
             this.getDistanceFromDestination();
-            console.log(this.state.distanceFromAtoB);
             if (this.state.distanceFromAtoB < 502) {
-              console.log('message will get sent');
               this.state.ref.collection('messages').add(newMessage);
               this.state.ref.set({ firstMessage: newMessage }, { merge: true });
               db.collection('users')
@@ -185,14 +145,17 @@ export default class MessagePreferences extends Component {
                 .collection('scheduled')
                 .doc(docID)
                 .delete();
-
               clearInterval(this.interval);
-            } else {
-              console.log('msg will not get sent');
             }
           }
         }
       }, 1000);
+      // setTimeout(() => {
+      //   this.setState({
+      //     currentLat: 40.7051,
+      //     currentLong: -74.0092, // fullstack coords for testing after 20 seconds!
+      //   });
+      // }, 20000);
     } else {
       let createdAt;
       const date = new Date(this.state.triggers.date);
