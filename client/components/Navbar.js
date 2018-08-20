@@ -20,10 +20,7 @@ export default class Navbar extends Component {
               }}
             >
               <Image
-                source={{
-                  uri:
-                    'https://cdn.icon-icons.com/icons2/935/PNG/512/speech-bubble-oval-symbol-with-three-dots_icon-icons.com_73151.png',
-                }}
+                source={require('../../public/navbar/message.png')}
                 style={{ width: 50, height: 50 }}
               />
             </Button>
@@ -33,10 +30,7 @@ export default class Navbar extends Component {
               }}
             >
               <Image
-                source={{
-                  uri:
-                    'https://www.materialui.co/materialIcons/action/schedule_black_192x192.png',
-                }}
+                source={require('../../public/navbar/clock.png')}
                 style={{ width: 50, height: 50 }}
               />
             </Button>
@@ -46,10 +40,7 @@ export default class Navbar extends Component {
               }}
             >
               <Image
-                source={{
-                  uri:
-                    'https://cdn1.iconfinder.com/data/icons/flat-web-browser/100/settings-512.png',
-                }}
+                source={require('../../public/navbar/gear.png')}
                 style={{ width: 50, height: 50 }}
               />
             </Button>

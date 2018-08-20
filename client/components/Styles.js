@@ -19,6 +19,23 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
   },
+  header: {
+    backgroundColor: 'white',
+    paddingTop: -20,
+    marginBottom: 8,
+  },
+  none: {
+    fontSize: 25,
+    textAlign: 'center',
+    textAlignVertical: 'center',
+    padding: 20,
+  },
+  noneContainer: {
+    flex: 1,
+    // justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#F5FCFF',
+  },
 });
 
 export default styles;
