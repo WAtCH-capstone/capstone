@@ -141,7 +141,6 @@ export default class SingleConvo extends React.Component {
                 this.setState({ messageContent: message })
               }
             />
-            {console.log(this.state)}
           </View>
           <View style={styles.scheduleButton}>
             <Button

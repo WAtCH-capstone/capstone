@@ -54,7 +54,6 @@ export default class SingleConvoPreferences extends Component {
 
   dateToTime(date) {
     let dateArr = date.toString().split(' ');
-    console.log(dateArr[4]);
     let [hour, minute, second] = dateArr[4]
       .split(':')
       .map(str => parseInt(str));
