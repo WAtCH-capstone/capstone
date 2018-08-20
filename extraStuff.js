@@ -21,3 +21,31 @@
 // const sorted = convos.sort(
 //   (a, b) => a.firstMessage.createdAt - b.firstMessage.createdAt || 0
 // );
+
+// onSend(messages = []) {
+//   let createdAt;
+//   if (this.state.triggers.date.length) {
+//     const date = new Date(this.state.triggers.date);
+//     createdAt = date.getTime();
+// const newMessage = {
+//   _id: createdAt,
+//   text: messages[0].text,
+//   createdAt,
+//   user: { _id: this.user.uid },
+// };
+//     schedule.scheduleJob(date, () => {
+//       this.state.ref.collection('messages').add(newMessage);
+//       this.state.ref.set({ firstMessage: newMessage }, { merge: true });
+//     });
+//   } else {
+//     createdAt = new Date().getTime();
+//     const newMessage = {
+//       _id: createdAt,
+//       text: messages[0].text,
+//       createdAt,
+//       user: { _id: this.user.uid },
+//     };
+//     this.state.ref.collection('messages').add(newMessage);
+//     this.state.ref.set({ firstMessage: newMessage }, { merge: true });
+//   }
+// }
