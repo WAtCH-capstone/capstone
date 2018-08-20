@@ -178,16 +178,35 @@ export default class Convos extends Component {
             />
           </Item>
           <Button
-            transparent
-            onPress={() => this.enterSearch(this.state.search)}
+            info
+            onPress={() => {
+              this.enterSearch(this.state.search);
+            }}
           >
-            <Text>Search</Text>
+            <Image
+              source={require('../../public/search.png')}
+              style={{
+                width: 30,
+                height: 30,
+                backgroundColor: 'white',
+                borderColor: 'white',
+              }}
+            />
           </Button>
           <Button
-            transparent
-            onPress={() => navigation.navigate('CreateConvo')}
+            onPress={() => {
+              navigation.navigate('CreateConvo');
+            }}
           >
-            <Text>+</Text>
+            <Image
+              source={require('../../public/plus.png')}
+              style={{
+                width: 30,
+                height: 30,
+                backgroundColor: 'white',
+                borderColor: 'white',
+              }}
+            />
           </Button>
         </Header>
         <Content>
