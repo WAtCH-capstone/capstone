@@ -9,8 +9,6 @@ import {
   Text,
   Left,
   Body,
-  Right,
-  Thumbnail,
 } from 'native-base';
 import Navbar from './Navbar';
 

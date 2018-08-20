@@ -41,6 +41,7 @@ class GeoLocator extends React.Component {
       }
     );
   }
+
   componentWillUnmount() {
     navigator.geolocation.clearWatch(this.watchId);
   }

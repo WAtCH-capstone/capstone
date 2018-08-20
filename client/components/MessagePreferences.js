@@ -18,7 +18,7 @@ import firebase from 'firebase';
 import Navbar from './Navbar';
 const geodist = require('geodist');
 // const timer = require('react-native-timer');
-//
+
 export default class MessagePreferences extends Component {
   constructor() {
     super();
@@ -54,7 +54,6 @@ export default class MessagePreferences extends Component {
     this.setState({ ref });
   }
 
-
   getDistanceFromDestination() {
     if (this.state.locationDetails.hasOwnProperty('geometry')) {
       const dist = geodist(
@@ -65,7 +64,6 @@ export default class MessagePreferences extends Component {
         },
         { unit: 'feet' }
       );
-      console.log('distance from current to destination: ', dist);
       this.setState({
         distanceFromAtoB: dist,
       });
