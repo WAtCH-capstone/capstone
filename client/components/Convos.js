@@ -14,7 +14,7 @@ import {
   Input,
   Button,
 } from 'native-base';
-import { ActivityIndicator } from 'react-native';
+import { ActivityIndicator, Image } from 'react-native';
 import db from '../../firestore';
 import firebase from 'firebase';
 import Navbar from './Navbar';
@@ -198,7 +198,14 @@ export default class Convos extends Component {
           ) : this.state.isLoading ? (
             <ActivityIndicator size="large" color="#3B80FE" />
           ) : (
-            <Text>No conversations yet</Text>
+            <Container style={styles.noneContainer}>
+              <Image
+                source={{
+                  uri: 'https://media.giphy.com/media/WgTf8fPTjJZAI/giphy.gif',
+                }}
+              />
+              <Text style={styles.none}>No conversations yet</Text>
+            </Container>
           )}
         </Content>
         <Navbar navigation={this.props.navigation} />

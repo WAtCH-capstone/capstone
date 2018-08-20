@@ -50,7 +50,7 @@ export default class LogIn extends React.Component {
         />
         <Form>
           <Item floatingLabel>
-            <Label>E-mail</Label>
+            <Label>Email</Label>
             <Input
               autoCorrect={false}
               autoCapitalize="none"

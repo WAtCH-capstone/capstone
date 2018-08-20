@@ -24,6 +24,17 @@ const styles = StyleSheet.create({
     paddingTop: -20,
     marginBottom: 8,
   },
+  none: {
+    fontSize: 20,
+    textAlign: 'center',
+    textAlignVertical: 'center',
+  },
+  noneContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#F5FCFF',
+  },
 });
 
 export default styles;

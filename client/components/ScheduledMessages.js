@@ -10,7 +10,8 @@ import {
   Left,
   Body,
 } from 'native-base';
-import { ActivityIndicator } from 'react-native';
+import { ActivityIndicator, Image } from 'react-native';
+import styles from './Styles';
 import Navbar from './Navbar';
 
 export default class ScheduledMesages extends Component {
@@ -101,7 +102,14 @@ export default class ScheduledMesages extends Component {
           ) : this.state.isLoading ? (
             <ActivityIndicator size="large" color="#3B80FE" />
           ) : (
-            <Text>No scheduled messages.</Text>
+            <Container style={styles.noneContainer}>
+              <Image
+                source={{
+                  uri: 'https://media.giphy.com/media/WgTf8fPTjJZAI/giphy.gif',
+                }}
+              />
+              <Text style={styles.none}>No scheduled messages.</Text>
+            </Container>
           )}
         </Content>
         <Navbar navigation={this.props.navigation} />
