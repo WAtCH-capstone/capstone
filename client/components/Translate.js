@@ -12,92 +12,38 @@ import {
   Content,
   Picker,
 } from 'native-base';
-import key from '../../googleMaps';
-import {
-  PowerTranslator,
-  ProviderTypes,
-  TranslatorConfiguration,
-  TranslatorFactory,
-} from 'react-native-power-translator';
 import languages from './Languages';
 
 export default class TranslateComponent extends React.Component {
   constructor() {
     super();
     this.state = {
-      selectedItem: undefined,
+      messageContent: '',
       selected1: 'key',
-      language: '',
-      results: {
-        items: [],
-      },
     };
-    this.translateMessage = this.translateMessage.bind(this);
-    // this.onValueChange = this.onValueChange.bind(this);
   }
 
-  // onValueChange(value) {
-  //   this.setState({
-  //     selected1: value,
-  //   });
-  //   // this.translateMessage(this.state.messageContent, 'fr');
-  // }
-
-  translateMessage(messageContent, lang) {
-    // TranslatorConfiguration.setConfig(ProviderTypes.Google, key, 'fr');
-    // const translator = TranslatorFactory.createTranslator();
-    // translator
-    //   .translate('Engineering physics or engineering science')
-    //   .then(translated => {
-    //     console.log(translated);
-    //   });
-
-    TranslatorConfiguration.setConfig(ProviderTypes.Google, key, lang);
-    const translator = TranslatorFactory.createTranslator();
-    translator.translate(messageContent).then(translated => {
-      console.log(translated);
+  async onValueChange(value) {
+    await this.setState({
+      selected1: value,
     });
+    this.props.translateMessage(
+      this.props.messageContent,
+      this.state.selected1
+    );
   }
 
   render() {
     return (
-      // <View style={styles.scheduleButton}>
-      //   <Button
-      // style={styles.blueButton}
-      // full
-      // rounded
-      // primary
-      //     // onPress={() => this.translateMessage(this.props.messageContent)}
-      //   >
-      //     <View>
-      //       <Text style={{ color: 'white' }}>Translate this Message</Text>
-      //     </View>
-      //   </Button>
-      // </View>
-
       <View style={styles.scheduleButton}>
-        <Button
-          style={styles.blueButton}
-          full
-          rounded
-          primary
-          // onPress={() => this.translateMessage()}
-        >
+        <Button style={styles.blueButton} full rounded primary>
           <Content>
             <Picker
+              style={{ alignItems: 'center' }}
               mode="dropdown"
-              selectedValue={this.state.en}
+              selectedValue={this.state.selected1}
               placeholder="Translate"
-              onValueChange={(itemValue, itemIndex) => (
-                this.setState({
-                  language: itemValue,
-                  selected1: this.state.itemValue,
-                }),
-                this.translateMessage(
-                  this.state.messageContent,
-                  itemValue //may need to change
-                )
-              )}
+              onValueChange={this.onValueChange.bind(this)}
             >
               {languages.map(value => (
                 <Picker.Item key={value[1]} label={value[1]} value={value[0]} />

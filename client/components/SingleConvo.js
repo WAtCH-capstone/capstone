@@ -6,7 +6,14 @@ import { GiftedChat } from 'react-native-gifted-chat';
 import firebase from 'firebase';
 import Navbar from './Navbar';
 import SideMenu from 'react-native-side-menu';
+import key from '../../googleMaps';
 import TranslateComponent from './Translate';
+import {
+  PowerTranslator,
+  ProviderTypes,
+  TranslatorConfiguration,
+  TranslatorFactory,
+} from 'react-native-power-translator';
 
 export default class SingleConvo extends React.Component {
   constructor() {
@@ -100,6 +107,14 @@ export default class SingleConvo extends React.Component {
       .set(objToSet, { merge: true });
   }
 
+  async translateMessage(messageContent, lang) {
+    TranslatorConfiguration.setConfig(ProviderTypes.Google, key, lang);
+    const translator = TranslatorFactory.createTranslator();
+    await translator.translate(messageContent).then(translated => {
+      this.setState({ messageContent: translated });
+    });
+  }
+
   render() {
     if (this.state.id.length) {
       return (
@@ -143,6 +158,7 @@ export default class SingleConvo extends React.Component {
               onInputTextChanged={message =>
                 this.setState({ messageContent: message })
               }
+              text={this.state.messageContent}
             />
           </View>
           <View style={styles.scheduleButton}>
@@ -164,7 +180,10 @@ export default class SingleConvo extends React.Component {
               </View>
             </Button>
           </View>
-          <TranslateComponent messageContent={this.state.messageContent} />
+          <TranslateComponent
+            messageContent={this.state.messageContent}
+            translateMessage={this.translateMessage.bind(this)}
+          />
           <Navbar navigation={this.props.navigation} />
         </SideMenu>
       );
