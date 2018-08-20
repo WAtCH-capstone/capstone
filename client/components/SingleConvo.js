@@ -121,6 +121,8 @@ export default class SingleConvo extends React.Component {
                   onPress={() =>
                     this.props.navigation.navigate('SingleConvoPreferences', {
                       setConvoPrefs: this.setConvoPrefs,
+                      id: this.state.id,
+                      friend: this.state.friend,
                     })
                   }
                 >
@@ -142,7 +144,6 @@ export default class SingleConvo extends React.Component {
                 this.setState({ messageContent: message })
               }
             />
-            {console.log(this.state)}
           </View>
           <View style={styles.scheduleButton}>
             <Button

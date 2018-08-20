@@ -29,32 +29,34 @@ export default class Convos extends Component {
     this.enterSearch = this.enterSearch.bind(this);
     this.getData = this.getData.bind(this);
     this.renderConvos = this.renderConvos.bind(this);
-    this.listen = this.listen.bind(this);
+    this.listenToConvos = this.listenToConvos.bind(this);
+    this.listenToUser = this.listenToUser.bind(this);
     this.setConvos = this.setConvos.bind(this);
   }
 
-  async getUserData() {
-    const uid = await firebase.auth().currentUser.uid;
-    const snapshot = await db
-      .collection('users')
-      .doc(uid)
-      .get();
-    const userData = await snapshot.data();
-    return userData;
-  }
-
-  async listen(userData) {
+  async listenToConvos() {
+    let userData = await this.getUserData();
     for (let id of userData.conversations) {
-      this.unsubscribe = db
+      this.unsubscribe = await db
         .collection('conversations')
         .doc(id)
         .collection('messages')
         .orderBy('createdAt', 'desc')
         .limit(20)
-        .onSnapshot(() => {
+        .onSnapshot(async () => {
+          let userData = await this.getUserData();
           this.setConvos(userData);
         });
     }
+  }
+
+  async listenToUser() {
+    this.userListener = await db
+      .collection('users')
+      .doc(this.user.uid)
+      .onSnapshot(snap => {
+        this.setConvos(snap.data());
+      });
   }
 
   async setConvos(userData) {
@@ -73,9 +75,8 @@ export default class Convos extends Component {
   }
 
   async componentDidMount() {
-    const userData = await this.getUserData();
-    this.setConvos(userData);
-    this.listen(userData);
+    this.listenToConvos();
+    this.listenToUser();
   }
 
   // async listenNotifications() {
@@ -109,22 +110,6 @@ export default class Convos extends Component {
   //   });
   // }
 
-  async getData(id) {
-    const convo = await db
-      .collection('conversations')
-      .doc(id)
-      .get();
-    const data = convo.data();
-    const firstMessage = data.firstMessage;
-    const friendID = data.users.find(uid => uid !== this.user.uid);
-    const friendQuery = await db
-      .collection('users')
-      .doc(friendID)
-      .get();
-    const friend = friendQuery.data();
-    return { firstMessage, friend };
-  }
-
   enterSearch(search) {
     let convos = this.state.convos;
     let searchResult = [];
@@ -141,54 +126,40 @@ export default class Convos extends Component {
 
   renderConvos(convos) {
     return convos.map(convoData => {
-      const id = convoData.id;
-      const friend = convoData.friend;
-      const firstMessage = convoData.firstMessage;
-      const date = new Date(firstMessage.createdAt);
-      const time = this.dateToTime(date);
-      const timeArr = date.toString().split(' ');
-      const displayTime =
-        timeArr[0] + ' ' + timeArr[1] + ' ' + timeArr[2] + ' at ' + time;
-      return (
-        <ListItem
-          key={id}
-          avatar
-          onPress={() =>
-            this.props.navigation.navigate('SingleConvo', {
-              id,
-              friend,
-            })
-          }
-        >
-          <Left>
-            <Thumbnail source={{ uri: friend.icon }} />
-          </Left>
-          <Body>
-            <Text>{friend.displayName}</Text>
-            <Text note>{firstMessage && firstMessage.text}</Text>
-          </Body>
-          <Right>
-            <Text note>{displayTime}</Text>
-          </Right>
-        </ListItem>
-      );
+      if (convoData.firstMessage) {
+        const id = convoData.id;
+        const friend = convoData.friend;
+        const firstMessage = convoData.firstMessage;
+        const date = new Date(firstMessage.createdAt);
+        const time = this.dateToTime(date);
+        const timeArr = date.toString().split(' ');
+        const displayTime =
+          timeArr[0] + ' ' + timeArr[1] + ' ' + timeArr[2] + ' at ' + time;
+        return (
+          <ListItem
+            key={id}
+            avatar
+            onPress={() =>
+              this.props.navigation.navigate('SingleConvo', {
+                id,
+                friend,
+              })
+            }
+          >
+            <Left>
+              <Thumbnail source={{ uri: friend.icon }} />
+            </Left>
+            <Body>
+              <Text>{friend.displayName}</Text>
+              <Text note>{firstMessage && firstMessage.text}</Text>
+            </Body>
+            <Right>
+              <Text note>{displayTime}</Text>
+            </Right>
+          </ListItem>
+        );
+      }
     });
-  }
-
-  dateToTime(date) {
-    let dateArr = date.toString().split(' ');
-    console.log(dateArr[4]);
-    let [hour, minute, second] = dateArr[4]
-      .split(':')
-      .map(str => parseInt(str));
-    if (hour > 12) {
-      hour = hour - 12;
-      if (minute < 10) return `${hour}:0${minute} pm`;
-      else return `${hour}:${minute} pm`;
-    } else {
-      if (minute < 10) return `${hour}:0${minute} am`;
-      else return `${hour}:${minute} am`;
-    }
   }
 
   render() {
@@ -235,6 +206,45 @@ export default class Convos extends Component {
         /> */}
       </Container>
     );
+  }
+
+  async getUserData() {
+    const snapshot = await db
+      .collection('users')
+      .doc(this.user.uid)
+      .get();
+    return snapshot.data();
+  }
+
+  async getData(id) {
+    const convo = await db
+      .collection('conversations')
+      .doc(id)
+      .get();
+    const data = convo.data();
+    const firstMessage = data.firstMessage;
+    const friendID = data.users.find(uid => uid !== this.user.uid);
+    const friendQuery = await db
+      .collection('users')
+      .doc(friendID)
+      .get();
+    const friend = friendQuery.data();
+    return { firstMessage, friend };
+  }
+
+  dateToTime(date) {
+    let dateArr = date.toString().split(' ');
+    let [hour, minute, second] = dateArr[4]
+      .split(':')
+      .map(str => parseInt(str));
+    if (hour > 12) {
+      hour = hour - 12;
+      if (minute < 10) return `${hour}:0${minute} pm`;
+      else return `${hour}:${minute} pm`;
+    } else {
+      if (minute < 10) return `${hour}:0${minute} am`;
+      else return `${hour}:${minute} am`;
+    }
   }
 }
 
