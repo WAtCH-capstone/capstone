@@ -6,6 +6,7 @@ import { GiftedChat } from 'react-native-gifted-chat';
 import firebase from 'firebase';
 import Navbar from './Navbar';
 import SideMenu from 'react-native-side-menu';
+import TranslateComponent from './Translate';
 
 export default class SingleConvo extends React.Component {
   constructor() {
@@ -161,6 +162,7 @@ export default class SingleConvo extends React.Component {
                 <Text style={{ color: 'white' }}>Schedule this Message</Text>
               </View>
             </Button>
+            <TranslateComponent />
           </View>
           <Navbar navigation={this.props.navigation} />
         </SideMenu>
