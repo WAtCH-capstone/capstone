@@ -19,9 +19,10 @@ import {
   TranslatorConfiguration,
   TranslatorFactory,
 } from 'react-native-power-translator';
+import languages from './Languages';
 
-TranslatorConfiguration.setConfig(ProviderTypes.Google, key, 'fr');
-const translator = TranslatorFactory.createTranslator();
+// TranslatorConfiguration.setConfig(ProviderTypes.Google, key, 'fr');
+// const translator = TranslatorFactory.createTranslator();
 
 export default class TranslateComponent extends React.Component {
   constructor() {
@@ -34,20 +35,30 @@ export default class TranslateComponent extends React.Component {
       },
     };
     this.translateMessage = this.translateMessage.bind(this);
+    this.onValueChange = this.onValueChange.bind(this);
   }
 
   onValueChange(value) {
     this.setState({
       selected1: value,
     });
+    this.translateMessage(this.state.messageContent, 'fr');
   }
 
-  translateMessage(messageContent) {
-    translator
-      .translate('Engineering physics or engineering science')
-      .then(translated => {
-        console.log(translated);
-      });
+  translateMessage(messageContent, lang) {
+    // TranslatorConfiguration.setConfig(ProviderTypes.Google, key, 'fr');
+    // const translator = TranslatorFactory.createTranslator();
+    // translator
+    //   .translate('Engineering physics or engineering science')
+    //   .then(translated => {
+    //     console.log(translated);
+    //   });
+
+    TranslatorConfiguration.setConfig(ProviderTypes.Google, key, lang);
+    const translator = TranslatorFactory.createTranslator();
+    translator.translate(messageContent).then(translated => {
+      console.log(translated);
+    });
   }
 
   render() {
@@ -74,20 +85,24 @@ export default class TranslateComponent extends React.Component {
           primary
           onPress={() => this.translateMessage()}
         >
-          {/* <Content>
+          <Content>
             <Picker
               mode="dropdown"
               selectedValue={this.state.selected1}
-              onValueChange={this.onValueChange.bind(this)}
+              onValueChange={() => this.onValueChange}
             >
               <Picker.Item label="Select a Language " value="key" />
-              <Picker.Item label="Cats" value="key0" />
+              {languages.map(language => {
+                <Picker.Item label="Cats" value="key0" />;
+              })}
+
+              {/* <Picker.Item label="Cats" value="key0" />
               <Picker.Item label="Dogs" value="key1" />
               <Picker.Item label="Birds" value="key2" />
-              <Picker.Item label="Elephants" value="key3" />
+              <Picker.Item label="Elephants" value="key3" /> */}
             </Picker>
-          </Content> */}
-          <Text>Translate</Text>
+          </Content>
+          {/* <Text>Translate</Text> */}
         </Button>
       </View>
     );

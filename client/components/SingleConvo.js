@@ -162,8 +162,8 @@ export default class SingleConvo extends React.Component {
                 <Text style={{ color: 'white' }}>Schedule this Message</Text>
               </View>
             </Button>
-            <TranslateComponent />
           </View>
+          <TranslateComponent messageContent={this.state.messageContent} />
           <Navbar navigation={this.props.navigation} />
         </SideMenu>
       );
@@ -189,7 +189,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingBottom: 100,
+    paddingBottom: 10,
   },
   smallImage: {
     width: 30,
