@@ -16,7 +16,9 @@ import schedule from 'node-schedule';
 import db from '../../firestore';
 import firebase from 'firebase';
 import Navbar from './Navbar';
-
+const geodist = require('geodist');
+// const timer = require('react-native-timer');
+//
 export default class MessagePreferences extends Component {
   constructor() {
     super();
@@ -30,17 +32,44 @@ export default class MessagePreferences extends Component {
       triggers: {
         date: '',
       },
+      distanceFromAtoB: '',
+      currentLat: null,
+      currentLong: null,
+      error: null,
+      showMsg: false,
+      locationTrigger: false,
     };
     this.setTrigger = this.setTrigger.bind(this);
     this._handleDatePicked = this._handleDatePicked.bind(this);
     this._handlePress = this._handlePress.bind(this);
     this.onSend = this.onSend.bind(this);
     this.user = firebase.auth().currentUser;
+    this.getDistanceFromDestination = this.getDistanceFromDestination.bind(
+      this
+    );
   }
 
   componentDidMount() {
     const ref = this.getRef(this.props.navigation.state.params.id);
     this.setState({ ref });
+  }
+
+
+  getDistanceFromDestination() {
+    if (this.state.locationDetails.hasOwnProperty('geometry')) {
+      const dist = geodist(
+        { lat: this.state.currentLat, long: this.state.currentLong },
+        {
+          lat: this.state.locationDetails.geometry.location.lat,
+          long: this.state.locationDetails.geometry.location.lng,
+        },
+        { unit: 'feet' }
+      );
+      console.log('distance from current to destination: ', dist);
+      this.setState({
+        distanceFromAtoB: dist,
+      });
+    }
   }
 
   getRef(id) {
@@ -67,41 +96,117 @@ export default class MessagePreferences extends Component {
       locationDetails: res,
       textInput: el.description,
       showResults: false,
+      locationTrigger: !this.state.locationTrigger,
     });
   };
 
   async onSend() {
-    let createdAt;
-    const date = new Date(this.state.triggers.date);
-    createdAt = date.getTime();
-    const docID = createdAt.toString();
-    const newMessage = {
-      _id: createdAt,
-      text: this.props.navigation.state.params.messageContent,
-      createdAt,
-      user: { _id: this.props.navigation.state.params.user.uid },
-    };
-    db.collection('users')
-      .doc(this.user.uid)
-      .collection('scheduled')
-      .doc(docID)
-      .set({
-        newMessage,
-        convoID: this.props.navigation.state.params.id,
-      });
-    schedule.scheduleJob(date, () => {
-      this.state.ref.collection('messages').add(newMessage);
-      this.state.ref.set({ firstMessage: newMessage }, { merge: true });
+    if (this.state.locationTrigger) {
+      let createdAt;
+      const date = new Date();
+      createdAt = date.getTime();
+      const docID = createdAt.toString();
+
+      const newMessage = {
+        _id: createdAt,
+        text: this.props.navigation.state.params.messageContent,
+        createdAt,
+        user: { _id: this.props.navigation.state.params.user.uid },
+      };
+      db.collection('users')
+        .doc(this.user.uid)
+        .collection('scheduled')
+        .add({ newMessage, convoID: this.props.navigation.state.params.id });
+
+      this.interval = setInterval(() => {
+        if (this.state.locationDetails) {
+          this.watchId = navigator.geolocation.watchPosition(
+            position => {
+              this.setState({
+                currentLat: position.coords.latitude,
+                currentLong: position.coords.longitude,
+              });
+            },
+            error => this.setState({ error: error.message }),
+            {
+              enableHighAccuracy: true,
+              timeout: 20000,
+              maximumAge: 1000,
+              distanceFilter: 10,
+            }
+          );
+          if (this.state.currentLat && this.state.currentLong) {
+            this.getDistanceFromDestination();
+            if (this.state.distanceFromAtoB < 502) {
+              this.state.ref.collection('messages').add(newMessage);
+              this.state.ref.set({ firstMessage: newMessage }, { merge: true });
+              db.collection('users')
+                .doc(this.user.uid)
+                .collection('scheduled')
+                .doc(docID)
+                .delete();
+              clearInterval(this.interval);
+            }
+          }
+        }
+      }, 1000);
+      // setTimeout(() => {
+      //   this.setState({
+      //     currentLat: 40.7051,
+      //     currentLong: -74.0092, // fullstack coords for testing after 20 seconds!
+      //   });
+      // }, 20000);
+    } else {
+      let createdAt;
+      const date = new Date(this.state.triggers.date);
+      createdAt = date.getTime();
+      const docID = createdAt.toString();
+      const newMessage = {
+        _id: createdAt,
+        text: this.props.navigation.state.params.messageContent,
+        createdAt,
+        user: { _id: this.props.navigation.state.params.user.uid },
+      };
       db.collection('users')
         .doc(this.user.uid)
         .collection('scheduled')
         .doc(docID)
-        .delete();
-    });
+        .set({
+          newMessage,
+          convoID: this.props.navigation.state.params.id,
+        });
+      schedule.scheduleJob(date, () => {
+        this.state.ref.collection('messages').add(newMessage);
+        this.state.ref.set({ firstMessage: newMessage }, { merge: true });
+        db.collection('users')
+          .doc(this.user.uid)
+          .collection('scheduled')
+          .doc(docID)
+          .delete();
+      });
+    }
   }
 
   render() {
     const { isDateTimePickerVisible, triggers } = this.state;
+    // testing:
+    // const newLat = 40.766291;
+    // const newLng = -73.923729;
+    // setTimeout(() => {
+    //   this.setState(
+    //     {
+    //       locationDetails: {
+    //         geometry: { location: { lat: newLat + 1, lng: newLng + 1 } },
+    //       },
+    //     },
+    //     () => {
+    //       console.log(
+    //         'time out after 5 seconds',
+    //         this.state.locationDetails.geometry.location
+    //       );
+    //     }
+    //   );
+    // }, 5000);
     return (
       <View>
         <View style={{ backgroundColor: 'white', paddingBottom: 540 }}>
