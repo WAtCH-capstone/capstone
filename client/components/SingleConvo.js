@@ -120,6 +120,8 @@ export default class SingleConvo extends React.Component {
                   onPress={() =>
                     this.props.navigation.navigate('SingleConvoPreferences', {
                       setConvoPrefs: this.setConvoPrefs,
+                      id: this.state.id,
+                      friend: this.state.friend,
                     })
                   }
                 >
