@@ -19,7 +19,7 @@ import Navbar from './Navbar';
 import styles from './Styles';
 const geodist = require('geodist');
 // const timer = require('react-native-timer');
-//
+
 export default class MessagePreferences extends Component {
   constructor() {
     super();
@@ -283,9 +283,6 @@ export default class MessagePreferences extends Component {
             </View>
           </Button>
         </View>
-        {/* <View style={{ position: 'absolute' }}>
-          <Navbar navigation={this.props.navigation} />
-        </View> */}
       </View>
     );
   }

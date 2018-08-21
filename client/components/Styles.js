@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
   },
   noneContainer: {
     paddingBottom: 500,
-    paddingTop: 20, //CHANGEEGEGEGE
+    paddingTop: 20,
     alignItems: 'center',
     backgroundColor: 'white',
   },
