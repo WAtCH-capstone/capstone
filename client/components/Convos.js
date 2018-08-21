@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import {
   Container,
   Content,
@@ -19,9 +19,8 @@ import db from '../../firestore';
 import firebase from 'firebase';
 import Navbar from './Navbar';
 import styles from './Styles';
-import Notification from 'react-native-in-app-notification';
 
-export default class Convos extends Component {
+export default class Convos extends React.Component {
   constructor() {
     super();
     this.state = { convos: [], search: '', results: [], isLoading: true };
@@ -81,37 +80,6 @@ export default class Convos extends Component {
     this.listenToConvos();
     this.listenToUser();
   }
-
-  // async listenNotifications() {
-  //   const uid = await firebase.auth().currentUser.uid;
-  //   const snapshot = await db
-  //     .collection('users')
-  //     .doc(uid)
-  //     .get();
-  //   const userData = await snapshot.data();
-  //   let userConvos = [];
-  //   for (let id of userData.conversations) {
-  //     const convoData = await this.getData(id);
-  //     userConvos.push(convoData);
-  //   }
-  //   console.log('userConvos: ', userConvos);
-  //   userConvos.forEach(convo => {
-  //     this.unsubscribe = db
-  //       .collection('conversations')
-  //       .doc(convo._id)
-  //       .collection('messages')
-  //       .onSnapshot(snap => {
-  //         console.log('snap: ', snap);
-  //         // this.notification &&
-  //         //   this.notification.show({
-  //         //     title: 'You pressed it!',
-  //         //     message: 'The notification has been triggered',
-  //         //     // onPress: () =>
-  //         //     //   Alert.alert('Alert', 'You clicked the notification!'),
-  //         //   });
-  //       });
-  //   });
-  // }
 
   enterSearch(search) {
     let convos = this.state.convos;
@@ -188,7 +156,7 @@ export default class Convos extends Component {
             }}
           >
             <Image
-              source={require('../../public/search.png')}
+              source={require('../../public/buttons/search.png')}
               style={{
                 width: 30,
                 height: 30,
@@ -204,7 +172,7 @@ export default class Convos extends Component {
             }}
           >
             <Image
-              source={require('../../public/plus.png')}
+              source={require('../../public/buttons/plus.png')}
               style={{
                 width: 30,
                 height: 30,
@@ -223,17 +191,12 @@ export default class Convos extends Component {
             <ActivityIndicator size="large" color="#3B80FE" />
           ) : (
             <Container style={styles.noneContainer}>
-              <Image source={require('../../public/no-messages.png')} />
+              <Image source={require('../../public/buttons/no-messages.png')} />
               <Text style={styles.none}>No conversations yet</Text>
             </Container>
           )}
         </Content>
         <Navbar navigation={this.props.navigation} />
-        {/* <Notification
-          ref={ref => {
-            this.notification = ref;
-          }}
-        /> */}
       </Container>
     );
   }

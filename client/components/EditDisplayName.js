@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Container, Form, Item, Input, Label, Button } from 'native-base';
 import { Text } from 'react-native';
 const firebase = require('firebase');
 import db from '../../firestore';
 
-export default class EditDisplayName extends Component {
+export default class EditDisplayName extends React.Component {
   constructor() {
     super();
     this.state = { displayName: '' };

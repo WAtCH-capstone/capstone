@@ -1,9 +1,82 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { View } from 'react-native';
 import { Avatar } from 'react-native-elements';
 import { Col, Row, Grid } from 'react-native-easy-grid';
 import db from '../../firestore';
 import firebase from 'firebase';
+
+export default class EmojiPicker extends React.Component {
+  constructor() {
+    super();
+    this.selectEmoji = this.selectEmoji.bind(this);
+  }
+
+  async selectEmoji(uri) {
+    const currUserId = await firebase.auth().currentUser.uid;
+    const currUserRef = db.collection('users').doc(currUserId);
+    if (currUserRef.icon === '') {
+      currUserRef.update({ icon: uri });
+      alert(`Your account was created! Now you may login.`);
+      this.props.navigation.navigate('LogIn');
+    } else {
+      currUserRef.update({ icon: uri });
+      alert(`Your icon was updated!`);
+      this.props.navigation.navigate('Convos');
+    }
+  }
+
+  renderEmoji(num) {
+    const emoji = emojis[num];
+    return (
+      <View key={emoji.id}>
+        <Avatar
+          large
+          rounded
+          source={{
+            uri: emoji.uri,
+          }}
+          onPress={() => this.selectEmoji(emoji.uri)}
+          activeOpacity={0.7}
+        />
+      </View>
+    );
+  }
+
+  render() {
+    return (
+      <Grid>
+        <Col size={25}>
+          <Row size={20}>{this.renderEmoji(0)}</Row>
+          <Row size={20}>{this.renderEmoji(1)}</Row>
+          <Row size={20}>{this.renderEmoji(2)}</Row>
+          <Row size={20}>{this.renderEmoji(3)}</Row>
+          <Row size={20}>{this.renderEmoji(4)}</Row>
+        </Col>
+        <Col size={25}>
+          <Row size={20}>{this.renderEmoji(5)}</Row>
+          <Row size={20}>{this.renderEmoji(6)}</Row>
+          <Row size={20}>{this.renderEmoji(7)}</Row>
+          <Row size={20}>{this.renderEmoji(8)}</Row>
+          <Row size={20}>{this.renderEmoji(9)}</Row>
+        </Col>
+        <Col size={25}>
+          <Row size={20}>{this.renderEmoji(10)}</Row>
+          <Row size={20}>{this.renderEmoji(11)}</Row>
+          <Row size={20}>{this.renderEmoji(12)}</Row>
+          <Row size={20}>{this.renderEmoji(13)}</Row>
+          <Row size={20}>{this.renderEmoji(14)}</Row>
+        </Col>
+        <Col size={25}>
+          <Row size={20}>{this.renderEmoji(15)}</Row>
+          <Row size={20}>{this.renderEmoji(16)}</Row>
+          <Row size={20}>{this.renderEmoji(17)}</Row>
+          <Row size={20}>{this.renderEmoji(18)}</Row>
+          <Row size={20}>{this.renderEmoji(19)}</Row>
+        </Col>
+      </Grid>
+    );
+  }
+}
 
 const emojis = [
   {
@@ -105,76 +178,3 @@ const emojis = [
       'https://cdn.shopify.com/s/files/1/1061/1924/files/Octopus_Emoji.png?9898922749706957214',
   },
 ];
-
-export default class EmojiPicker extends Component {
-  constructor() {
-    super();
-    this.selectEmoji = this.selectEmoji.bind(this);
-  }
-
-  async selectEmoji(uri) {
-    const currUserId = await firebase.auth().currentUser.uid;
-    const currUserRef = db.collection('users').doc(currUserId);
-    if (currUserRef.icon === '') {
-      currUserRef.update({ icon: uri });
-      alert(`Your account was created! Now you may login.`);
-      this.props.navigation.navigate('LogIn');
-    } else {
-      currUserRef.update({ icon: uri });
-      alert(`Your icon was updated!`);
-      this.props.navigation.navigate('Convos');
-    }
-  }
-
-  renderEmoji(num) {
-    const emoji = emojis[num];
-    return (
-      <View key={emoji.id}>
-        <Avatar
-          large
-          rounded
-          source={{
-            uri: emoji.uri,
-          }}
-          onPress={() => this.selectEmoji(emoji.uri)}
-          activeOpacity={0.7}
-        />
-      </View>
-    );
-  }
-
-  render() {
-    return (
-      <Grid>
-        <Col size={25}>
-          <Row size={20}>{this.renderEmoji(0)}</Row>
-          <Row size={20}>{this.renderEmoji(1)}</Row>
-          <Row size={20}>{this.renderEmoji(2)}</Row>
-          <Row size={20}>{this.renderEmoji(3)}</Row>
-          <Row size={20}>{this.renderEmoji(4)}</Row>
-        </Col>
-        <Col size={25}>
-          <Row size={20}>{this.renderEmoji(5)}</Row>
-          <Row size={20}>{this.renderEmoji(6)}</Row>
-          <Row size={20}>{this.renderEmoji(7)}</Row>
-          <Row size={20}>{this.renderEmoji(8)}</Row>
-          <Row size={20}>{this.renderEmoji(9)}</Row>
-        </Col>
-        <Col size={25}>
-          <Row size={20}>{this.renderEmoji(10)}</Row>
-          <Row size={20}>{this.renderEmoji(11)}</Row>
-          <Row size={20}>{this.renderEmoji(12)}</Row>
-          <Row size={20}>{this.renderEmoji(13)}</Row>
-          <Row size={20}>{this.renderEmoji(14)}</Row>
-        </Col>
-        <Col size={25}>
-          <Row size={20}>{this.renderEmoji(15)}</Row>
-          <Row size={20}>{this.renderEmoji(16)}</Row>
-          <Row size={20}>{this.renderEmoji(17)}</Row>
-          <Row size={20}>{this.renderEmoji(18)}</Row>
-          <Row size={20}>{this.renderEmoji(19)}</Row>
-        </Col>
-      </Grid>
-    );
-  }
-}

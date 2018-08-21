@@ -38,7 +38,7 @@ export default class LogIn extends React.Component {
     return (
       <Container style={{ paddingBottom: 100 }}>
         <Image
-          source={require('../../public/now-or-later.png')}
+          source={require('../../public/buttons/now-or-later.png')}
           style={styles.logo}
         />
         <Form>

@@ -1,11 +1,11 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Container, Form, Input, Item, Button, Label, Text } from 'native-base';
 import db from '../../firestore';
 import firebase from 'firebase';
 
 // Need to have a way to check if that conversation already exists
 
-export default class CreateConvo extends Component {
+export default class CreateConvo extends React.Component {
   constructor(props) {
     super(props);
     this.state = { email: '' };
@@ -48,7 +48,6 @@ export default class CreateConvo extends Component {
   }
 
   render() {
-    // const navigation = this.props.navigation;
     return (
       <Container>
         <Form>

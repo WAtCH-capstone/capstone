@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import db from '../../firestore';
 import firebase from 'firebase';
 import {
@@ -14,7 +14,7 @@ import { ActivityIndicator, Image } from 'react-native';
 import styles from './Styles';
 import Navbar from './Navbar';
 
-export default class ScheduledMesages extends Component {
+export default class ScheduledMesages extends React.Component {
   constructor() {
     super();
     this.state = {
@@ -103,7 +103,7 @@ export default class ScheduledMesages extends Component {
             <ActivityIndicator size="large" color="#3B80FE" />
           ) : (
             <Container style={styles.noneContainer}>
-              <Image source={require('../../public/no-messages.png')} />
+              <Image source={require('../../public/buttons/no-messages.png')} />
               <Text style={styles.none}>No scheduled messages yet</Text>
             </Container>
           )}

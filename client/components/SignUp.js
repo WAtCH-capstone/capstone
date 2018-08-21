@@ -4,7 +4,7 @@ import { Text } from 'react-native';
 const firebase = require('firebase');
 import db from '../../firestore';
 
-class SignUp extends React.Component {
+export default class SignUp extends React.Component {
   constructor() {
     super();
     this.state = {
@@ -70,15 +70,12 @@ class SignUp extends React.Component {
               }}
             />
           </Item>
-
-          {/* E-MAIL ERROR MESSAGE */}
           {!this.state.email.includes('@' && '.') &&
           this.state.email.length > 0 ? (
             <Text style={{ color: 'red' }}>
               Please enter a valid e-mail address
             </Text>
           ) : null}
-
           <Item floatingLabel>
             <Label>Password</Label>
             <Input
@@ -91,15 +88,11 @@ class SignUp extends React.Component {
               }}
             />
           </Item>
-
-          {/* PASSWORD ERROR MESSAGE */}
           {this.state.password.length < 6 && this.state.password.length > 0 ? (
             <Text style={{ color: 'red' }}>
               Password must be at least 6 characters
             </Text>
           ) : null}
-
-          {/* BUTTON DISABLED UNTIL CONCERNS ARE MET */}
           {this.state.password.length < 6 ? (
             <Button
               disabled={true}
@@ -134,6 +127,5 @@ class SignUp extends React.Component {
     );
   }
 }
-export default SignUp;
 
 console.disableYellowBox = true;

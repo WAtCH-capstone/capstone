@@ -16,6 +16,7 @@ import {
   EditPassword,
   ScheduledMessages,
   SingleConvoPreferences,
+  InAppNotification,
 } from './client/components';
 
 const RootNavigator = createStackNavigator({
@@ -129,6 +130,13 @@ const RootNavigator = createStackNavigator({
     navigationOptions: {
       headerTitle: 'Receipt Preferences',
       // headerLeft: null,
+    },
+  },
+  InAppNotification: {
+    screen: InAppNotification,
+    navigationOptions: {
+      headerTitle: 'New Notification',
+      headerLeft: null,
     },
   },
 });
