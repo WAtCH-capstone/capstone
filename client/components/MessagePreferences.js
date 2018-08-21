@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import {
   Text,
   View,
@@ -8,7 +8,7 @@ import {
   ActivityIndicator,
   TouchableOpacity,
 } from 'react-native';
-import { Button } from 'native-base';
+import { Button, Footer } from 'native-base';
 import DateTimePicker from 'react-native-modal-datetime-picker';
 import { GoogleAutoComplete } from 'react-native-google-autocomplete';
 import key from '../../googleMaps';
@@ -16,10 +16,11 @@ import schedule from 'node-schedule';
 import db from '../../firestore';
 import firebase from 'firebase';
 import Navbar from './Navbar';
+import styles from './Styles';
 const geodist = require('geodist');
 // const timer = require('react-native-timer');
-//
-export default class MessagePreferences extends Component {
+
+export default class MessagePreferences extends React.Component {
   constructor() {
     super();
     this.state = {
@@ -158,12 +159,12 @@ export default class MessagePreferences extends Component {
         }
       }, 1000);
       // testing afte 20 seconds uncomment to check.
-      // this.timeoutID = setTimeout(() => {
-      //   this.setState({
-      //     currentLat: 40.7051,
-      //     currentLong: -74.0092, // fullstack coords for testing after 20 seconds!
-      //   });
-      // }, 20000);
+      this.timeoutID = setTimeout(() => {
+        this.setState({
+          currentLat: 40.7051,
+          currentLong: -74.0092, // fullstack coords for testing after 20 seconds!
+        });
+      }, 20000);
     } else {
       let createdAt;
       const date = new Date(this.state.triggers.date);
@@ -199,108 +200,91 @@ export default class MessagePreferences extends Component {
     const { isDateTimePickerVisible, triggers } = this.state;
     return (
       <View>
-        <View style={{ backgroundColor: 'white', paddingBottom: 540 }}>
-          <View>
-            <Button
-              style={styles.blueButton}
-              full
-              rounded
-              primary
-              onPress={this._showDateTimePicker}
-            >
-              <View>
-                <Text style={{ color: 'white' }}>Pick a Date and Time</Text>
-              </View>
-            </Button>
-            <Text>{triggers.date}</Text>
-            <DateTimePicker
-              mode="datetime"
-              isVisible={isDateTimePickerVisible}
-              onConfirm={this._handleDatePicked}
-              onCancel={this._hideDateTimePicker}
-            />
-          </View>
-          <View style={styles.container}>
-            <GoogleAutoComplete apiKey={key} debounce={500} minLength={0}>
-              {({
-                handleTextChange,
-                locationResults,
-                fetchDetails,
-                isSearching,
-              }) => (
-                <React.Fragment>
-                  <View style={styles.inputWrapper}>
-                    <TextInput
-                      style={styles.mapTextInput}
-                      placeholder="Enter a Location..."
-                      onChangeText={handleTextChange}
-                      value={this.state.textInput}
-                    />
-                  </View>
-                  {isSearching && <ActivityIndicator />}
-                  <ScrollView>
-                    {locationResults.map(el => (
-                      <TouchableOpacity
-                        key={el.id}
-                        style={styles.root}
-                        onPress={() => this._handlePress(el, fetchDetails)}
-                      >
-                        <Text>{el.description}</Text>
-                      </TouchableOpacity>
-                    ))}
-                  </ScrollView>
-                </React.Fragment>
-              )}
-            </GoogleAutoComplete>
-            <Text>{this.state.textInput}</Text>
-            <Button
-              style={styles.blueButton}
-              full
-              rounded
-              primary
-              onPress={() =>
-                this.onSend()
-                  .then(() => {
-                    alert('Your message has been scheduled!');
-                    this.props.navigation.navigate('ScheduledMessages');
-                  })
-                  .catch(err => console.error(err))
-              }
-            >
-              <View>
-                <Text style={{ color: 'white' }}>Submit</Text>
-              </View>
-            </Button>
-          </View>
+        <View style={styles.noneContainer}>
+          <Text style={styles.nonePref}>
+            {this.props.navigation.state.params.messageContent}
+          </Text>
+          {triggers.date ? (
+            <Text style={styles.noneSmall}>{triggers.date}</Text>
+          ) : null}
+          <Button
+            style={styles.blueButton}
+            full
+            rounded
+            primary
+            onPress={this._showDateTimePicker}
+          >
+            <View>
+              <Text style={{ color: 'white' }}>Pick a Date and Time</Text>
+            </View>
+          </Button>
+          <DateTimePicker
+            mode="datetime"
+            isVisible={isDateTimePickerVisible}
+            onConfirm={this._handleDatePicked}
+            onCancel={this._hideDateTimePicker}
+          />
+          {this.state.textInput ? (
+            <Text style={styles.noneSmall}>{this.state.textInput}</Text>
+          ) : null}
+          <GoogleAutoComplete apiKey={key} debounce={500} minLength={0}>
+            {({
+              handleTextChange,
+              locationResults,
+              fetchDetails,
+              isSearching,
+            }) => (
+              <React.Fragment>
+                <View style={styles.inputWrapper}>
+                  <TextInput
+                    style={styles.mapTextInput}
+                    placeholder="Enter a Location..."
+                    // onChangeText={() => {
+                    //   handleTextChange;
+                    //   this.setState({ showResults: true });
+                    // }}
+                    clearButtonMode
+                    onChangeText={handleTextChange}
+                    value={this.state.textInput}
+                  />
+                </View>
+                {isSearching && <ActivityIndicator />}
+                {/* {this.state.showResults === true ? ( */}
+                <ScrollView>
+                  {locationResults.map(el => (
+                    <TouchableOpacity
+                      key={el.id}
+                      style={styles.root}
+                      onPress={() => this._handlePress(el, fetchDetails)}
+                    >
+                      <Text>{el.description}</Text>
+                    </TouchableOpacity>
+                  ))}
+                </ScrollView>
+                {/* ) : null} */}
+              </React.Fragment>
+            )}
+          </GoogleAutoComplete>
+          <Button
+            style={styles.blueButton}
+            full
+            rounded
+            primary
+            onPress={() =>
+              this.onSend()
+                .then(() => {
+                  alert('Your message has been scheduled!');
+                  this.props.navigation.navigate('ScheduledMessages');
+                })
+                .catch(err => console.error(err))
+            }
+          >
+            <View>
+              <Text style={{ color: 'white' }}>Submit Message</Text>
+            </View>
+          </Button>
         </View>
-        <Navbar navigation={this.props.navigation} />
       </View>
     );
   }
 }
-
-const styles = StyleSheet.create({
-  blueButton: {
-    marginTop: 5,
-  },
-  inputWrapper: {
-    marginTop: 10,
-  },
-  mapTextInput: {
-    height: 40,
-    width: 350,
-    borderWidth: 1,
-    paddingHorizontal: 16,
-  },
-  container: {
-    backgroundColor: 'white',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingTop: -50,
-  },
-  root: {
-    height: 40,
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    justifyContent: 'center',
-  },
-});

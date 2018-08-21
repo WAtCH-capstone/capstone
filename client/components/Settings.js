@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { TouchableOpacity } from 'react-native';
 import {
   Container,
@@ -11,16 +11,18 @@ import {
   Thumbnail,
   Left,
   Body,
+  Right,
   List,
+  Button,
 } from 'native-base';
 import Navbar from './Navbar';
 import db from '../../firestore';
 import firebase from 'firebase';
 
-export default class Settings extends Component {
+export default class Settings extends React.Component {
   constructor() {
     super();
-    this.state = { userDoc: {}, userRef: {} };
+    this.state = { userDoc: {}, userRef: {}, requests: [] };
     this.getUserDoc = this.getUserDoc.bind(this);
     this.logout = this.logout.bind(this);
     // this.deleteUser = this.deleteUser.bind(this);
@@ -28,9 +30,12 @@ export default class Settings extends Component {
 
   async componentDidMount() {
     const uid = await firebase.auth().currentUser.uid;
+    const userData = await this.getUserDoc(uid);
+    const requests = await this.getFriendRequests(userData.requests);
     this.setState({
-      userDoc: await this.getUserDoc(uid),
+      userDoc: userData,
       userRef: firebase.auth().currentUser,
+      requests,
     });
   }
 
@@ -43,6 +48,91 @@ export default class Settings extends Component {
     return userData;
   }
 
+  async getFriendRequests(requestArr) {
+    let requests = [];
+    for (let id of requestArr) {
+      const user = await db
+        .collection('users')
+        .doc(id)
+        .get();
+      const data = await user.data();
+      const objToAdd = { id, data };
+      requests.push(objToAdd);
+    }
+    return requests;
+  }
+
+  async acceptRequest(requestor, index) {
+    const uid = await firebase.auth().currentUser.uid;
+    this.state.userDoc.requests.splice(index, 1);
+    await db
+      .collection('users')
+      .doc(this.state.userRef.uid)
+      .set(
+        {
+          friends: [...this.state.userDoc.friends, requestor.id],
+          requests: this.state.userDoc.requests,
+        },
+        { merge: true }
+      );
+    await db
+      .collection('users')
+      .doc(requestor.id)
+      .set({ friends: [...requestor.data.friends, uid] }, { merge: true });
+    await this.setState(prevState => {
+      prevState.requests.splice(index, 1);
+      return {
+        requests: prevState.requests,
+        userDoc: {
+          ...prevState.userDoc,
+          friends: [...prevState.userDoc.friends, requestor.id],
+        },
+      };
+    });
+    alert(
+      `You and ${
+        requestor.data.displayName
+      } are now friends. Send them a message!`
+    );
+  }
+
+  async declineRequest(index) {
+    this.state.userDoc.requests.splice(index, 1);
+    await this.state.userRef.set(
+      { requests: this.state.userDoc },
+      { merge: true }
+    );
+    await this.setState(prevState => {
+      prevState.requests.splice(index, 1);
+      return {
+        requests: prevState.requests,
+      };
+    });
+  }
+
+  renderRequests() {
+    return this.state.requests.map((requestor, index) => {
+      return (
+        <ListItem key={requestor.id}>
+          <Left>
+            <Thumbnail source={{ uri: requestor.data.icon }} />
+          </Left>
+          <Body>
+            <Text>{requestor.data.displayName}</Text>
+          </Body>
+          <Right>
+            <Button onPress={() => this.acceptRequest(requestor, index)}>
+              <Text>Yes</Text>
+            </Button>
+            <Button onPres={() => this.declineRequest(index)}>
+              <Text>No</Text>
+            </Button>
+          </Right>
+        </ListItem>
+      );
+    });
+  }
+
   logout() {
     firebase
       .auth()
@@ -51,54 +141,6 @@ export default class Settings extends Component {
       .then(() => this.props.navigation.navigate('LogIn'))
       .catch(err => console.error(err));
   }
-
-  // async deleteUser() {
-  //   const convoDocs = this.state.userDoc.conversations;
-  //   let convos = {};
-  //   let convosArr = [];
-  //   for (let i = 0; i < convoDocs.length; i++) {
-  //     const convo = await db
-  //       .collection('conversations')
-  //       .doc(convoDocs[i])
-  //       .get();
-  //     convos[convo.id] = [];
-  //     convosArr.push(convo.id);
-  //   }
-  //   convosArr.forEach(async convo => {
-  //     const snapshot = await db
-  //       .collection('conversations')
-  //       .doc(convo)
-  //       .get();
-  //     const convoData = await snapshot.data();
-  //     const users = convoData.users;
-  //     users.forEach(user => convos[convo].push(user));
-  //     convos[convo].forEach(async user => {
-  //       const userDoc = await this.getUserDoc(user);
-  //       const oldConvos = userDoc.conversations;
-  //       const newConvos = oldConvos.filter(convoInArr => convoInArr !== convo);
-  //       db.collection('users')
-  //         .doc(user)
-  //         .set({ conversations: newConvos })
-  //         .then(() =>
-  //           console.log(
-  //             `User ${userDoc.id} no longer is part of convo ${convo}`
-  //           )
-  //         )
-  //         .catch(err => console.error(err));
-  //     });
-  //     db.collection('conversations')
-  //       .doc(convo)
-  //       .delete()
-  //       .then(() => console.log(`Convo ${convo} was deleted`))
-  //       .catch(err => console.error(err));
-  //   });
-  //   this.state.userRef
-  //     .delete()
-  //     .then(() => console.log(`User ${this.state.userRef.id} was deleted`))
-  //     .then(() => alert(`Your account was deleted.`))
-  //     .then(() => this.props.navigation.navigate('LogIn'))
-  //     .catch(err => console.error(err));
-  // }
 
   render() {
     const userDoc = this.state.userDoc;
@@ -121,6 +163,14 @@ export default class Settings extends Component {
               </Left>
             </CardItem>
           </Card>
+          <Separator bordered>
+            <Text>Friend Requests</Text>
+          </Separator>
+          {this.state.requests.length ? (
+            <List>{this.renderRequests()}</List>
+          ) : (
+            <Text>You have no pending requests.</Text>
+          )}
           <Separator bordered>
             <Text>Options</Text>
           </Separator>
@@ -170,6 +220,13 @@ export default class Settings extends Component {
                 <Text>Change password</Text>
               </TouchableOpacity>
             </ListItem>
+            <ListItem>
+              <TouchableOpacity
+                onPress={() => navigation.navigate('FriendRequests')}
+              >
+                <Text>View Friend Requests</Text>
+              </TouchableOpacity>
+            </ListItem>
             <ListItem last>
               <TouchableOpacity onPress={() => this.logout()}>
                 <Text>Logout</Text>
@@ -187,3 +244,51 @@ export default class Settings extends Component {
     );
   }
 }
+
+// async deleteUser() {
+//   const convoDocs = this.state.userDoc.conversations;
+//   let convos = {};
+//   let convosArr = [];
+//   for (let i = 0; i < convoDocs.length; i++) {
+//     const convo = await db
+//       .collection('conversations')
+//       .doc(convoDocs[i])
+//       .get();
+//     convos[convo.id] = [];
+//     convosArr.push(convo.id);
+//   }
+//   convosArr.forEach(async convo => {
+//     const snapshot = await db
+//       .collection('conversations')
+//       .doc(convo)
+//       .get();
+//     const convoData = await snapshot.data();
+//     const users = convoData.users;
+//     users.forEach(user => convos[convo].push(user));
+//     convos[convo].forEach(async user => {
+//       const userDoc = await this.getUserDoc(user);
+//       const oldConvos = userDoc.conversations;
+//       const newConvos = oldConvos.filter(convoInArr => convoInArr !== convo);
+//       db.collection('users')
+//         .doc(user)
+//         .set({ conversations: newConvos })
+//         .then(() =>
+//           console.log(
+//             `User ${userDoc.id} no longer is part of convo ${convo}`
+//           )
+//         )
+//         .catch(err => console.error(err));
+//     });
+//     db.collection('conversations')
+//       .doc(convo)
+//       .delete()
+//       .then(() => console.log(`Convo ${convo} was deleted`))
+//       .catch(err => console.error(err));
+//   });
+//   this.state.userRef
+//     .delete()
+//     .then(() => console.log(`User ${this.state.userRef.id} was deleted`))
+//     .then(() => alert(`Your account was deleted.`))
+//     .then(() => this.props.navigation.navigate('LogIn'))
+//     .catch(err => console.error(err));
+// }

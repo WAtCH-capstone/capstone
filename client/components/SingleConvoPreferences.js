@@ -68,7 +68,7 @@ export default class SingleConvoPreferences extends Component {
     this.setState({
       locationDetails: res,
       textInput: el.description,
-      locationTrigger: !this.state.locationTrigger,
+      locationTrigger: true, //set at true for now
     });
   };
   async onSend() {
