@@ -55,7 +55,6 @@ export default class Settings extends Component {
         .collection('users')
         .doc(id)
         .get();
-      console.log(user);
       const data = await user.data();
       const objToAdd = { id, data };
       requests.push(objToAdd);
@@ -63,29 +62,33 @@ export default class Settings extends Component {
     return requests;
   }
 
-  async acceptRequest(requestor) {
+  async acceptRequest(requestor, index) {
+    console.log(this.state);
+    console.log(requestor);
+    console.log(index);
     const uid = await firebase.auth().currentUser.uid;
-    await db
-      .collection('users')
-      .doc(this.state.userRef.uid)
-      .set(
-        {
-          friends: [...this.state.userDoc.friends, requestor.id],
-        },
-        { merge: true }
-      );
-    await db
-      .collection('users')
-      .doc(requestor.id)
-      .set({ friends: [...requestor.data.friends, uid] }, { merge: true });
-    const newRequests = this.state.requests.splice(index, 1);
-    await this.state.userRef.set({ requests: newRequests }, { merge: true });
-    this.setState({ requests: newRequests });
-    alert(
-      `You and ${
-        requestor.data.displayName
-      } are now friends. Send them a message!`
-    );
+    // await db
+    //   .collection('users')
+    //   .doc(this.state.userRef.uid)
+    //   .set(
+    //     {
+    //       friends: [...this.state.userDoc.friends, requestor.id],
+    //       requests: this.state.userDoc.requests.splice(index, 1),
+    //     },
+    //     { merge: true }
+    //   );
+    // await db
+    //   .collection('users')
+    //   .doc(requestor.id)
+    //   .set({ friends: [...requestor.data.friends, uid] }, { merge: true });
+    // await this.setState(prevState => ({
+    //   requests: prevState.requests.splice(index, 1),
+    // }));
+    // alert(
+    //   `You and ${
+    //     requestor.data.displayName
+    //   } are now friends. Send them a message!`
+    // );
   }
 
   async declineRequest(index) {
@@ -97,7 +100,7 @@ export default class Settings extends Component {
   renderRequests() {
     return this.state.requests.map((requestor, index) => {
       return (
-        <ListItem>
+        <ListItem key={requestor.id}>
           <Left>
             <Thumbnail source={{ uri: requestor.data.icon }} />
           </Left>
@@ -105,7 +108,7 @@ export default class Settings extends Component {
             <Text>{requestor.data.displayName}</Text>
           </Body>
           <Right>
-            <Button onPress={() => this.acceptRequest(requestor)}>
+            <Button onPress={() => this.acceptRequest(requestor, index)}>
               <Text>Yes</Text>
             </Button>
             <Button onPres={() => this.declineRequest(index)}>
