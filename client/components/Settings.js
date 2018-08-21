@@ -63,32 +63,37 @@ export default class Settings extends Component {
   }
 
   async acceptRequest(requestor, index) {
-    console.log(this.state);
-    console.log(requestor);
-    console.log(index);
     const uid = await firebase.auth().currentUser.uid;
-    // await db
-    //   .collection('users')
-    //   .doc(this.state.userRef.uid)
-    //   .set(
-    //     {
-    //       friends: [...this.state.userDoc.friends, requestor.id],
-    //       requests: this.state.userDoc.requests.splice(index, 1),
-    //     },
-    //     { merge: true }
-    //   );
-    // await db
-    //   .collection('users')
-    //   .doc(requestor.id)
-    //   .set({ friends: [...requestor.data.friends, uid] }, { merge: true });
-    // await this.setState(prevState => ({
-    //   requests: prevState.requests.splice(index, 1),
-    // }));
-    // alert(
-    //   `You and ${
-    //     requestor.data.displayName
-    //   } are now friends. Send them a message!`
-    // );
+    this.state.userDoc.requests.splice(index, 1);
+    await db
+      .collection('users')
+      .doc(this.state.userRef.uid)
+      .set(
+        {
+          friends: [...this.state.userDoc.friends, requestor.id],
+          requests: this.state.userDoc.requests,
+        },
+        { merge: true }
+      );
+    await db
+      .collection('users')
+      .doc(requestor.id)
+      .set({ friends: [...requestor.data.friends, uid] }, { merge: true });
+    await this.setState(prevState => {
+      prevState.requests.splice(index, 1);
+      return {
+        requests: prevState.requests,
+        userDoc: {
+          ...prevState.userDoc,
+          friends: [...prevState.userDoc.friends, requestor.id],
+        },
+      };
+    });
+    alert(
+      `You and ${
+        requestor.data.displayName
+      } are now friends. Send them a message!`
+    );
   }
 
   async declineRequest(index) {
