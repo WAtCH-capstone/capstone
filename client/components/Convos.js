@@ -81,7 +81,6 @@ export default class Convos extends React.Component {
 
   enterSearch(search) {
     let convos = this.state.convos;
-    console.log(convos);
     let searchResult = [];
     if (!search.length) {
       this.setState({ results: convos, isLoading: false });
