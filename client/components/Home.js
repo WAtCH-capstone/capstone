@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Text, View, ScrollView, Image, Button as Button1 } from 'react-native';
 import Navbar from './Navbar';
 // import { Image, StyleSheet, View } from "react-native";
@@ -27,7 +27,7 @@ const geodist = require('geodist');
 //   },
 // ];
 
-export default class Home extends Component {
+export default class Home extends React.Component {
   // constructor() {
   //   super();
   //   this.state = {

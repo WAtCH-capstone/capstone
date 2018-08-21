@@ -14,3 +14,4 @@ export { default as EditEmail } from './EditEmail';
 export { default as EditPassword } from './EditPassword';
 export { default as ScheduledMessages } from './ScheduledMessages';
 export { default as SingleConvoPreferences } from './SingleConvoPreferences';
+export { default as InAppNotification } from './InAppNotification';

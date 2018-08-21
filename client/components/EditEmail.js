@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Container, Form, Item, Input, Label, Button } from 'native-base';
 import { Text } from 'react-native';
 const firebase = require('firebase');
 import db from '../../firestore';
 
-export default class EditEmail extends Component {
+export default class EditEmail extends React.Component {
   constructor() {
     super();
     this.state = { email: '' };
@@ -26,16 +26,12 @@ export default class EditEmail extends Component {
               onChangeText={email => this.setState({ email })}
             />
           </Item>
-
-          {/* E-MAIL ERROR MESSAGE */}
           {!this.state.email.includes('@' && '.') &&
           this.state.email.length > 0 ? (
             <Text style={{ color: 'red' }}>
               Please enter a valid e-mail address
             </Text>
           ) : null}
-
-          {/* BUTTON DISABLED UNTIL CONCERNS ARE MET */}
           {!this.state.email.includes('@' && '.') &&
           this.state.email.length > 0 ? (
             <Button

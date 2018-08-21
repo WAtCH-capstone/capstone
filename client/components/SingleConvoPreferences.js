@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import {
   Container,
   Content,
@@ -17,7 +17,7 @@ import DateTimePicker from 'react-native-modal-datetime-picker';
 import db from '../../firestore';
 import firebase from 'firebase';
 
-export default class SingleConvoPreferences extends Component {
+export default class SingleConvoPreferences extends React.Component {
   constructor(props) {
     super(props);
     this.state = {

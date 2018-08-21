@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import {
   Text,
   View,
@@ -20,7 +20,7 @@ import styles from './Styles';
 const geodist = require('geodist');
 // const timer = require('react-native-timer');
 
-export default class MessagePreferences extends Component {
+export default class MessagePreferences extends React.Component {
   constructor() {
     super();
     this.state = {
