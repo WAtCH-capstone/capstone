@@ -47,11 +47,16 @@ export default class MessagePreferences extends Component {
     this.getDistanceFromDestination = this.getDistanceFromDestination.bind(
       this
     );
+    this.timeoutID = null;
   }
 
   componentDidMount() {
     const ref = this.getRef(this.props.navigation.state.params.id);
     this.setState({ ref });
+  }
+
+  componentWillUnmount() {
+    clearTimeout(this.timeoutID);
   }
 
   getDistanceFromDestination() {
@@ -152,12 +157,12 @@ export default class MessagePreferences extends Component {
           }
         }
       }, 1000);
-      setTimeout(() => {
-        this.setState({
-          currentLat: 40.7051,
-          currentLong: -74.0092, // fullstack coords for testing after 20 seconds!
-        });
-      }, 20000);
+      // this.timeoutID = setTimeout(() => {
+      //   this.setState({
+      //     currentLat: 40.7051,
+      //     currentLong: -74.0092, // fullstack coords for testing after 20 seconds!
+      //   });
+      // }, 20000);
     } else {
       let createdAt;
       const date = new Date(this.state.triggers.date);
