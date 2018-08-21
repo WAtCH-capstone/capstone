@@ -156,12 +156,12 @@ export default class MessagePreferences extends Component {
           }
         }
       }, 1000);
-      // this.timeoutID = setTimeout(() => {
-      //   this.setState({
-      //     currentLat: 40.7051,
-      //     currentLong: -74.0092, // fullstack coords for testing after 20 seconds!
-      //   });
-      // }, 20000);
+      this.timeoutID = setTimeout(() => {
+        this.setState({
+          currentLat: 40.7051,
+          currentLong: -74.0092, // fullstack coords for testing after 20 seconds!
+        });
+      }, 20000);
     } else {
       let createdAt;
       const date = new Date(this.state.triggers.date);
