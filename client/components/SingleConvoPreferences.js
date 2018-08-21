@@ -194,7 +194,7 @@ export default class SingleConvoPreferences extends React.Component {
                     onCancel={this._hideStartTimePicker}
                   />
                 </Button>
-                <Text>{'  '}</Text>
+                {/* <Text>{'  '}</Text> */}
                 <Button
                   style={{ marginTop: 10 }}
                   full
