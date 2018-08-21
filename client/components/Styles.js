@@ -31,8 +31,8 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   noneContainer: {
-    flex: 1,
-    // justifyContent: 'center',
+    paddingBottom: 500,
+    paddingTop: 20, //CHANGEEGEGEGE
     alignItems: 'center',
     backgroundColor: 'white',
   },
@@ -45,22 +45,19 @@ const styles = StyleSheet.create({
   },
   blueButton: {
     marginTop: 5,
-    // color: '#3B80FE',
+    marginBottom: 5,
   },
   inputWrapper: {
     marginTop: 10,
+    marginBottom: 10,
   },
   mapTextInput: {
     height: 40,
-    width: 350,
+    width: 375,
     borderWidth: 1,
     paddingHorizontal: 16,
-  },
-  containerPref: {
-    backgroundColor: 'white',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingTop: -50,
+    borderColor: '#3B80FE',
+    borderRadius: 20,
   },
   root: {
     height: 40,
