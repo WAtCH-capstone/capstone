@@ -72,6 +72,7 @@ export default class MessagePreferences extends Component {
       this.setState({
         distanceFromAtoB: dist,
       });
+      console.log('distance from a to b', dist);
     }
   }
 

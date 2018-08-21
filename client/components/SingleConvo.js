@@ -79,7 +79,6 @@ export default class SingleConvo extends React.Component {
     });
   }
 
-
   async getCurrUserRef() {
     const currUserRef = await db
       .collection('users')
