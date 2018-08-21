@@ -64,16 +64,16 @@ export default class SingleConvo extends React.Component {
     const friends = this.props.navigation.state.params.friends;
     const ref = this.getRef(this.props.navigation.state.params.id);
     let doNotDisturbArr = [];
-    console.log(this.props.navigation.state.params.friendPrefs);
-    // if (this.props.navigation.state.params.friendPrefs) {
-    //   const friendPrefs = this.props.navigation.state.params.friendPrefs;
-    //   for (let i = 0; i < friendPrefs.startTimes.length; i++) {
-    //     const start = timeToInt(friendPrefs.startTimes[i].time);
-    //     const end = timeToInt(friendPrefs.endTimes[i].time);
-    //     doNotDisturbArr.push([start, end]);
-    // }
-    // }
-    // }
+    if (friends.length === 1) {
+      const friendPrefs = this.props.navigation.state.params.friendPrefs[0];
+      if (friendPrefs) {
+        for (let i = 0; i < friendPrefs.startTimes.length; i++) {
+          const start = timeToInt(friendPrefs.startTimes[i].time);
+          const end = timeToInt(friendPrefs.endTimes[i].time);
+          doNotDisturbArr.push([start, end]);
+        }
+      }
+    }
     this.setState({
       friends,
       id: this.props.navigation.state.params.id,
@@ -175,7 +175,7 @@ export default class SingleConvo extends React.Component {
               }
             >
               <Image
-                source={require('../../public/preferences.png')}
+                source={require('../../public/buttons/preferences.png')}
                 style={styles.smallImage}
               />
             </Button>

@@ -73,7 +73,6 @@ export default class CreateConvo extends React.Component {
     const currUserRef = db.collection('users').doc(currUserId);
     const participants = recipientArr.map(el => el.id);
     participants.push(currUserId);
-    console.log(participants);
     db.collection('conversations')
       .add({
         users: participants,
@@ -109,7 +108,6 @@ export default class CreateConvo extends React.Component {
       .get();
     const friendArr = friendQuery.docs.map(friend => friend.data());
     const friend = friendArr[0];
-    console.log(friend);
     const friendRef = db.collection('users').doc(friendQuery.docs[0].id);
     friendRef.set(
       { requests: [...friend.requests, currUserId] },
