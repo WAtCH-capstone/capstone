@@ -36,7 +36,7 @@ export default class SingleConvoPreferences extends React.Component {
   }
 
   async componentDidMount() {
-    const uid = firebase.auth().currentUser.uid;
+    const uid = await firebase.auth().currentUser.uid;
     const prefRef = `${uid}-prefs`;
     const convoRef = await db
       .collection('conversations')

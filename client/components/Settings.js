@@ -22,7 +22,7 @@ import firebase from 'firebase';
 export default class Settings extends React.Component {
   constructor() {
     super();
-    this.state = { userDoc: {}, userRef: {}, requests: [] };
+    this.state = { userDoc: {}, userRef: '', requests: [] };
     this.getUserDoc = this.getUserDoc.bind(this);
     this.logout = this.logout.bind(this);
     // this.deleteUser = this.deleteUser.bind(this);
