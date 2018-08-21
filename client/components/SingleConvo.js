@@ -61,26 +61,25 @@ export default class SingleConvo extends React.Component {
 
   componentDidMount() {
     this.listen();
+    const friends = this.props.navigation.state.params.friends;
     const ref = this.getRef(this.props.navigation.state.params.id);
     let doNotDisturbArr = [];
-    if (this.props.navigation.state.params.friendPrefs) {
-      const friendPrefs = this.props.navigation.state.params.friendPrefs;
-      for (let i = 0; i < friendPrefs.startTimes.length; i++) {
-        const start = timeToInt(friendPrefs.startTimes[i].time);
-        const end = timeToInt(friendPrefs.endTimes[i].time);
-        doNotDisturbArr.push([start, end]);
-      }
-    }
+    console.log(this.props.navigation.state.params.friendPrefs);
+    // if (this.props.navigation.state.params.friendPrefs) {
+    //   const friendPrefs = this.props.navigation.state.params.friendPrefs;
+    //   for (let i = 0; i < friendPrefs.startTimes.length; i++) {
+    //     const start = timeToInt(friendPrefs.startTimes[i].time);
+    //     const end = timeToInt(friendPrefs.endTimes[i].time);
+    //     doNotDisturbArr.push([start, end]);
+    // }
+    // }
+    // }
     this.setState({
-      friend: this.props.navigation.state.params.friend,
+      friends,
       id: this.props.navigation.state.params.id,
       ref,
       friendPrefs: doNotDisturbArr,
     });
-  }
-
-  componentWillUnmount() {
-    this.unsubscribe();
   }
 
   async getCurrUserRef() {
@@ -153,38 +152,74 @@ export default class SingleConvo extends React.Component {
     });
   }
 
+  renderHeader() {
+    if (this.state.friends.length === 1) {
+      const friend = this.state.friends[0];
+      return (
+        <React.Fragment>
+          <Left>
+            <Image source={{ uri: friend.icon }} style={styles.image} />
+          </Left>
+          <Body>
+            <Title>{friend.displayName}</Title>
+          </Body>
+          <Right>
+            <Button
+              transparent
+              onPress={() =>
+                this.props.navigation.navigate('SingleConvoPreferences', {
+                  setConvoPrefs: this.setConvoPrefs,
+                  id: this.state.id,
+                  friend,
+                })
+              }
+            >
+              <Image
+                source={require('../../public/preferences.png')}
+                style={styles.smallImage}
+              />
+            </Button>
+          </Right>
+        </React.Fragment>
+      );
+    } else {
+      return (
+        <React.Fragment>
+          {/* <Left>
+            <Image source={{ uri: friend.data.icon }} style={styles.image} />
+          </Left> */}
+          <Body>
+            <Title>Group Chat</Title>
+          </Body>
+          {/* <Right>
+            <Button
+              transparent
+              onPress={() =>
+                this.props.navigation.navigate('SingleConvoPreferences', {
+                  setConvoPrefs: this.setConvoPrefs,
+                  id: this.state.id,
+                  friend,
+                })
+              }
+            >
+              <Image
+                source={require('../../public/preferences.png')}
+                style={styles.smallImage}
+              />
+            </Button>
+          </Right> */}
+        </React.Fragment>
+      );
+    }
+  }
+
   render() {
     if (this.state.id.length) {
       return (
         <SideMenu>
           <View style={{ flex: 1, backgroundColor: 'white' }}>
             <Header style={{ backgroundColor: 'white', paddingTop: -20 }}>
-              <Left>
-                <Image
-                  source={{ uri: this.state.friend.icon }}
-                  style={styles.image}
-                />
-              </Left>
-              <Body>
-                <Title>{this.state.friend.displayName}</Title>
-              </Body>
-              <Right>
-                <Button
-                  transparent
-                  onPress={() =>
-                    this.props.navigation.navigate('SingleConvoPreferences', {
-                      setConvoPrefs: this.setConvoPrefs,
-                      id: this.state.id,
-                      friend: this.state.friend,
-                    })
-                  }
-                >
-                  <Image
-                    source={require('../../public/preferences.png')}
-                    style={styles.smallImage}
-                  />
-                </Button>
-              </Right>
+              {this.renderHeader()}
             </Header>
             <GiftedChat
               messages={this.state.messages}

@@ -83,11 +83,10 @@ export default class CreateConvo extends Component {
           conversations: firebase.firestore.FieldValue.arrayUnion(docRef.id),
         });
         for (let friend of recipientArr) {
-          const recipientRef = db
-            .collection('users')
+          db.collection('users')
             .doc(friend.id)
             .set(
-              { conversations: [...friend.data.conversations, docRef.if] },
+              { conversations: [...friend.data.conversations, docRef.id] },
               { merge: true }
             );
         }
@@ -96,7 +95,7 @@ export default class CreateConvo extends Component {
       .then(id =>
         this.props.navigation.navigate('SingleConvo', {
           id,
-          friend: recipient,
+          friends: recipientArr,
         })
       )
       .catch(err => console.error(err));
