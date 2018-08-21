@@ -70,6 +70,8 @@ export default class Convos extends Component {
         id,
         firstMessage,
         friend,
+        friendPrefs: convoData.friendPrefs,
+        userPrefs: convoData.userPrefs,
       });
     }
     this.setState({ convos: convosArr, isLoading: false });
@@ -144,6 +146,8 @@ export default class Convos extends Component {
               this.props.navigation.navigate('SingleConvo', {
                 id,
                 friend,
+                friendPrefs: convoData.friendPrefs,
+                userPrefs: convoData.userPrefs,
               })
             }
           >
@@ -230,12 +234,14 @@ export default class Convos extends Component {
     const data = convo.data();
     const firstMessage = data.firstMessage;
     const friendID = data.users.find(uid => uid !== this.user.uid);
+    const friendPrefs = data[`${friendID}-prefs`];
+    const userPrefs = data[`${this.user.uid}-prefs`];
     const friendQuery = await db
       .collection('users')
       .doc(friendID)
       .get();
     const friend = friendQuery.data();
-    return { firstMessage, friend };
+    return { firstMessage, friend, friendPrefs, userPrefs };
   }
 
   dateToTime(date) {
