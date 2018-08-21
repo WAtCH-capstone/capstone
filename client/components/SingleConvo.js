@@ -6,6 +6,7 @@ import { GiftedChat } from 'react-native-gifted-chat';
 import firebase from 'firebase';
 import Navbar from './Navbar';
 import SideMenu from 'react-native-side-menu';
+import schedule from 'node-schedule';
 import key from '../../googleMaps';
 import TranslateComponent from './Translate';
 import {
@@ -61,10 +62,20 @@ export default class SingleConvo extends React.Component {
   componentDidMount() {
     this.listen();
     const ref = this.getRef(this.props.navigation.state.params.id);
+    let doNotDisturbArr = [];
+    if (this.props.navigation.state.params.friendPrefs) {
+      const friendPrefs = this.props.navigation.state.params.friendPrefs;
+      for (let i = 0; i < friendPrefs.startTimes.length; i++) {
+        const start = timeToInt(friendPrefs.startTimes[i].time);
+        const end = timeToInt(friendPrefs.endTimes[i].time);
+        doNotDisturbArr.push([start, end]);
+      }
+    }
     this.setState({
       friend: this.props.navigation.state.params.friend,
       id: this.props.navigation.state.params.id,
       ref,
+      friendPrefs: doNotDisturbArr,
     });
   }
 
@@ -81,6 +92,7 @@ export default class SingleConvo extends React.Component {
   }
 
   async onSend(messages = []) {
+    let done;
     const currUserRef = await this.getCurrUserRef();
     const createdAt = new Date().getTime();
     const newMessage = {
@@ -93,8 +105,34 @@ export default class SingleConvo extends React.Component {
         avatar: currUserRef.icon,
       },
     };
-    this.state.ref.collection('messages').add(newMessage);
-    this.state.ref.set({ firstMessage: newMessage }, { merge: true });
+    const timeToCheck = dateToInt(new Date());
+    this.state.friendPrefs.forEach(pref => {
+      if (timeToCheck > pref[0] && timeToCheck < pref[1]) {
+        db.collection('users')
+          .doc(this.user.uid)
+          .collection('scheduled')
+          .doc(pref[1].toString())
+          .set({ newMessage, convoID: this.props.navigation.state.params.id });
+        const date = new Date(setSendTime(createdAt, pref[1] - timeToCheck));
+        alert(
+          'Your friend is in DO NOT DISTURB mode. You message has been scheduled.'
+        );
+        schedule.scheduleJob(date, () => {
+          this.state.ref.collection('messages').add(newMessage);
+          this.state.ref.set({ firstMessage: newMessage }, { merge: true });
+          db.collection('users')
+            .doc(this.user.uid)
+            .collection('scheduled')
+            .doc(pref[1].toString())
+            .delete();
+        });
+        done = true;
+      }
+    });
+    if (!done) {
+      this.state.ref.collection('messages').add(newMessage);
+      this.state.ref.set({ firstMessage: newMessage }, { merge: true });
+    }
   }
 
   async setConvoPrefs(prefs) {
@@ -142,10 +180,7 @@ export default class SingleConvo extends React.Component {
                   }
                 >
                   <Image
-                    source={{
-                      uri:
-                        'https://img.freepik.com/free-icon/information-symbol_318-123095.jpg?size=338&ext=jpg',
-                    }}
+                    source={require('../../public/preferences.png')}
                     style={styles.smallImage}
                   />
                 </Button>
@@ -192,6 +227,30 @@ export default class SingleConvo extends React.Component {
     }
   }
 }
+
+timeToInt = time => {
+  const arr1 = time.split(':');
+  const arr2 = arr1[1].split(' ');
+  let hours;
+  if (arr2[1] === 'am') {
+    hours = parseInt(arr1[0]);
+  } else {
+    hours = parseInt(arr1[0]) + 12;
+  }
+  let mins = parseInt(arr2[0]);
+  return hours * 60 + mins;
+};
+
+dateToInt = date => {
+  let dateArr = date.toString().split(' ');
+  let [hour, minute, second] = dateArr[4].split(':').map(str => parseInt(str));
+  return hour * 60 + minute;
+};
+
+setSendTime = (creationTime, minutesUntilSend) => {
+  const millisecondsUntilSend = minutesUntilSend * 60000;
+  return creationTime + millisecondsUntilSend;
+};
 
 const styles = StyleSheet.create({
   container: {
