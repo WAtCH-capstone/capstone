@@ -39,12 +39,27 @@ export default class CreateConvo extends React.Component {
       .then(id =>
         this.props.navigation.navigate('SingleConvo', {
           id,
-          // convo: { messages: [] },
-          // user: { uid: currUserId },
           friend: recipient,
         })
       )
       .catch(err => console.error(err));
+  }
+
+  async sendFriendRequest(email) {
+    const currUserId = await firebase.auth().currentUser.uid;
+    const friendQuery = await db
+      .collection('users')
+      .where('email', '==', email)
+      .get();
+    const friendArr = friendQuery.docs.map(friend => friend.data());
+    const friend = friendArr[0];
+    console.log(friend);
+    const friendRef = db.collection('users').doc(friendQuery.docs[0].id);
+    friendRef.set(
+      { requests: [...friend.requests, currUserId] },
+      { merge: true }
+    );
+    alert('Friend request sent!');
   }
 
   render() {
@@ -70,6 +85,17 @@ export default class CreateConvo extends React.Component {
             }}
           >
             <Text style={{ color: 'white' }}>Create Conversation</Text>
+          </Button>
+          <Button
+            style={{ marginTop: 10 }}
+            full
+            rounded
+            primary
+            onPress={() => {
+              this.sendFriendRequest(this.state.email);
+            }}
+          >
+            <Text style={{ color: 'white' }}>Add Friend</Text>
           </Button>
         </Form>
       </Container>
