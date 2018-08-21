@@ -19,7 +19,7 @@ import Navbar from './Navbar';
 import styles from './Styles';
 const geodist = require('geodist');
 // const timer = require('react-native-timer');
-
+//
 export default class MessagePreferences extends Component {
   constructor() {
     super();
@@ -48,11 +48,16 @@ export default class MessagePreferences extends Component {
     this.getDistanceFromDestination = this.getDistanceFromDestination.bind(
       this
     );
+    this.timeoutID = null;
   }
 
   componentDidMount() {
     const ref = this.getRef(this.props.navigation.state.params.id);
     this.setState({ ref });
+  }
+
+  componentWillUnmount() {
+    clearTimeout(this.timeoutID);
   }
 
   getDistanceFromDestination() {
@@ -115,8 +120,11 @@ export default class MessagePreferences extends Component {
       db.collection('users')
         .doc(this.user.uid)
         .collection('scheduled')
-        .add({ newMessage, convoID: this.props.navigation.state.params.id });
-
+        .doc(docID)
+        .set({
+          newMessage,
+          convoID: this.props.navigation.state.params.id,
+        });
       this.interval = setInterval(() => {
         if (this.state.locationDetails) {
           this.watchId = navigator.geolocation.watchPosition(
@@ -149,7 +157,8 @@ export default class MessagePreferences extends Component {
           }
         }
       }, 1000);
-      // setTimeout(() => {
+      // testing afte 20 seconds uncomment to check.
+      // this.timeoutID = setTimeout(() => {
       //   this.setState({
       //     currentLat: 40.7051,
       //     currentLong: -74.0092, // fullstack coords for testing after 20 seconds!
@@ -188,24 +197,6 @@ export default class MessagePreferences extends Component {
 
   render() {
     const { isDateTimePickerVisible, triggers } = this.state;
-    // testing:
-    // const newLat = 40.766291;
-    // const newLng = -73.923729;
-    // setTimeout(() => {
-    //   this.setState(
-    //     {
-    //       locationDetails: {
-    //         geometry: { location: { lat: newLat + 1, lng: newLng + 1 } },
-    //       },
-    //     },
-    //     () => {
-    //       console.log(
-    //         'time out after 5 seconds',
-    //         this.state.locationDetails.geometry.location
-    //       );
-    //     }
-    //   );
-    // }, 5000);
     return (
       <View style={styles.noneContainer}>
         <View style={{ backgroundColor: 'white', paddingBottom: 600 }}>
@@ -255,9 +246,7 @@ export default class MessagePreferences extends Component {
                       value={this.state.textInput}
                     />
                   </View>
-                  {isSearching && (
-                    <ActivityIndicator size="large" color="#3B80FE" />
-                  )}
+                  {isSearching && <ActivityIndicator />}
                   <ScrollView>
                     {locationResults.map(el => (
                       <TouchableOpacity
