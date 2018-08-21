@@ -63,12 +63,10 @@ export default class Convos extends React.Component {
     let convosArr = [];
     for (let id of userData.conversations) {
       const convoData = await this.getData(id);
-      const firstMessage = convoData.firstMessage;
-      const friend = convoData.friend;
       convosArr.push({
         id,
-        firstMessage,
-        friend,
+        firstMessage: convoData.firstMessage,
+        friends: convoData.friends,
         friendPrefs: convoData.friendPrefs,
         userPrefs: convoData.userPrefs,
       });
@@ -95,11 +93,24 @@ export default class Convos extends React.Component {
     }
   }
 
+  renderNames(friends) {
+    const names = friends.map(el => el.displayName);
+    return names.join(' & ');
+  }
+
+  renderThumbnail(friends, firstMessage) {
+    if (friends.length === 1) {
+      return <Thumbnail source={{ uri: friends[0].icon }} />;
+    } else {
+      return <Thumbnail source={{ uri: firstMessage.user.avatar }} />;
+    }
+  }
+
   renderConvos(convos) {
     return convos.map(convoData => {
       if (convoData.firstMessage) {
         const id = convoData.id;
-        const friend = convoData.friend;
+        const friends = convoData.friends;
         const firstMessage = convoData.firstMessage;
         const date = new Date(firstMessage.createdAt);
         const time = this.dateToTime(date);
@@ -113,17 +124,15 @@ export default class Convos extends React.Component {
             onPress={() =>
               this.props.navigation.navigate('SingleConvo', {
                 id,
-                friend,
+                friends,
                 friendPrefs: convoData.friendPrefs,
                 userPrefs: convoData.userPrefs,
               })
             }
           >
-            <Left>
-              <Thumbnail source={{ uri: friend.icon }} />
-            </Left>
+            <Left>{this.renderThumbnail(friends, firstMessage)}</Left>
             <Body>
-              <Text>{friend.displayName}</Text>
+              <Text>{this.renderNames(friends)}</Text>
               <Text note>{firstMessage && firstMessage.text}</Text>
             </Body>
             <Right>
@@ -216,15 +225,20 @@ export default class Convos extends React.Component {
       .get();
     const data = convo.data();
     const firstMessage = data.firstMessage;
-    const friendID = data.users.find(uid => uid !== this.user.uid);
-    const friendPrefs = data[`${friendID}-prefs`];
     const userPrefs = data[`${this.user.uid}-prefs`];
-    const friendQuery = await db
-      .collection('users')
-      .doc(friendID)
-      .get();
-    const friend = friendQuery.data();
-    return { firstMessage, friend, friendPrefs, userPrefs };
+    const friendIDs = data.users.filter(id => id !== this.user.uid);
+    let friends = [];
+    let friendPrefs = [];
+    for (let id of friendIDs) {
+      friendPrefs.push(data[`${id}-prefs`]);
+      const friendQuery = await db
+        .collection('users')
+        .doc(id)
+        .get();
+      const friend = friendQuery.data();
+      friends.push(friend);
+    }
+    return { firstMessage, friends, friendPrefs, userPrefs };
   }
 
   dateToTime(date) {
