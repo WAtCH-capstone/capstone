@@ -106,8 +106,20 @@ export default class Convos extends React.Component {
     }
   }
 
+  sortConvos(convos) {
+    return convos.sort((first, second) => {
+      if (first.firstMessage && second.firstMessage) {
+        return second.firstMessage.createdAt - first.firstMessage.createdAt;
+      } else if (!first.firstMessage) {
+        return 1;
+      } else return -1;
+    });
+  }
+
   renderConvos(convos) {
-    return convos.map(convoData => {
+    console.log(convos);
+    const sortedConvos = this.sortConvos(convos);
+    return sortedConvos.map(convoData => {
       if (convoData.firstMessage) {
         const id = convoData.id;
         const friends = convoData.friends;
