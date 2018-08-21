@@ -44,6 +44,7 @@ export default class TranslateComponent extends React.Component {
               selectedValue={this.state.selected1}
               placeholder="Translate"
               onValueChange={this.onValueChange.bind(this)}
+              textStyle={{ color: 'white' }}
             >
               {languages.map(value => (
                 <Picker.Item key={value[1]} label={value[1]} value={value[0]} />
