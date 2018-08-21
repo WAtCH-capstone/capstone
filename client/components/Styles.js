@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
   },
   blueButton: {
     marginTop: 5,
-    color: '#3B80FE',
+    // color: '#3B80FE',
   },
   inputWrapper: {
     marginTop: 10,
@@ -69,6 +69,12 @@ const styles = StyleSheet.create({
   },
   nonePref: {
     fontSize: 25,
+    textAlign: 'center',
+    textAlignVertical: 'center',
+    padding: 20,
+  },
+  noneSmall: {
+    fontSize: 17,
     textAlign: 'center',
     textAlignVertical: 'center',
     padding: 20,

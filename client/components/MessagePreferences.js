@@ -204,6 +204,7 @@ export default class MessagePreferences extends Component {
             {this.props.navigation.state.params.messageContent}
           </Text>
           <View>
+            <Text style={styles.noneSmall}>{triggers.date}</Text>
             <Button
               style={styles.blueButton}
               full
@@ -215,7 +216,6 @@ export default class MessagePreferences extends Component {
                 <Text style={{ color: 'white' }}>Pick a Date and Time</Text>
               </View>
             </Button>
-            <Text>{triggers.date}</Text>
             <DateTimePicker
               mode="datetime"
               isVisible={isDateTimePickerVisible}
@@ -224,13 +224,8 @@ export default class MessagePreferences extends Component {
             />
           </View>
           <View style={styles.containerPref}>
-            <GoogleAutoComplete
-              apiKey={key}
-              debounce={500}
-              minLength={0}
-
-              // style={{ backgroundColor: 'red' }}
-            >
+            <Text style={styles.noneSmall}>{this.state.textInput}</Text>
+            <GoogleAutoComplete apiKey={key} debounce={500} minLength={0}>
               {({
                 handleTextChange,
                 locationResults,
@@ -242,11 +237,16 @@ export default class MessagePreferences extends Component {
                     <TextInput
                       style={styles.mapTextInput}
                       placeholder="Enter a Location..."
+                      // onChangeText={() => {
+                      //   handleTextChange;
+                      //   this.setState({ showResults: true });
+                      // }}
                       onChangeText={handleTextChange}
                       value={this.state.textInput}
                     />
                   </View>
                   {isSearching && <ActivityIndicator />}
+                  {/* {this.state.showResults === true ? ( */}
                   <ScrollView>
                     {locationResults.map(el => (
                       <TouchableOpacity
@@ -258,10 +258,10 @@ export default class MessagePreferences extends Component {
                       </TouchableOpacity>
                     ))}
                   </ScrollView>
+                  {/* ) : null} */}
                 </React.Fragment>
               )}
             </GoogleAutoComplete>
-            <Text style={styles.none}>{this.state.textInput}</Text>
             <Button
               style={styles.blueButton}
               full
