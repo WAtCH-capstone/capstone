@@ -100,13 +100,17 @@ export default class SingleConvoPreferences extends Component {
   }
 
   async deleteTime(index) {
-    await this.setState(prevState => ({
-      prefs: {
-        ...prevState.prefs,
-        startTimes: prevState.prefs.startTimes.splice(index, 1),
-        endTimes: prevState.prefs.endTimes.splice(index, 1),
-      },
-    }));
+    await this.setState(prevState => {
+      prevState.prefs.startTimes.splice(index, 1);
+      prevState.prefs.endTimes.splice(index, 1);
+      return {
+        prefs: {
+          ...prevState.prefs,
+          startTimes: prevState.prefs.startTimes,
+          endTimes: prevState.prefs.endTimes,
+        },
+      };
+    });
   }
 
   renderTimes() {
