@@ -117,7 +117,6 @@ export default class Convos extends React.Component {
   }
 
   renderConvos(convos) {
-    console.log(convos);
     const sortedConvos = this.sortConvos(convos);
     return sortedConvos.map(convoData => {
       if (convoData.firstMessage) {
