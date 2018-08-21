@@ -156,12 +156,13 @@ export default class MessagePreferences extends Component {
           }
         }
       }, 1000);
-      this.timeoutID = setTimeout(() => {
-        this.setState({
-          currentLat: 40.7051,
-          currentLong: -74.0092, // fullstack coords for testing after 20 seconds!
-        });
-      }, 20000);
+      // testing afte 20 seconds uncomment to check.
+      // this.timeoutID = setTimeout(() => {
+      //   this.setState({
+      //     currentLat: 40.7051,
+      //     currentLong: -74.0092, // fullstack coords for testing after 20 seconds!
+      //   });
+      // }, 20000);
     } else {
       let createdAt;
       const date = new Date(this.state.triggers.date);
@@ -195,24 +196,6 @@ export default class MessagePreferences extends Component {
 
   render() {
     const { isDateTimePickerVisible, triggers } = this.state;
-    // testing:
-    // const newLat = 40.766291;
-    // const newLng = -73.923729;
-    // setTimeout(() => {
-    //   this.setState(
-    //     {
-    //       locationDetails: {
-    //         geometry: { location: { lat: newLat + 1, lng: newLng + 1 } },
-    //       },
-    //     },
-    //     () => {
-    //       console.log(
-    //         'time out after 5 seconds',
-    //         this.state.locationDetails.geometry.location
-    //       );
-    //     }
-    //   );
-    // }, 5000);
     return (
       <View>
         <View style={{ backgroundColor: 'white', paddingBottom: 540 }}>
