@@ -1,6 +1,4 @@
 import React from 'react';
-import { Container } from 'native-base';
-import styles from './Styles';
 import AwesomeAlert from 'react-native-awesome-alerts';
 import db from '../../firestore';
 import firebase from 'firebase';
@@ -8,33 +6,49 @@ import firebase from 'firebase';
 export default class InAppNotification extends React.Component {
   constructor() {
     super();
-    this.state = { newText: [], displayAlert: false };
-    this.user = firebase.auth().currentUser;
+    this.state = { newText: {}, displayAlert: false };
+    // this.user = firebase.auth().currentUser;
     this.getUserData = this.getUserData.bind(this);
     this.listenToConvos = this.listenToConvos.bind(this);
     this.listenToUser = this.listenToUser.bind(this);
   }
 
   async componentDidMount() {
+    // this.setState({
+    //   newText: {
+    //     _id: 1534792009096,
+    //     createdAt: 1534792009096,
+    //     text: 'Hi!',
+    //     user: {
+    //       _id: 'G0biB6fiC5Yzrty1eTrQKmOgKL12',
+    //       avatar:
+    //         'https://cdn.shopify.com/s/files/1/1061/1924/files/Nerd_with_Glasses_Emoji.png?9898922749706957214',
+    //       name: 'Hadley',
+    //     },
+    //   },
+    //   displayAlert: true,
+    // });
     this.listenToConvos();
     this.listenToUser();
   }
 
   async getUserData() {
+    const user = firebase.auth().currentUser;
+    console.log('user: ', user);
     const snapshot = await db
       .collection('users')
-      .doc(this.user.uid)
+      .doc(user.uid)
       .get();
     return snapshot.data();
   }
 
   async setNewText(userData) {
-    let newText = [];
+    let newText = {};
     for (let id of userData.conversations) {
       const convoData = await this.getData(id);
-      const firstMessage = convoData.firstMessage;
-      const friend = convoData.friend;
-      newText.push({ id, firstMessage, friend });
+      console.log('convoData: ', convoData);
+      newText = convoData.firstMessage;
+      console.log('newText: ', newText);
     }
     this.setState({ newText, displayAlert: true });
   }
@@ -50,17 +64,21 @@ export default class InAppNotification extends React.Component {
         .limit(20)
         .onSnapshot(async () => {
           let userData = await this.getUserData();
+          console.log('userData: ', userData);
           this.setNewText(userData);
         });
     }
   }
 
   async listenToUser() {
+    const user = firebase.auth().currentUser;
+    console.log('user: ', user);
     this.userListener = await db
       .collection('users')
-      .doc(this.user.uid)
+      .doc(user.uid)
       .onSnapshot(snap => {
         this.setNewText(snap.data());
+        console.log('snap.data(): ', snap.data());
       });
   }
 
@@ -79,15 +97,15 @@ export default class InAppNotification extends React.Component {
         <AwesomeAlert
           show={displayAlert}
           showProgress={false}
-          title={`Message from ${newText.friend}`}
-          message={newText.firstMessage}
+          title={`Message from ${newText.user ? newText.user.name : null}`}
+          message={newText.text ? newText.text : null}
           closeOnTouchOutside={false}
           closeOnHardwareBackPress={false}
           showCancelButton={true}
           showConfirmButton={true}
           cancelText="Not now"
           confirmText="View"
-          confirmButtonColor="#aaa"
+          confirmButtonColor="#3B80FE"
           cancelButtonColor="#aaa"
           onCancelPressed={() => {
             this.hideAlert();
