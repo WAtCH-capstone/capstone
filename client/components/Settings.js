@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { TouchableOpacity } from 'react-native';
 import {
   Container,
@@ -19,7 +19,7 @@ import Navbar from './Navbar';
 import db from '../../firestore';
 import firebase from 'firebase';
 
-export default class Settings extends Component {
+export default class Settings extends React.Component {
   constructor() {
     super();
     this.state = { userDoc: {}, userRef: '', requests: [] };

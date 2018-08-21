@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Container, Form, Item, Input, Label, Button } from 'native-base';
 import { Text } from 'react-native';
 const firebase = require('firebase');
 import db from '../../firestore';
 
-export default class EditPassword extends Component {
+export default class EditPassword extends React.Component {
   constructor() {
     super();
     this.state = { password: '' };
@@ -27,15 +27,11 @@ export default class EditPassword extends Component {
               onChangeText={password => this.setState({ password })}
             />
           </Item>
-
-          {/* PASSWORD ERROR MESSAGE */}
           {this.state.password.length < 6 ? (
             <Text style={{ color: 'red' }}>
               Password must be at least 6 characters
             </Text>
           ) : null}
-
-          {/* BUTTON DISABLED UNTIL CONCERNS ARE MET */}
           {this.state.password.length < 6 ? (
             <Button
               disabled={true}
