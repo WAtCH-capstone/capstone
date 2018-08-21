@@ -59,6 +59,7 @@ export default class CreateConvo extends Component {
       { requests: [...friend.requests, currUserId] },
       { merge: true }
     );
+    alert('Friend request sent!');
   }
 
   render() {

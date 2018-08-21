@@ -15,6 +15,7 @@ class SignUp extends React.Component {
       icon: '',
       conversations: [],
       requests: [],
+      friends: [],
     };
     this.signUpUser = this.signUpUser.bind(this);
     this.createUser = this.createUser.bind(this);
