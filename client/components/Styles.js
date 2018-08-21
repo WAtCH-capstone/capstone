@@ -43,6 +43,36 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 10,
   },
+  blueButton: {
+    marginTop: 5,
+    color: '#3B80FE',
+  },
+  inputWrapper: {
+    marginTop: 10,
+  },
+  mapTextInput: {
+    height: 40,
+    width: 350,
+    borderWidth: 1,
+    paddingHorizontal: 16,
+  },
+  containerPref: {
+    backgroundColor: 'white',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingTop: -50,
+  },
+  root: {
+    height: 40,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    justifyContent: 'center',
+  },
+  nonePref: {
+    fontSize: 25,
+    textAlign: 'center',
+    textAlignVertical: 'center',
+    padding: 20,
+  },
 });
 
 export default styles;

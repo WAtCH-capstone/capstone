@@ -16,6 +16,7 @@ import schedule from 'node-schedule';
 import db from '../../firestore';
 import firebase from 'firebase';
 import Navbar from './Navbar';
+import styles from './Styles';
 const geodist = require('geodist');
 // const timer = require('react-native-timer');
 
@@ -206,8 +207,11 @@ export default class MessagePreferences extends Component {
     //   );
     // }, 5000);
     return (
-      <View>
-        <View style={{ backgroundColor: 'white', paddingBottom: 540 }}>
+      <View style={styles.noneContainer}>
+        <View style={{ backgroundColor: 'white', paddingBottom: 600 }}>
+          <Text style={styles.nonePref}>
+            {this.props.navigation.state.params.messageContent}
+          </Text>
           <View>
             <Button
               style={styles.blueButton}
@@ -228,8 +232,14 @@ export default class MessagePreferences extends Component {
               onCancel={this._hideDateTimePicker}
             />
           </View>
-          <View style={styles.container}>
-            <GoogleAutoComplete apiKey={key} debounce={500} minLength={0}>
+          <View style={styles.containerPref}>
+            <GoogleAutoComplete
+              apiKey={key}
+              debounce={500}
+              minLength={0}
+
+              // style={{ backgroundColor: 'red' }}
+            >
               {({
                 handleTextChange,
                 locationResults,
@@ -262,7 +272,7 @@ export default class MessagePreferences extends Component {
                 </React.Fragment>
               )}
             </GoogleAutoComplete>
-            <Text>{this.state.textInput}</Text>
+            <Text style={styles.none}>{this.state.textInput}</Text>
             <Button
               style={styles.blueButton}
               full
@@ -288,29 +298,3 @@ export default class MessagePreferences extends Component {
     );
   }
 }
-
-const styles = StyleSheet.create({
-  blueButton: {
-    marginTop: 5,
-  },
-  inputWrapper: {
-    marginTop: 10,
-  },
-  mapTextInput: {
-    height: 40,
-    width: 350,
-    borderWidth: 1,
-    paddingHorizontal: 16,
-  },
-  container: {
-    backgroundColor: 'white',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingTop: -50,
-  },
-  root: {
-    height: 40,
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    justifyContent: 'center',
-  },
-});
