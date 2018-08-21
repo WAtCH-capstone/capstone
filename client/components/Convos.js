@@ -182,7 +182,7 @@ export default class Convos extends Component {
             />
           </Item>
           <Button
-            info
+            transparent
             onPress={() => {
               this.enterSearch(this.state.search);
             }}
@@ -198,6 +198,7 @@ export default class Convos extends Component {
             />
           </Button>
           <Button
+            transparent
             onPress={() => {
               navigation.navigate('CreateConvo');
             }}
