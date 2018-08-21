@@ -95,8 +95,6 @@ export default class InAppNotification extends React.Component {
           onConfirmPressed={() => {
             this.props.navigation.navigate('SingleConvo', {
               id: this.state.newText.id,
-              // convo: { messages: [] },
-              // user: { uid: currUserId },
               friend: this.state.newText.friend,
             });
           }}
