@@ -36,6 +36,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: 'white',
   },
+  logo: {
+    width: '100%',
+    height: '55%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 10,
+  },
 });
 
 export default styles;

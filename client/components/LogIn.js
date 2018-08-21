@@ -2,6 +2,7 @@ import React from 'react';
 import { Image } from 'react-native';
 import { Container, Form, Input, Item, Button, Label, Text } from 'native-base';
 const firebase = require('firebase');
+import styles from './Styles';
 
 export default class LogIn extends React.Component {
   constructor(props) {
@@ -38,12 +39,7 @@ export default class LogIn extends React.Component {
       <Container style={{ paddingBottom: 100 }}>
         <Image
           source={require('../../public/now-or-later.png')}
-          style={{
-            width: '100%',
-            height: '50%',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}
+          style={styles.logo}
         />
         <Form>
           <Item floatingLabel>
