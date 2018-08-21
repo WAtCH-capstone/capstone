@@ -12,10 +12,19 @@ import {
   Button,
   Switch,
 } from 'native-base';
-import { TouchableOpacity } from 'react-native';
+import {
+  TouchableOpacity,
+  View,
+  StyleSheet,
+  TextInput,
+  ActivityIndicator,
+  ScrollView,
+} from 'react-native';
 import DateTimePicker from 'react-native-modal-datetime-picker';
 import db from '../../firestore';
 import firebase from 'firebase';
+import key from '../../googleMaps';
+import { GoogleAutoComplete } from 'react-native-google-autocomplete';
 
 export default class SingleConvoPreferences extends Component {
   constructor(props) {
@@ -29,10 +38,13 @@ export default class SingleConvoPreferences extends Component {
       prefs: {
         startTimes: [],
         endTimes: [],
-        location: '',
       },
+      locationDetails: '',
+      textInput: '',
+      locationTrigger: false,
     };
     this.deleteTime = this.deleteTime.bind(this);
+    this.onSend = this.onSend.bind(this);
   }
 
   async componentDidMount() {
@@ -47,11 +59,23 @@ export default class SingleConvoPreferences extends Component {
       prefs: {
         startTimes: data.startTimes,
         endTimes: data.endTimes,
-        location: data.location,
+        // location: data.location,
       },
     });
   }
-
+  _handlePress = async (el, fetchDetails) => {
+    const res = await fetchDetails(el.place_id);
+    this.setState({
+      locationDetails: res,
+      textInput: el.description,
+      locationTrigger: !this.state.locationTrigger,
+    });
+  };
+  async onSend() {
+    if (this.state.locationTrigger) {
+      console.log(this.state.locationDetails);
+    }
+  }
   async onValueChange() {
     await this.setState({ selected: value });
   }
@@ -226,8 +250,87 @@ export default class SingleConvoPreferences extends Component {
           >
             <Text style={{ color: 'white' }}>Save preferences</Text>
           </Button>
+          {/* this will be for location */}
+          <View style={styles.container}>
+            <GoogleAutoComplete apiKey={key} debounce={500} minLength={0}>
+              {({
+                handleTextChange,
+                locationResults,
+                fetchDetails,
+                isSearching,
+              }) => (
+                <React.Fragment>
+                  <View style={styles.inputWrapper}>
+                    <TextInput
+                      style={styles.mapTextInput}
+                      placeholder="Enter a Location..."
+                      onChangeText={handleTextChange}
+                      value={this.state.textInput}
+                    />
+                  </View>
+                  {isSearching && <ActivityIndicator />}
+                  <ScrollView>
+                    {/* {console.log('locationResults', locationResults)} */}
+                    {locationResults.map(el => (
+                      <TouchableOpacity
+                        key={el.id}
+                        style={styles.root}
+                        onPress={() => this._handlePress(el, fetchDetails)}
+                      >
+                        <Text>{el.description}</Text>
+                      </TouchableOpacity>
+                    ))}
+                  </ScrollView>
+                </React.Fragment>
+              )}
+            </GoogleAutoComplete>
+            <Text>{this.state.textInput}</Text>
+            <Button
+              full
+              rounded
+              primary
+              onPress={() =>
+                this.onSend()
+                  .then(() => {
+                    alert('Your message has been scheduled!');
+                    this.props.navigation.navigate('ScheduledMessages');
+                  })
+                  .catch(err => console.error(err))
+              }
+            >
+              <View>
+                <Text style={{ color: 'white' }}>Submit</Text>
+              </View>
+            </Button>
+          </View>
         </Content>
       </Container>
     );
   }
 }
+
+const styles = StyleSheet.create({
+  blueButton: {
+    marginTop: 5,
+  },
+  inputWrapper: {
+    marginTop: 10,
+  },
+  mapTextInput: {
+    height: 40,
+    width: 350,
+    borderWidth: 1,
+    paddingHorizontal: 16,
+  },
+  container: {
+    backgroundColor: 'white',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingTop: -50,
+  },
+  root: {
+    height: 40,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    justifyContent: 'center',
+  },
+});

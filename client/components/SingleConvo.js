@@ -79,9 +79,6 @@ export default class SingleConvo extends React.Component {
     });
   }
 
-  componentWillUnmount() {
-    this.unsubscribe();
-  }
 
   async getCurrUserRef() {
     const currUserRef = await db

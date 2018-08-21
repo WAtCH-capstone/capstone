@@ -99,7 +99,7 @@ export default class MessagePreferences extends Component {
       locationDetails: res,
       textInput: el.description,
       showResults: false,
-      locationTrigger: !this.state.locationTrigger,
+      locationTrigger: true,
     });
   };
 
