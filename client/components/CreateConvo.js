@@ -24,7 +24,13 @@ import firebase from 'firebase';
 export default class CreateConvo extends Component {
   constructor(props) {
     super(props);
-    this.state = { friends: [], recipients: [], userDoc: {}, userRef: '' };
+    this.state = {
+      friends: [],
+      recipients: [],
+      email: '',
+      userDoc: {},
+      userRef: '',
+    };
     this.createNewConvo = this.createNewConvo.bind(this);
   }
 
@@ -63,28 +69,28 @@ export default class CreateConvo extends Component {
   }
 
   async createNewConvo(recipientArr) {
-    // grab .data.email for each (each el has friend data)
-    const recipientQuery = await db
-      .collection('users')
-      .where('email', '==', recipientEmail)
-      .get();
-    const recArr = recipientQuery.docs.map(doc => doc.data());
-    const recipient = recArr[0];
-    const recipientId = recipientQuery.docs[0].id;
-    const currUserId = await firebase.auth().currentUser.uid;
+    const currUserId = this.state.userRef.uid;
     const currUserRef = db.collection('users').doc(currUserId);
-    const recipientRef = db.collection('users').doc(recipientId);
+    const participants = recipientArr.map(el => el.id);
+    participants.push(currUserId);
+    console.log(participants);
     db.collection('conversations')
       .add({
-        users: [currUserId, recipientId],
+        users: participants,
       })
       .then(docRef => {
         currUserRef.update({
           conversations: firebase.firestore.FieldValue.arrayUnion(docRef.id),
         });
-        recipientRef.update({
-          conversations: [...recipient.conversations, docRef.id],
-        });
+        for (let friend of recipientArr) {
+          const recipientRef = db
+            .collection('users')
+            .doc(friend.id)
+            .set(
+              { conversations: [...friend.data.conversations, docRef.if] },
+              { merge: true }
+            );
+        }
         return docRef.id;
       })
       .then(id =>
@@ -134,7 +140,6 @@ export default class CreateConvo extends Component {
   }
 
   renderRecipients() {
-    console.log(this.state.recipients);
     return this.state.recipients.map((friend, index) => {
       return (
         <ListItem key={friend.id}>
