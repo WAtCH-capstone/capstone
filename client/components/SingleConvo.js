@@ -180,7 +180,7 @@ export default class SingleConvo extends React.Component {
                   }
                 >
                   <Image
-                    source={require('../../public/buttons/preferences.png')}
+                    source={require('../../public/buttons/now-or-later.png')}
                     style={styles.smallImage}
                   />
                 </Button>
