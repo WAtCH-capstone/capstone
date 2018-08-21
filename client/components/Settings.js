@@ -97,9 +97,17 @@ export default class Settings extends Component {
   }
 
   async declineRequest(index) {
-    const newRequests = this.state.requests.splice(index, 1);
-    await this.state.userRef.set({ requests: newRequests }, { merge: true });
-    this.setState({ requests: newRequests });
+    this.state.userDoc.requests.splice(index, 1);
+    await this.state.userRef.set(
+      { requests: this.state.userDoc },
+      { merge: true }
+    );
+    await this.setState(prevState => {
+      prevState.requests.splice(index, 1);
+      return {
+        requests: prevState.requests,
+      };
+    });
   }
 
   renderRequests() {
