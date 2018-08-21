@@ -69,7 +69,6 @@ export default class MessagePreferences extends Component {
         },
         { unit: 'feet' }
       );
-      console.log('distance from current to destination: ', dist);
       this.setState({
         distanceFromAtoB: dist,
       });
