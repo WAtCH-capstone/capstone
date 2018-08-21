@@ -9,6 +9,10 @@ import {
   Text,
   Left,
   Body,
+  Header,
+  Item,
+  Input,
+  Button,
 } from 'native-base';
 import { ActivityIndicator, Image } from 'react-native';
 import styles from './Styles';
@@ -17,11 +21,9 @@ import Navbar from './Navbar';
 export default class ScheduledMesages extends React.Component {
   constructor() {
     super();
-    this.state = {
-      messages: [],
-      isLoading: true,
-    };
+    this.state = { messages: [], isLoading: true, search: '', results: [] };
     this.user = firebase.auth().currentUser;
+    this.enterSearch = this.enterSearch.bind(this);
   }
 
   async getMessages() {
@@ -55,6 +57,23 @@ export default class ScheduledMesages extends React.Component {
 
   async componentDidMount() {
     await this.getMessages();
+  }
+
+  enterSearch(search) {
+    let messages = this.state.messages;
+    let searchResult = [];
+    if (!search.length) {
+      this.setState({ results: messages, isLoading: false });
+    }
+    for (let i = 0; i < messages.length; i++) {
+      if (search === messages[i].friend.displayName) {
+        searchResult.push(messages[i]);
+      }
+      this.setState({
+        results: searchResult,
+        isLoading: false,
+      });
+    }
   }
 
   dateToTime(date) {
@@ -96,8 +115,35 @@ export default class ScheduledMesages extends React.Component {
   render() {
     return (
       <Container>
+        <Header style={styles.header} searchBar rounded>
+          <Item>
+            <Input
+              clearButtonMode="always"
+              onChangeText={search => this.setState({ search })}
+              placeholder="Search"
+            />
+          </Item>
+          <Button
+            transparent
+            onPress={() => {
+              this.enterSearch(this.state.search);
+            }}
+          >
+            <Image
+              source={require('../../public/buttons/search.png')}
+              style={{
+                width: 30,
+                height: 30,
+                backgroundColor: 'white',
+                borderColor: 'white',
+              }}
+            />
+          </Button>
+        </Header>
         <Content>
-          {this.state.messages && this.state.messages.length ? (
+          {this.state.results && this.state.results.length ? (
+            <List>{this.renderScheduled(this.state.results)}</List>
+          ) : this.state.messages && this.state.messages.length ? (
             <List>{this.renderScheduled(this.state.messages)}</List>
           ) : this.state.isLoading ? (
             <ActivityIndicator size="large" color="#3B80FE" />
