@@ -50,6 +50,3 @@ export default class Navbar extends Component {
     );
   }
 }
-
-//OLD SETTINGS ICON:
-//'https://cdn0.iconfinder.com/data/icons/thin-essentials/57/thin-053_settings_gear_preferences-512.png'

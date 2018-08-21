@@ -180,10 +180,7 @@ export default class SingleConvo extends React.Component {
                   }
                 >
                   <Image
-                    source={{
-                      uri:
-                        'https://img.freepik.com/free-icon/information-symbol_318-123095.jpg?size=338&ext=jpg',
-                    }}
+                    source={require('../../public/preferences.png')}
                     style={styles.smallImage}
                   />
                 </Button>
