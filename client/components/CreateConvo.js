@@ -15,9 +15,11 @@ import {
   Body,
   Right,
   Thumbnail,
+  View,
 } from 'native-base';
 import db from '../../firestore';
 import firebase from 'firebase';
+import styles from './Styles';
 
 // Need to have a way to check if that conversation already exists
 
@@ -159,19 +161,45 @@ export default class CreateConvo extends React.Component {
   renderFriends() {
     return this.state.friends.map((friend, index) => {
       return (
-        <ListItem key={friend.id}>
-          <Left>
+        // <ListItem key={friend.id}>
+        //   <Left>
+        //     <Thumbnail source={{ uri: friend.data.icon }} />
+        //   </Left>
+        //   <Body>
+        //     <Text>{friend.data.displayName}</Text>
+        //   </Body>
+        //   <Right>
+        //     <Button onPress={() => this.addToConvo(friend, index)}>
+        //       <Text>Add</Text>
+        //     </Button>
+        //   </Right>
+        // </ListItem>
+
+        <View
+          style={{
+            flex: 1,
+            flexDirection: 'row',
+            marginLeft: 20,
+            marginBottom: 10,
+          }}
+          key={friend.id}
+        >
+          <View style={{ backgroundColor: 'white', width: 70 }}>
             <Thumbnail source={{ uri: friend.data.icon }} />
-          </Left>
-          <Body>
-            <Text>{friend.data.displayName}</Text>
-          </Body>
-          <Right>
-            <Button onPress={() => this.addToConvo(friend, index)}>
+          </View>
+          <View style={{ backgroundColor: 'white', width: 170 }}>
+            <Text style={styles.noneSmall1}>{friend.data.displayName}</Text>
+          </View>
+          <View style={{ backgroundColor: 'white' }}>
+            <Button
+              style={styles.yesButton}
+              success
+              onPress={() => this.addToConvo(friend, index)}
+            >
               <Text>Add</Text>
             </Button>
-          </Right>
-        </ListItem>
+          </View>
+        </View>
       );
     });
   }
@@ -180,13 +208,13 @@ export default class CreateConvo extends React.Component {
     return (
       <Container>
         <Content>
-          <Separator bordered>
-            <Text>Recipients</Text>
-          </Separator>
+          <View style={{ backgroundColor: 'white' }}>
+            <Text style={styles.title}>Recipients</Text>
+          </View>
           {this.state.recipients.length ? (
             <List>{this.renderRecipients()}</List>
           ) : (
-            <Text>No friends added.</Text>
+            <Text style={styles.noneSmall1}>No friends added.</Text>
           )}
           <Button
             style={{ marginTop: 10 }}
@@ -199,16 +227,18 @@ export default class CreateConvo extends React.Component {
           >
             <Text style={{ color: 'white' }}>Start Conversation</Text>
           </Button>
-          <Separator bordered>
-            <Text>Friends</Text>
-          </Separator>
+          <View style={{ backgroundColor: 'white' }}>
+            <Text style={styles.title}>Friends</Text>
+          </View>
           {this.state.friends.length ? (
             <List>{this.renderFriends()}</List>
           ) : (
-            <Text>
-              You have no friends yet. :( Press "Add Friend" to start adding
-              friends!
-            </Text>
+            <View>
+              <Text style={styles.noneSmall1}>You have no friends yet.</Text>
+              <Text style={styles.noneSmall1}>
+                Press "Add Friend" to start adding friends!
+              </Text>
+            </View>
           )}
           <Form>
             <Item floatingLabel>
@@ -221,10 +251,10 @@ export default class CreateConvo extends React.Component {
               />
             </Item>
             <Button
-              style={{ marginTop: 10 }}
+              style={{ marginTop: 15 }}
+              primary
               full
               rounded
-              primary
               onPress={() => {
                 this.sendFriendRequest(this.state.email);
               }}
