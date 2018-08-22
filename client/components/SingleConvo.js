@@ -26,7 +26,8 @@ export default class SingleConvo extends React.Component {
       menuOpen: false,
       messageContent: '',
       ref: '',
-      convoPrefs: {},
+      friendPrefs: [],
+      locationPrefs: null,
     };
     this.user = firebase.auth().currentUser;
     this.onSend = this.onSend.bind(this);
@@ -40,9 +41,10 @@ export default class SingleConvo extends React.Component {
   }
 
   listen() {
+    const convoID = this.props.navigation.state.params.id;
     const listenToMessages = db
       .collection('conversations')
-      .doc(this.props.navigation.state.params.id)
+      .doc(convoID)
       .collection('messages')
       .orderBy('createdAt', 'desc')
       .limit(20)
@@ -60,13 +62,36 @@ export default class SingleConvo extends React.Component {
 
     this.unsubscribeMessages = listenToMessages;
 
+    const userCheck = `${this.user.uid}-check`;
+
     const listenToPendingLocation = db
       .collection('conversations')
-      .doc(this.props.navigation.state.params.id)
+      .doc(convoID)
       .collection('location-check')
       .onSnapshot(snap => {
-        const pending = snap.docs.map(doc => doc.data());
-        console.log(pending);
+        const pendingMessages = snap.docs.map(doc => doc.data());
+        let objToSet = {};
+        if (!this.state.locationPrefs) {
+          for (let message of pendingMessages) {
+            if (!message.userCheck) {
+              objToSet[userCheck] = true;
+              db.collection('conversations')
+                .doc(convoID)
+                .collection('location-check')
+                .doc(message.createdAt.toString())
+                .set(objToSet, { merge: true });
+            }
+          }
+        } else {
+          for (let message of pendingMessages) {
+            objToSet[userCheck] = false;
+            db.collection('conversations')
+              .doc(convoID)
+              .collection('location-check')
+              .doc(message.createdAt.toString())
+              .set({ objToSet }, { merge: true });
+          }
+        }
       });
 
     this.unsubscribePendingLocation = listenToPendingLocation;
@@ -77,15 +102,20 @@ export default class SingleConvo extends React.Component {
     const friends = this.props.navigation.state.params.friends;
     const ref = this.getRef(this.props.navigation.state.params.id);
     let doNotDisturbArr = [];
+    let locationPrefs = null;
     if (friends.length === 1) {
       const friendPrefsArr = this.props.navigation.state.params.friendPrefs;
       if (friendPrefsArr && friendPrefsArr[0]) {
-        const friendPrefs = friendPrefs[0];
+        const friendPrefs = friendPrefsArr[0];
         for (let i = 0; i < friendPrefs.startTimes.length; i++) {
           const start = timeToInt(friendPrefs.startTimes[i].time);
           const end = timeToInt(friendPrefs.endTimes[i].time);
           doNotDisturbArr.push([start, end]);
         }
+      }
+      const userPrefs = this.props.navigation.state.params.userPrefs;
+      if (userPrefs && userPrefs.location) {
+        locationPrefs = userPrefs.lcoation;
       }
     }
     this.setState({
@@ -93,6 +123,7 @@ export default class SingleConvo extends React.Component {
       id: this.props.navigation.state.params.id,
       ref,
       friendPrefs: doNotDisturbArr,
+      locationPrefs,
     });
   }
 
@@ -124,26 +155,32 @@ export default class SingleConvo extends React.Component {
         db.collection('users')
           .doc(this.user.uid)
           .collection('scheduled')
-          .doc(pref[1].toString())
+          .doc(createdAt.toString())
           .set({ newMessage, convoID: this.props.navigation.state.params.id });
         const date = new Date(setSendTime(createdAt, pref[1] - timeToCheck));
         alert(
           'Your friend is in DO NOT DISTURB mode. You message has been scheduled.'
         );
         schedule.scheduleJob(date, () => {
-          this.state.ref.collection('location-check').add(newMessage);
+          this.state.ref
+            .collection('location-check')
+            .doc(createdAt.toString())
+            .set(newMessage);
           this.state.ref.set({ firstMessage: newMessage }, { merge: true });
           db.collection('users')
             .doc(this.user.uid)
             .collection('scheduled')
-            .doc(pref[1].toString())
+            .doc(createdAt.toString())
             .delete();
         });
         done = true;
       }
     });
     if (!done) {
-      this.state.ref.collection('location-check').add(newMessage);
+      this.state.ref
+        .collection('location-check')
+        .doc(createdAt.toString())
+        .set(newMessage);
       this.state.ref.set({ firstMessage: newMessage }, { merge: true });
     }
   }
