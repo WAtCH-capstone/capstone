@@ -91,6 +91,36 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     paddingLeft: 10,
   },
+  title: {
+    fontSize: 23,
+    textAlign: 'center',
+    textAlignVertical: 'center',
+    padding: 20,
+    fontWeight: 'bold',
+  },
+  titleSmall: {
+    fontSize: 18,
+    textAlign: 'center',
+    textAlignVertical: 'center',
+    padding: 10,
+    fontWeight: 'bold',
+  },
+  yesButton: {
+    borderRadius: 10,
+    width: 60,
+    marginRight: 10,
+    marginLeft: 30,
+    textAlign: 'center',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  noButton: {
+    borderRadius: 10,
+    width: 60,
+    textAlign: 'center',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 });
 
 export default styles;
