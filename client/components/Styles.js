@@ -76,6 +76,12 @@ const styles = StyleSheet.create({
     textAlignVertical: 'center',
     padding: 20,
   },
+  noneSmall1: {
+    fontSize: 17,
+    textAlign: 'center',
+    textAlignVertical: 'center',
+    padding: 10,
+  },
 });
 
 export default styles;

@@ -23,8 +23,7 @@ import {
 import DateTimePicker from 'react-native-modal-datetime-picker';
 import db from '../../firestore';
 import firebase from 'firebase';
-import key from '../../googleMaps';
-import { GoogleAutoComplete } from 'react-native-google-autocomplete';
+import styles from './Styles';
 
 export default class SingleConvoPreferences extends Component {
   constructor(props) {
@@ -136,7 +135,7 @@ export default class SingleConvoPreferences extends Component {
     const startTimes = this.state.prefs.startTimes;
     const endTimes = this.state.prefs.endTimes;
     if (!startTimes.length && !endTimes.length) {
-      return <Text>Messages welcome anytime</Text>;
+      return <Text style={styles.noneSmall1}>Off</Text>;
     }
     return startTimes.map((el, ind) => {
       if (!endTimes[ind]) {
@@ -179,9 +178,9 @@ export default class SingleConvoPreferences extends Component {
       <Container>
         <Content>
           <List>
-            <ListItem>
+            <ListItem style={{ marginTop: 20, marginBottom: 20 }}>
               <Left>
-                <Text>
+                <Text style={styles.noneSmall1}>
                   Share location with{' '}
                   {this.props.navigation.state.params.friend.displayName}
                 </Text>
@@ -193,13 +192,13 @@ export default class SingleConvoPreferences extends Component {
               </Right>
             </ListItem>
           </List>
-          <Text>Do Not disturb:</Text>
+          <Text style={styles.noneSmall1}>Do Not Disturb:</Text>
           <List>
             {this.renderTimes()}
             <ListItem>
               <Left>
                 <Button
-                  style={{ marginTop: 10 }}
+                  style={{ marginTop: 10, marginLeft: 10, marginBottom: 20 }}
                   full
                   rounded
                   primary
@@ -213,9 +212,8 @@ export default class SingleConvoPreferences extends Component {
                     onCancel={this._hideStartTimePicker}
                   />
                 </Button>
-                <Text>{'  '}</Text>
                 <Button
-                  style={{ marginTop: 10 }}
+                  style={{ marginTop: 10, marginLeft: 40 }}
                   full
                   rounded
                   primary
@@ -308,28 +306,28 @@ export default class SingleConvoPreferences extends Component {
   }
 }
 
-const styles = StyleSheet.create({
-  blueButton: {
-    marginTop: 5,
-  },
-  inputWrapper: {
-    marginTop: 10,
-  },
-  mapTextInput: {
-    height: 40,
-    width: 350,
-    borderWidth: 1,
-    paddingHorizontal: 16,
-  },
-  container: {
-    backgroundColor: 'white',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingTop: -50,
-  },
-  root: {
-    height: 40,
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    justifyContent: 'center',
-  },
-});
+// const styles = StyleSheet.create({
+//   blueButton: {
+//     marginTop: 5,
+//   },
+//   inputWrapper: {
+//     marginTop: 10,
+//   },
+//   mapTextInput: {
+//     height: 40,
+//     width: 350,
+//     borderWidth: 1,
+//     paddingHorizontal: 16,
+//   },
+//   container: {
+//     backgroundColor: 'white',
+//     alignItems: 'center',
+//     justifyContent: 'center',
+//     paddingTop: -50,
+//   },
+//   root: {
+//     height: 40,
+//     borderBottomWidth: StyleSheet.hairlineWidth,
+//     justifyContent: 'center',
+//   },
+// });
