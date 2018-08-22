@@ -82,6 +82,15 @@ const styles = StyleSheet.create({
     textAlignVertical: 'center',
     padding: 10,
   },
+  scheduledFriend: {
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  scheduledMessage: {
+    fontWeight: 'bold',
+    textAlign: 'center',
+    paddingLeft: 10,
+  },
   title: {
     fontSize: 23,
     textAlign: 'center',
