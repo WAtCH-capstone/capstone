@@ -16,6 +16,7 @@ import { TouchableOpacity } from 'react-native';
 import DateTimePicker from 'react-native-modal-datetime-picker';
 import db from '../../firestore';
 import firebase from 'firebase';
+import styles from './Styles';
 
 export default class SingleConvoPreferences extends React.Component {
   constructor(props) {
@@ -117,7 +118,7 @@ export default class SingleConvoPreferences extends React.Component {
     const startTimes = this.state.prefs.startTimes;
     const endTimes = this.state.prefs.endTimes;
     if (!startTimes.length && !endTimes.length) {
-      return <Text>Messages welcome anytime</Text>;
+      return <Text style={styles.noneSmall1}>Off</Text>;
     }
     return startTimes.map((el, ind) => {
       if (!endTimes[ind]) {
@@ -160,9 +161,9 @@ export default class SingleConvoPreferences extends React.Component {
       <Container>
         <Content>
           <List>
-            <ListItem>
+            <ListItem style={{ marginTop: 20, marginBottom: 20 }}>
               <Left>
-                <Text>
+                <Text style={styles.noneSmall1}>
                   Share location with{' '}
                   {this.props.navigation.state.params.friend.displayName}
                 </Text>
@@ -174,13 +175,13 @@ export default class SingleConvoPreferences extends React.Component {
               </Right>
             </ListItem>
           </List>
-          <Text>Do Not disturb:</Text>
+          <Text style={styles.noneSmall1}>Do Not Disturb:</Text>
           <List>
             {this.renderTimes()}
             <ListItem>
               <Left>
                 <Button
-                  style={{ marginTop: 10 }}
+                  style={{ marginTop: 10, marginLeft: 10, marginBottom: 20 }}
                   full
                   rounded
                   primary
@@ -194,9 +195,8 @@ export default class SingleConvoPreferences extends React.Component {
                     onCancel={this._hideStartTimePicker}
                   />
                 </Button>
-                {/* <Text>{'  '}</Text> */}
                 <Button
-                  style={{ marginTop: 10 }}
+                  style={{ marginTop: 10, marginLeft: 40 }}
                   full
                   rounded
                   primary
