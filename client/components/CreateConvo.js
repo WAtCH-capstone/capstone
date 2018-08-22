@@ -141,19 +141,31 @@ export default class CreateConvo extends React.Component {
   renderRecipients() {
     return this.state.recipients.map((friend, index) => {
       return (
-        <ListItem key={friend.id}>
-          <Left>
+        <View
+          style={{
+            flex: 1,
+            flexDirection: 'row',
+            marginLeft: 20,
+            marginBottom: 10,
+          }}
+          key={friend.id}
+        >
+          <View style={{ backgroundColor: 'white', width: 70 }}>
             <Thumbnail source={{ uri: friend.data.icon }} />
-          </Left>
-          <Body>
-            <Text>{friend.data.displayName}</Text>
-          </Body>
-          <Right>
-            <Button onPress={() => this.removeFromConvo(friend, index)}>
+          </View>
+          <View style={{ backgroundColor: 'white', width: 135 }}>
+            <Text style={styles.noneSmall1}>{friend.data.displayName}</Text>
+          </View>
+          <View style={{ backgroundColor: 'white' }}>
+            <Button
+              style={styles.removeButton}
+              danger
+              onPress={() => this.removeFromConvo(friend, index)}
+            >
               <Text>Remove</Text>
             </Button>
-          </Right>
-        </ListItem>
+          </View>
+        </View>
       );
     });
   }
