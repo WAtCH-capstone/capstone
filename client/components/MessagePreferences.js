@@ -90,7 +90,6 @@ export default class MessagePreferences extends React.Component {
     const timeArr = date.toString().split(' ');
     const displayTime =
       timeArr[0] + ' ' + timeArr[1] + ' ' + timeArr[2] + ' at ' + time;
-    console.log('setting state', displayTime);
     this.setState({ triggers: { date }, displayTime });
   }
 
@@ -233,7 +232,6 @@ export default class MessagePreferences extends React.Component {
 
   render() {
     const { isDateTimePickerVisible, triggers, displayTime } = this.state;
-    console.log('got state', displayTime);
     return (
       <View>
         <View style={styles.noneContainer}>
