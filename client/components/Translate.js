@@ -36,7 +36,7 @@ export default class TranslateComponent extends React.Component {
   render() {
     return (
       <View style={styles.scheduleButton}>
-        <Button style={styles.blueButton} full rounded primary>
+        <Button style={styles.blueButton} full rounded success>
           <Content>
             <Picker
               style={styles.picker}

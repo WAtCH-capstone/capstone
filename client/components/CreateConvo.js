@@ -235,9 +235,7 @@ export default class CreateConvo extends React.Component {
           ) : (
             <View>
               <Text style={styles.noneSmall1}>You have no friends yet.</Text>
-              <Text style={styles.noneSmall1}>
-                Press "Add Friend" to start adding friends!
-              </Text>
+              <Text style={styles.noneSmall1}>Why don't you add one?</Text>
             </View>
           )}
           <Form>
