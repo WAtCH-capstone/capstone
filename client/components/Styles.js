@@ -121,6 +121,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  errorMessage: {
+    
+  }
 });
 
 export default styles;

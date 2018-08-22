@@ -62,7 +62,7 @@ export default class SignUp extends React.Component {
             />
           </Item>
           <Item floatingLabel>
-            <Label>E-mail</Label>
+            <Label>Email</Label>
             <Input
               autoCorrect={false}
               autoCapitalize="none"
@@ -75,7 +75,7 @@ export default class SignUp extends React.Component {
           {!this.state.email.includes('@' && '.') &&
           this.state.email.length > 0 ? (
             <Text style={{ color: 'red' }}>
-              Please enter a valid e-mail address
+              Please enter a valid email address
             </Text>
           ) : null}
           <Item floatingLabel>

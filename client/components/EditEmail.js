@@ -29,7 +29,7 @@ export default class EditEmail extends React.Component {
           {!this.state.email.includes('@' && '.') &&
           this.state.email.length > 0 ? (
             <Text style={{ color: 'red' }}>
-              Please enter a valid e-mail address
+              Please enter a valid email address
             </Text>
           ) : null}
           {!this.state.email.includes('@' && '.') &&

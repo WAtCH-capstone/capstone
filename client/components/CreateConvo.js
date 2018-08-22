@@ -242,7 +242,7 @@ export default class CreateConvo extends React.Component {
           )}
           <Form>
             <Item floatingLabel>
-              <Label>Recipient E-mail</Label>
+              <Label>Recipient Email</Label>
               <Input
                 autoCorrect={false}
                 autoCapitalize="none"
