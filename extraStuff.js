@@ -49,3 +49,64 @@
 //     this.state.ref.set({ firstMessage: newMessage }, { merge: true });
 //   }
 // }
+
+// renderHeader() {
+//   if (this.state.friends.length === 1) {
+//     const friend = this.state.friends[0];
+//     return (
+//       <React.Fragment>
+//         <Left>
+//           <Image source={{ uri: friend.icon }} style={styles.image} />
+//         </Left>
+//         <Body>
+//           <Title>{friend.displayName}</Title>
+//         </Body>
+//         <Right>
+//           <Button
+//             transparent
+//             onPress={() =>
+//               this.props.navigation.navigate('SingleConvoPreferences', {
+//                 setConvoPrefs: this.setConvoPrefs,
+//                 id: this.state.id,
+//                 friend,
+//               })
+//             }
+//           >
+//             <Image
+//               source={require('../../public/buttons/preferences.png')}
+//               style={styles.smallImage}
+//             />
+//           </Button>
+//         </Right>
+//       </React.Fragment>
+//     );
+//   } else {
+//     return (
+//       <React.Fragment>
+//         {/* <Left>
+//           <Image source={{ uri: friend.data.icon }} style={styles.image} />
+//         </Left> */}
+//         <Body>
+//           <Title>Group Chat</Title>
+//         </Body>
+//         {/* <Right>
+//           <Button
+//             transparent
+//             onPress={() =>
+//               this.props.navigation.navigate('SingleConvoPreferences', {
+//                 setConvoPrefs: this.setConvoPrefs,
+//                 id: this.state.id,
+//                 friend,
+//               })
+//             }
+//           >
+//             <Image
+//               source={require('../../public/preferences.png')}
+//               style={styles.smallImage}
+//             />
+//           </Button>
+//         </Right> */}
+//       </React.Fragment>
+//     );
+//   }
+// }

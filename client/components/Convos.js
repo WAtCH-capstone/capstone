@@ -84,10 +84,15 @@ export default class Convos extends React.Component {
     let searchResult = [];
     if (!search.length) {
       this.setState({ results: convos, isLoading: false });
+      return;
     }
     for (let i = 0; i < convos.length; i++) {
-      if (search === convos[i].friend.displayName) {
-        searchResult.push(convos[i]);
+      let friends = convos[i].friends;
+      for (let friend of friends) {
+        if (search === friend.displayName) {
+          searchResult.push(convos[i]);
+          break;
+        }
       }
       this.setState({ results: searchResult, isLoading: false });
     }

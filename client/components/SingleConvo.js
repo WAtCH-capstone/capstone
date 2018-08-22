@@ -185,29 +185,9 @@ export default class SingleConvo extends React.Component {
     } else {
       return (
         <React.Fragment>
-          {/* <Left>
-            <Image source={{ uri: friend.data.icon }} style={styles.image} />
-          </Left> */}
           <Body>
             <Title>Group Chat</Title>
           </Body>
-          {/* <Right>
-            <Button
-              transparent
-              onPress={() =>
-                this.props.navigation.navigate('SingleConvoPreferences', {
-                  setConvoPrefs: this.setConvoPrefs,
-                  id: this.state.id,
-                  friend,
-                })
-              }
-            >
-              <Image
-                source={require('../../public/preferences.png')}
-                style={styles.smallImage}
-              />
-            </Button>
-          </Right> */}
         </React.Fragment>
       );
     }
