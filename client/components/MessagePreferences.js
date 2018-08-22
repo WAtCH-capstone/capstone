@@ -86,7 +86,12 @@ export default class MessagePreferences extends React.Component {
   }
 
   setTrigger(date) {
-    this.setState({ triggers: { date } });
+    const time = this.dateToTime(date);
+    const timeArr = date.toString().split(' ');
+    const displayTime =
+      timeArr[0] + ' ' + timeArr[1] + ' ' + timeArr[2] + ' at ' + time;
+    console.log('setting state', displayTime);
+    this.setState({ triggers: { date }, displayTime });
   }
 
   _showDateTimePicker = () => this.setState({ isDateTimePickerVisible: true });
@@ -108,6 +113,21 @@ export default class MessagePreferences extends React.Component {
       locationTrigger: !this.state.locationTrigger,
     });
   };
+
+  dateToTime(date) {
+    let dateArr = date.toString().split(' ');
+    let [hour, minute, second] = dateArr[4]
+      .split(':')
+      .map(str => parseInt(str));
+    if (hour > 12) {
+      hour = hour - 12;
+      if (minute < 10) return `${hour}:0${minute} pm`;
+      else return `${hour}:${minute} pm`;
+    } else {
+      if (minute < 10) return `${hour}:0${minute} am`;
+      else return `${hour}:${minute} am`;
+    }
+  }
 
   async onSend() {
     if (this.state.locationTrigger) {
@@ -212,7 +232,8 @@ export default class MessagePreferences extends React.Component {
   }
 
   render() {
-    const { isDateTimePickerVisible, triggers } = this.state;
+    const { isDateTimePickerVisible, triggers, displayTime } = this.state;
+    console.log('got state', displayTime);
     return (
       <View>
         <View style={styles.noneContainer}>
@@ -220,7 +241,7 @@ export default class MessagePreferences extends React.Component {
             {this.props.navigation.state.params.messageContent}
           </Text>
           {triggers.date ? (
-            <Text style={styles.noneSmall}>{triggers.date}</Text>
+            <Text style={styles.noneSmall}>{displayTime}</Text>
           ) : null}
           <Button
             style={styles.blueButton}
