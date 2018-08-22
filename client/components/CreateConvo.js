@@ -93,12 +93,13 @@ export default class CreateConvo extends React.Component {
         }
         return docRef.id;
       })
-      .then(id =>
+      .then(id => {
+        const friends = recipientArr.map(el => el.data);
         this.props.navigation.navigate('SingleConvo', {
           id,
-          friends: recipientArr,
-        })
-      )
+          friends,
+        });
+      })
       .catch(err => console.error(err));
   }
 
