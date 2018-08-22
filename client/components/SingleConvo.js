@@ -22,11 +22,12 @@ export default class SingleConvo extends React.Component {
     this.state = {
       id: '',
       messages: [],
-      friend: {},
+      friends: {},
       menuOpen: false,
       messageContent: '',
       ref: '',
       convoPrefs: {},
+      userData: {},
     };
     this.user = firebase.auth().currentUser;
     this.onSend = this.onSend.bind(this);
@@ -59,8 +60,9 @@ export default class SingleConvo extends React.Component {
       });
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     this.listen();
+    await this.getCurrUserRef();
     const friends = this.props.navigation.state.params.friends;
     const ref = this.getRef(this.props.navigation.state.params.id);
     let doNotDisturbArr = [];
@@ -83,11 +85,14 @@ export default class SingleConvo extends React.Component {
   }
 
   async getCurrUserRef() {
+    const uid = await firebase.auth().currentUser.uid;
     const currUserRef = await db
       .collection('users')
-      .doc(this.user.uid)
+      .doc(uid)
       .get();
-    return currUserRef.data();
+    const userData = currUserRef.data();
+    this.setState({ userData });
+    return userData;
   }
 
   async onSend(messages = []) {
@@ -106,7 +111,7 @@ export default class SingleConvo extends React.Component {
     };
     const timeToCheck = dateToInt(new Date());
     this.state.friendPrefs.forEach(pref => {
-      if (timeToCheck > pref[0] && timeToCheck < pref[1]) {
+      if (timeToCheck >= pref[0] && timeToCheck <= pref[1]) {
         db.collection('users')
           .doc(this.user.uid)
           .collection('scheduled')
@@ -222,6 +227,7 @@ export default class SingleConvo extends React.Component {
                   user: this.user,
                   messageContent: this.state.messageContent,
                   id: this.state.id,
+                  userData: this.state.userData,
                 });
               }}
             >
