@@ -24,6 +24,8 @@ import DateTimePicker from 'react-native-modal-datetime-picker';
 import db from '../../firestore';
 import firebase from 'firebase';
 import styles from './Styles';
+import { GoogleAutoComplete } from 'react-native-google-autocomplete';
+import key from '../../googleMaps';
 
 export default class SingleConvoPreferences extends Component {
   constructor(props) {
