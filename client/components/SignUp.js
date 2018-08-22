@@ -3,6 +3,7 @@ import { Container, Form, Item, Label, Input, Button } from 'native-base';
 import { Text } from 'react-native';
 const firebase = require('firebase');
 import db from '../../firestore';
+import styles from './Styles';
 
 export default class SignUp extends React.Component {
   constructor() {
@@ -74,7 +75,7 @@ export default class SignUp extends React.Component {
           </Item>
           {!this.state.email.includes('@' && '.') &&
           this.state.email.length > 0 ? (
-            <Text style={{ color: 'red' }}>
+            <Text style={styles.errorMessage}>
               Please enter a valid email address
             </Text>
           ) : null}
@@ -91,7 +92,7 @@ export default class SignUp extends React.Component {
             />
           </Item>
           {this.state.password.length < 6 && this.state.password.length > 0 ? (
-            <Text style={{ color: 'red' }}>
+            <Text style={styles.errorMessage}>
               Password must be at least 6 characters
             </Text>
           ) : null}

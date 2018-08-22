@@ -122,8 +122,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   errorMessage: {
-    
-  }
+    color: 'red',
+    paddingLeft: 10,
+  },
 });
 
 export default styles;

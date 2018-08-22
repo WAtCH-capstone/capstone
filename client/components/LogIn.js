@@ -55,7 +55,7 @@ export default class LogIn extends React.Component {
           </Item>
           {/* {!this.state.email.includes('@' && '.') &&
           this.state.email.length > 0 ? (
-            <Text style={{ color: 'red' }}>
+            <Text style={styles.errorMessage}>
               Please enter a valid email address
             </Text>
           ) : null} */}
