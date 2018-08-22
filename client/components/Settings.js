@@ -14,10 +14,12 @@ import {
   Right,
   List,
   Button,
+  View,
 } from 'native-base';
 import Navbar from './Navbar';
 import db from '../../firestore';
 import firebase from 'firebase';
+import styles from './Styles';
 
 export default class Settings extends React.Component {
   constructor() {
@@ -113,22 +115,57 @@ export default class Settings extends React.Component {
   renderRequests() {
     return this.state.requests.map((requestor, index) => {
       return (
-        <ListItem key={requestor.id}>
-          <Left>
+        // <ListItem key={requestor.id}>
+        //   <Left>
+        //     <Thumbnail source={{ uri: requestor.data.icon }} />
+        //   </Left>
+        //   <Body>
+        //     <Text>{requestor.data.displayName}</Text>
+        //   </Body>
+        //   <Right>
+        //     <Button onPress={() => this.acceptRequest(requestor, index)}>
+        //       <Text>Yes</Text>
+        //     </Button>
+        //     <Button onPres={() => this.declineRequest(index)}>
+        //       <Text>No</Text>
+        //     </Button>
+        //   </Right>
+        // </ListItem>
+
+        <View
+          style={{
+            flex: 1,
+            flexDirection: 'row',
+            marginLeft: 20,
+            marginBotton: 10,
+          }}
+          key={requestor.id}
+        >
+          <View style={{ backgroundColor: 'white', width: 70 }}>
             <Thumbnail source={{ uri: requestor.data.icon }} />
-          </Left>
-          <Body>
-            <Text>{requestor.data.displayName}</Text>
-          </Body>
-          <Right>
-            <Button onPress={() => this.acceptRequest(requestor, index)}>
+          </View>
+          <View style={{ backgroundColor: 'white', width: 110 }}>
+            <Text style={styles.noneSmall1}>{requestor.data.displayName}</Text>
+          </View>
+          <View style={{ backgroundColor: 'white' }}>
+            <Button
+              style={styles.yesButton}
+              success
+              onPress={() => this.acceptRequest(requestor, index)}
+            >
               <Text>Yes</Text>
             </Button>
-            <Button onPres={() => this.declineRequest(index)}>
+          </View>
+          <View style={{ backgroundColor: 'white' }}>
+            <Button
+              style={styles.noButton}
+              danger
+              onPress={() => this.declineRequest(index)}
+            >
               <Text>No</Text>
             </Button>
-          </Right>
-        </ListItem>
+          </View>
+        </View>
       );
     });
   }
@@ -148,9 +185,9 @@ export default class Settings extends React.Component {
     return (
       <Container>
         <Content>
-          <Separator bordered>
-            <Text>My Profile</Text>
-          </Separator>
+          <View>
+            <Text style={styles.titleSmall}>My Profile</Text>
+          </View>
           <Card>
             <CardItem>
               <Left>
@@ -163,17 +200,17 @@ export default class Settings extends React.Component {
               </Left>
             </CardItem>
           </Card>
-          <Separator bordered>
-            <Text>Friend Requests</Text>
-          </Separator>
+          <View>
+            <Text style={styles.titleSmall}>Friend Requests</Text>
+          </View>
           {this.state.requests.length ? (
             <List>{this.renderRequests()}</List>
           ) : (
-            <Text>You have no pending requests.</Text>
+            <Text style={styles.noneSmall1}>You have no pending requests.</Text>
           )}
-          <Separator bordered>
-            <Text>Options</Text>
-          </Separator>
+          <View>
+            <Text style={styles.titleSmall}>Options</Text>
+          </View>
           <List>
             <ListItem>
               <TouchableOpacity
