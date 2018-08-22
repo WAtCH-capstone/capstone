@@ -28,7 +28,7 @@ export default class EditPassword extends React.Component {
             />
           </Item>
           {this.state.password.length < 6 ? (
-            <Text style={{ color: 'red' }}>
+            <Text style={styles.errorMessage}>
               Password must be at least 6 characters
             </Text>
           ) : null}

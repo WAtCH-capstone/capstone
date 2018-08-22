@@ -121,6 +121,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  errorMessage: {
+    color: 'red',
+    paddingLeft: 15,
+    paddingTop: 10,
+  },
 });
 
 export default styles;
