@@ -70,11 +70,9 @@ export default class SingleConvo extends React.Component {
       .onSnapshot(snap => {
         const pendingMessages = snap.docs.map(doc => doc.data());
         console.log('checking:', pendingMessages);
-        // let objToSet = {};
-        // objToSet[`${this.user.uid}-check`] = true;
         if (!this.state.locationPrefs) {
           for (let message of pendingMessages) {
-            if (message.counter === this.state.friends.length - 1) {
+            if (message.counter === this.state.friends.length) {
               db.collection('converstions')
                 .doc(convoID)
                 .collection('messages')
@@ -94,43 +92,42 @@ export default class SingleConvo extends React.Component {
           }
         } else {
           for (let message of pendingMessages) {
-            if (!message.userCheck) {
-              const currLocation = navigator.geolocation.getCurrentPosition(
-                position => ({
-                  longitude: position.longitude,
-                  latitude: position.latitude,
-                })
-              );
-              const distance = geodist(
-                { lat: currLocation.latitude, long: currPosition.longitude },
-                {
-                  lat: this.state.locationPrefs.latitude,
-                  long: this.state.locationPrefs.longitude,
-                },
-                { unit: 'feet' }
-              );
-              if (distance < 502) {
-                if (message.counter === this.state.friends.length - 1) {
-                  db.collection('conversations')
-                    .doc(convoID)
-                    .collection('messages')
-                    .add(message.newMessage);
-                  db.collection('conversations')
-                    .doc(convoID)
-                    .collection('location-check')
-                    .doc(message.newMessage.createdAt.toString())
-                    .delete();
-                } else {
-                  db.collection('conversations')
-                    .doc(convoID)
-                    .collection('location-check')
-                    .doc(message.newMessage.createdAt.toString())
-                    .set({ counter: message.counter++ }, { merge: true });
-                }
-              } else {
-                console.log('outside of range!');
-              }
+            const currLocation = navigator.geolocation.getCurrentPosition(
+              position => ({
+                longitude: position.longitude,
+                latitude: position.latitude,
+              })
+            );
+            const distance = geodist(
+              { lat: currLocation.latitude, long: currPosition.longitude },
+              {
+                lat: this.state.locationPrefs.latitude,
+                long: this.state.locationPrefs.longitude,
+              },
+              { unit: 'feet' }
+            );
+          }
+          if (distance < 502) {
+            if (message.counter === this.state.friends.length) {
+              db.collection('conversations')
+                .doc(convoID)
+                .collection('messages')
+                .add(message.newMessage);
+              db.collection('conversations')
+                .doc(convoID)
+                .collection('location-check')
+                .doc(message.newMessage.createdAt.toString())
+                .delete();
+            } else {
+              db.collection('conversations')
+                .doc(convoID)
+                .collection('location-check')
+                .doc(message.newMessage.createdAt.toString())
+                .set({ counter: message.counter++ }, { merge: true });
             }
+          } else {
+            console.log('outside of range!');
+            // re-check
           }
         }
       });
