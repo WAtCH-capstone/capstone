@@ -123,7 +123,8 @@ const styles = StyleSheet.create({
   },
   errorMessage: {
     color: 'red',
-    paddingLeft: 10,
+    paddingLeft: 15,
+    paddingTop: 10,
   },
 });
 
