@@ -73,6 +73,7 @@ export default class MessagePreferences extends React.Component {
       this.setState({
         distanceFromAtoB: dist,
       });
+      console.log('distance from a to b', dist);
     }
   }
 
@@ -100,7 +101,7 @@ export default class MessagePreferences extends React.Component {
       locationDetails: res,
       textInput: el.description,
       showResults: false,
-      locationTrigger: !this.state.locationTrigger,
+      locationTrigger: true,
     });
   };
 
@@ -158,12 +159,12 @@ export default class MessagePreferences extends React.Component {
         }
       }, 1000);
       // testing afte 20 seconds uncomment to check.
-      // this.timeoutID = setTimeout(() => {
-      //   this.setState({
-      //     currentLat: 40.7051,
-      //     currentLong: -74.0092, // fullstack coords for testing after 20 seconds!
-      //   });
-      // }, 20000);
+      this.timeoutID = setTimeout(() => {
+        this.setState({
+          currentLat: 40.7051,
+          currentLong: -74.0092, // fullstack coords for testing after 20 seconds!
+        });
+      }, 20000);
     } else {
       let createdAt;
       const date = new Date(this.state.triggers.date);

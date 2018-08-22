@@ -101,6 +101,7 @@ export default class SingleConvo extends React.Component {
       .collection('users')
       .doc(this.user.uid)
       .get();
+    console.log('currentUserRef', currUserRef);
     return currUserRef.data();
   }
 
@@ -202,11 +203,28 @@ export default class SingleConvo extends React.Component {
           <Body>
             <Title>Group Chat</Title>
           </Body>
+          {/* <Right>
+            <Button
+              transparent
+              onPress={() =>
+                this.props.navigation.navigate('SingleConvoPreferences', {
+                  setConvoPrefs: this.setConvoPrefs,
+                  id: this.state.id,
+                  friend,
+                })
+              }
+            >
+              <Image
+                source={require('../../public/preferences.png')}
+                style={styles.smallImage}
+              />
+            </Button>
+          </Right> */}
         </React.Fragment>
       );
     }
   }
-
+  // prefs should be an object that has
   render() {
     if (this.state.id.length) {
       return (
