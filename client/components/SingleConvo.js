@@ -106,7 +106,7 @@ export default class SingleConvo extends React.Component {
     };
     const timeToCheck = dateToInt(new Date());
     this.state.friendPrefs.forEach(pref => {
-      if (timeToCheck > pref[0] && timeToCheck < pref[1]) {
+      if (timeToCheck >= pref[0] && timeToCheck <= pref[1]) {
         db.collection('users')
           .doc(this.user.uid)
           .collection('scheduled')
