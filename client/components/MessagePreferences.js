@@ -173,7 +173,11 @@ export default class MessagePreferences extends React.Component {
         _id: createdAt,
         text: this.props.navigation.state.params.messageContent,
         createdAt,
-        user: { _id: this.props.navigation.state.params.user.uid },
+        user: {
+          _id: this.props.navigation.state.params.user.uid,
+          name: this.props.navigation.state.params.userData.displayName,
+          avatar: this.props.navigation.state.params.userData.icon,
+        },
       };
       db.collection('users')
         .doc(this.user.uid)
