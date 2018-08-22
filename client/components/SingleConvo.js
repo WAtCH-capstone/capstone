@@ -160,7 +160,6 @@ export default class SingleConvo extends React.Component {
   renderHeader() {
     if (this.state.friends.length === 1) {
       const friend = this.state.friends[0];
-      console.log('rendering header with data:', friend);
       return (
         <React.Fragment>
           <Left>
