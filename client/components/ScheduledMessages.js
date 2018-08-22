@@ -85,7 +85,7 @@ export default class ScheduledMesages extends React.Component {
       hour = hour - 12;
       if (minute < 10) return `${hour}:0${minute} pm`;
       else return `${hour}:${minute} pm`;
-    } else if ((hour = 12)) {
+    } else if (hour === 12) {
       if (minute < 10) return `${hour}:0${minute} pm`;
       else return `${hour}:${minute} pm`;
     } else {
