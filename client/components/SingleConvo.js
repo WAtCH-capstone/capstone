@@ -40,7 +40,7 @@ export default class SingleConvo extends React.Component {
   }
 
   listen() {
-    this.unsubscribe = db
+    const listenToMessages = db
       .collection('conversations')
       .doc(this.props.navigation.state.params.id)
       .collection('messages')
@@ -57,6 +57,19 @@ export default class SingleConvo extends React.Component {
           messages: GiftedChat.append(prevState.messages, messages),
         }));
       });
+
+    this.unsubscribeMessages = listenToMessages;
+
+    const listenToPendingLocation = db
+      .collection('conversations')
+      .doc(this.props.navigation.state.params.id)
+      .collection('location-check')
+      .onSnapshot(snap => {
+        const pending = snap.docs.map(doc => doc.data());
+        console.log(pending);
+      });
+
+    this.unsubscribePendingLocation = listenToPendingLocation;
   }
 
   componentDidMount() {
@@ -65,8 +78,9 @@ export default class SingleConvo extends React.Component {
     const ref = this.getRef(this.props.navigation.state.params.id);
     let doNotDisturbArr = [];
     if (friends.length === 1) {
-      const friendPrefs = this.props.navigation.state.params.friendPrefs[0];
-      if (friendPrefs) {
+      const friendPrefsArr = this.props.navigation.state.params.friendPrefs;
+      if (friendPrefsArr && friendPrefsArr[0]) {
+        const friendPrefs = friendPrefs[0];
         for (let i = 0; i < friendPrefs.startTimes.length; i++) {
           const start = timeToInt(friendPrefs.startTimes[i].time);
           const end = timeToInt(friendPrefs.endTimes[i].time);
@@ -117,7 +131,7 @@ export default class SingleConvo extends React.Component {
           'Your friend is in DO NOT DISTURB mode. You message has been scheduled.'
         );
         schedule.scheduleJob(date, () => {
-          this.state.ref.collection('messages').add(newMessage);
+          this.state.ref.collection('location-check').add(newMessage);
           this.state.ref.set({ firstMessage: newMessage }, { merge: true });
           db.collection('users')
             .doc(this.user.uid)
@@ -129,7 +143,7 @@ export default class SingleConvo extends React.Component {
       }
     });
     if (!done) {
-      this.state.ref.collection('messages').add(newMessage);
+      this.state.ref.collection('location-check').add(newMessage);
       this.state.ref.set({ firstMessage: newMessage }, { merge: true });
     }
   }
