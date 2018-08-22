@@ -87,6 +87,7 @@ export default class SingleConvo extends React.Component {
       .collection('users')
       .doc(this.user.uid)
       .get();
+    console.log('currentUserRef', currUserRef);
     return currUserRef.data();
   }
 
