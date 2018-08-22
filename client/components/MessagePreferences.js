@@ -172,6 +172,11 @@ export default class MessagePreferences extends React.Component {
     } else {
       let createdAt;
       const date = new Date(this.state.triggers.date);
+      const current = new Date();
+      if (date < current) {
+        alert('Oops, that time has already passed.');
+        return;
+      }
       createdAt = date.getTime();
       const docID = createdAt.toString();
       const newMessage = {
@@ -201,6 +206,8 @@ export default class MessagePreferences extends React.Component {
           .doc(docID)
           .delete();
       });
+      alert('Your message has been scheduled!');
+      this.props.navigation.navigate('ScheduledMessages');
     }
   }
 
@@ -278,14 +285,7 @@ export default class MessagePreferences extends React.Component {
             full
             rounded
             primary
-            onPress={() =>
-              this.onSend()
-                .then(() => {
-                  alert('Your message has been scheduled!');
-                  this.props.navigation.navigate('ScheduledMessages');
-                })
-                .catch(err => console.error(err))
-            }
+            onPress={() => this.onSend()}
           >
             <View>
               <Text style={{ color: 'white' }}>Submit Message</Text>
