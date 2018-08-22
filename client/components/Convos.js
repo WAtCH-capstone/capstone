@@ -84,10 +84,15 @@ export default class Convos extends React.Component {
     let searchResult = [];
     if (!search.length) {
       this.setState({ results: convos, isLoading: false });
+      return;
     }
     for (let i = 0; i < convos.length; i++) {
-      if (search === convos[i].friend.displayName) {
-        searchResult.push(convos[i]);
+      let friends = convos[i].friends;
+      for (let friend of friends) {
+        if (search === friend.displayName) {
+          searchResult.push(convos[i]);
+          break;
+        }
       }
       this.setState({ results: searchResult, isLoading: false });
     }
@@ -106,8 +111,19 @@ export default class Convos extends React.Component {
     }
   }
 
+  sortConvos(convos) {
+    return convos.sort((first, second) => {
+      if (first.firstMessage && second.firstMessage) {
+        return second.firstMessage.createdAt - first.firstMessage.createdAt;
+      } else if (!first.firstMessage) {
+        return 1;
+      } else return -1;
+    });
+  }
+
   renderConvos(convos) {
-    return convos.map(convoData => {
+    const sortedConvos = this.sortConvos(convos);
+    return sortedConvos.map(convoData => {
       if (convoData.firstMessage) {
         const id = convoData.id;
         const friends = convoData.friends;

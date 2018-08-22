@@ -220,13 +220,6 @@ export default class Settings extends React.Component {
                 <Text>Change password</Text>
               </TouchableOpacity>
             </ListItem>
-            <ListItem>
-              <TouchableOpacity
-                onPress={() => navigation.navigate('FriendRequests')}
-              >
-                <Text>View Friend Requests</Text>
-              </TouchableOpacity>
-            </ListItem>
             <ListItem last>
               <TouchableOpacity onPress={() => this.logout()}>
                 <Text>Logout</Text>

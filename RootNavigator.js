@@ -87,28 +87,28 @@ const RootNavigator = createStackNavigator({
     screen: EditDisplayName,
     navigationOptions: {
       headerTitle: 'Edit Display Name',
-      headerLeft: null,
+      // headerLeft: null,
     },
   },
   EditUserName: {
     screen: EditUserName,
     navigationOptions: {
       headerTitle: 'Edit Username',
-      headerLeft: null,
+      // headerLeft: null,
     },
   },
   EditEmail: {
     screen: EditEmail,
     navigationOptions: {
       headerTitle: 'Edit Email',
-      headerLeft: null,
+      // headerLeft: null,
     },
   },
   EditPassword: {
     screen: EditPassword,
     navigationOptions: {
       headerTitle: 'Edit Password',
-      headerLeft: null,
+      // headerLeft: null,
     },
   },
   MessagePreferences: {

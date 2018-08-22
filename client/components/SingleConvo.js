@@ -186,9 +186,6 @@ export default class SingleConvo extends React.Component {
     } else {
       return (
         <React.Fragment>
-          {/* <Left>
-            <Image source={{ uri: friend.data.icon }} style={styles.image} />
-          </Left> */}
           <Body>
             <Title>Group Chat</Title>
           </Body>
@@ -213,7 +210,7 @@ export default class SingleConvo extends React.Component {
       );
     }
   }
-
+  // prefs should be an object that has
   render() {
     if (this.state.id.length) {
       return (
