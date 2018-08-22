@@ -3,6 +3,7 @@ import { Container, Form, Item, Label, Input, Button } from 'native-base';
 import { Text } from 'react-native';
 const firebase = require('firebase');
 import db from '../../firestore';
+import styles from './Styles';
 
 export default class SignUp extends React.Component {
   constructor() {
@@ -62,7 +63,7 @@ export default class SignUp extends React.Component {
             />
           </Item>
           <Item floatingLabel>
-            <Label>E-mail</Label>
+            <Label>Email</Label>
             <Input
               autoCorrect={false}
               autoCapitalize="none"
@@ -74,8 +75,8 @@ export default class SignUp extends React.Component {
           </Item>
           {!this.state.email.includes('@' && '.') &&
           this.state.email.length > 0 ? (
-            <Text style={{ color: 'red' }}>
-              Please enter a valid e-mail address
+            <Text style={styles.errorMessage}>
+              Please enter a valid email address
             </Text>
           ) : null}
           <Item floatingLabel>
@@ -91,7 +92,7 @@ export default class SignUp extends React.Component {
             />
           </Item>
           {this.state.password.length < 6 && this.state.password.length > 0 ? (
-            <Text style={{ color: 'red' }}>
+            <Text style={styles.errorMessage}>
               Password must be at least 6 characters
             </Text>
           ) : null}
@@ -110,7 +111,7 @@ export default class SignUp extends React.Component {
               style={{ marginTop: 10 }}
               full
               rounded
-              info
+              primary
               onPress={async () => {
                 const id = await this.signUpUser(
                   this.state.email,

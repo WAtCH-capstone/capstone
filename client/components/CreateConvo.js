@@ -93,12 +93,13 @@ export default class CreateConvo extends React.Component {
         }
         return docRef.id;
       })
-      .then(id =>
+      .then(id => {
+        const friends = recipientArr.map(el => el.data);
         this.props.navigation.navigate('SingleConvo', {
           id,
-          friends: recipientArr,
-        })
-      )
+          friends,
+        });
+      })
       .catch(err => console.error(err));
   }
 
@@ -247,14 +248,12 @@ export default class CreateConvo extends React.Component {
           ) : (
             <View>
               <Text style={styles.noneSmall1}>You have no friends yet.</Text>
-              <Text style={styles.noneSmall1}>
-                Press "Add Friend" to start adding friends!
-              </Text>
+              <Text style={styles.noneSmall1}>Why don't you add one?</Text>
             </View>
           )}
           <Form>
             <Item floatingLabel>
-              <Label>Recipient E-mail</Label>
+              <Label>Recipient Email</Label>
               <Input
                 autoCorrect={false}
                 autoCapitalize="none"

@@ -175,6 +175,7 @@ export default class ScheduledMesages extends React.Component {
             <Container style={styles.noneContainer}>
               <Image source={require('../../public/buttons/no-messages.png')} />
               <Text style={styles.none}>No scheduled messages yet</Text>
+              <Text style={styles.noneSmall}>Why don't you send one?</Text>
             </Container>
           )}
         </Content>

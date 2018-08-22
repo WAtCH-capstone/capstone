@@ -218,6 +218,7 @@ export default class Convos extends React.Component {
             <Container style={styles.noneContainer}>
               <Image source={require('../../public/buttons/no-messages.png')} />
               <Text style={styles.none}>No conversations yet</Text>
+              <Text style={styles.noneSmall}>Why don't you start one?</Text>
             </Container>
           )}
         </Content>
