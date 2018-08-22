@@ -64,14 +64,7 @@ export default class SingleConvoPreferences extends Component {
       },
     });
   }
-  _handlePress = async (el, fetchDetails) => {
-    const res = await fetchDetails(el.place_id);
-    this.setState({
-      locationDetails: res,
-      textInput: el.description,
-      locationTrigger: true, //set at true for now
-    });
-  };
+
   async onSend() {
     if (this.state.locationTrigger) {
       console.log(this.state.locationDetails);
@@ -107,6 +100,15 @@ export default class SingleConvoPreferences extends Component {
       },
     }));
     this._hideEndTimePicker();
+  };
+
+  _locationPicked = async (el, fetchDetails) => {
+    const res = await fetchDetails(el.place_id);
+    await this.setState(prevState => ({
+      prefs: { ...prevState.prefs, location: res.geometry.location },
+      textInput: el.description,
+    }));
+    console.log(this.state.prefs);
   };
 
   dateToTime(date) {
@@ -234,23 +236,6 @@ export default class SingleConvoPreferences extends Component {
               </Left>
             </ListItem>
           </List>
-          <Button
-            style={{ marginTop: 10 }}
-            full
-            rounded
-            primary
-            onPress={() => {
-              this.props.navigation.state.params.setConvoPrefs(
-                this.state.prefs
-              );
-              this.props.navigation.navigate('SingleConvo', {
-                id: this.props.navigation.state.params.id,
-                friend: this.props.navigation.state.params.friend,
-              });
-            }}
-          >
-            <Text style={{ color: 'white' }}>Save preferences</Text>
-          </Button>
           {/* this will be for location */}
           <View style={styles.container}>
             <GoogleAutoComplete apiKey={key} debounce={500} minLength={0}>
@@ -264,7 +249,7 @@ export default class SingleConvoPreferences extends Component {
                   <View style={styles.inputWrapper}>
                     <TextInput
                       style={styles.mapTextInput}
-                      placeholder="Enter a Location..."
+                      placeholder="Add Location"
                       onChangeText={handleTextChange}
                       value={this.state.textInput}
                     />
@@ -276,7 +261,7 @@ export default class SingleConvoPreferences extends Component {
                       <TouchableOpacity
                         key={el.id}
                         style={styles.root}
-                        onPress={() => this._handlePress(el, fetchDetails)}
+                        onPress={() => this._locationPicked(el, fetchDetails)}
                       >
                         <Text>{el.description}</Text>
                       </TouchableOpacity>
@@ -287,22 +272,39 @@ export default class SingleConvoPreferences extends Component {
             </GoogleAutoComplete>
             <Text>{this.state.textInput}</Text>
             <Button
+              style={{ marginTop: 10 }}
               full
               rounded
               primary
-              onPress={() =>
-                this.onSend()
-                  .then(() => {
-                    alert('Your message has been scheduled!');
-                    this.props.navigation.navigate('ScheduledMessages');
-                  })
-                  .catch(err => console.error(err))
+              onPress={() => {
+                this.props.navigation.state.params.setConvoPrefs(
+                  this.state.prefs
+                );
+                this.props.navigation.navigate('SingleConvo', {
+                  id: this.props.navigation.state.params.id,
+                  friend: this.props.navigation.state.params.friend,
+                });
+              }}
+            >
+              <Text style={{ color: 'white' }}>Save preferences</Text>
+            </Button>
+            {/* <Button
+              full
+              rounded
+              primary
+              onPress={() => this._locationPicked(this.state.)
+                // this.onSend()
+                //   .then(() => {
+                //     alert('Your message has been scheduled!');
+                //     this.props.navigation.navigate('ScheduledMessages');
+                //   })
+                //   .catch(err => console.error(err))
               }
             >
               <View>
                 <Text style={{ color: 'white' }}>Submit</Text>
               </View>
-            </Button>
+            </Button> */}
           </View>
         </Content>
       </Container>
