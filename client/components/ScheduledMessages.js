@@ -13,6 +13,7 @@ import {
   Item,
   Input,
   Button,
+  Right,
 } from 'native-base';
 import { ActivityIndicator, Image } from 'react-native';
 import styles from './Styles';
@@ -145,9 +146,29 @@ export default class ScheduledMesages extends React.Component {
         </Header>
         <Content>
           {this.state.results && this.state.results.length ? (
-            <List>{this.renderScheduled(this.state.results)}</List>
+            <List>
+              <ListItem key={1}>
+                <Left>
+                  <Text style={styles.scheduledFriend}>Friend</Text>
+                </Left>
+                <Left>
+                  <Text style={styles.scheduledMessage}>Message</Text>
+                </Left>
+              </ListItem>
+              {this.renderScheduled(this.state.results)}
+            </List>
           ) : this.state.messages && this.state.messages.length ? (
-            <List>{this.renderScheduled(this.state.messages)}</List>
+            <List>
+              <ListItem key={1}>
+                <Left>
+                  <Text style={styles.scheduledFriend}>Friend</Text>
+                </Left>
+                <Left>
+                  <Text style={styles.scheduledMessage}>Message</Text>
+                </Left>
+              </ListItem>
+              {this.renderScheduled(this.state.messages)}
+            </List>
           ) : this.state.isLoading ? (
             <ActivityIndicator size="large" color="#3B80FE" />
           ) : (
