@@ -7,6 +7,7 @@ import firebase from 'firebase';
 import Navbar from './Navbar';
 import SideMenu from 'react-native-side-menu';
 import schedule from 'node-schedule';
+import geodist from 'geodist';
 import key from '../../googleMaps';
 import TranslateComponent from './Translate';
 import {
@@ -22,7 +23,7 @@ export default class SingleConvo extends React.Component {
     this.state = {
       id: '',
       messages: [],
-      friend: {},
+      friends: {},
       menuOpen: false,
       messageContent: '',
       ref: '',
@@ -62,38 +63,77 @@ export default class SingleConvo extends React.Component {
 
     this.unsubscribeMessages = listenToMessages;
 
-    const userCheck = `${this.user.uid}-check`;
-
     const listenToPendingLocation = db
       .collection('conversations')
       .doc(convoID)
       .collection('location-check')
       .onSnapshot(snap => {
         const pendingMessages = snap.docs.map(doc => doc.data());
-        let objToSet = {};
+        console.log('checking:', pendingMessages);
+        // let objToSet = {};
+        // objToSet[`${this.user.uid}-check`] = true;
         if (!this.state.locationPrefs) {
           for (let message of pendingMessages) {
-            if (!message.userCheck) {
-              objToSet[userCheck] = true;
+            if (message.counter === this.state.friends.length - 1) {
+              db.collection('converstions')
+                .doc(convoID)
+                .collection('messages')
+                .add(message.newMessage);
               db.collection('conversations')
                 .doc(convoID)
                 .collection('location-check')
-                .doc(message.createdAt.toString())
-                .set(objToSet, { merge: true });
+                .doc(message.newMessage.createdAt.toString())
+                .delete();
+            } else {
+              db.collection('conversations')
+                .doc(convoID)
+                .collection('location-check')
+                .doc(message.newMessage.createdAt.toString())
+                .set({ counter: message.counter++ }, { merge: true });
             }
           }
         } else {
           for (let message of pendingMessages) {
-            objToSet[userCheck] = false;
-            db.collection('conversations')
-              .doc(convoID)
-              .collection('location-check')
-              .doc(message.createdAt.toString())
-              .set({ objToSet }, { merge: true });
+            if (!message.userCheck) {
+              const currLocation = navigator.geolocation.getCurrentPosition(
+                position => ({
+                  longitude: position.longitude,
+                  latitude: position.latitude,
+                })
+              );
+              const distance = geodist(
+                { lat: currLocation.latitude, long: currPosition.longitude },
+                {
+                  lat: this.state.locationPrefs.latitude,
+                  long: this.state.locationPrefs.longitude,
+                },
+                { unit: 'feet' }
+              );
+              if (distance < 502) {
+                if (message.counter === this.state.friends.length - 1) {
+                  db.collection('conversations')
+                    .doc(convoID)
+                    .collection('messages')
+                    .add(message.newMessage);
+                  db.collection('conversations')
+                    .doc(convoID)
+                    .collection('location-check')
+                    .doc(message.newMessage.createdAt.toString())
+                    .delete();
+                } else {
+                  db.collection('conversations')
+                    .doc(convoID)
+                    .collection('location-check')
+                    .doc(message.newMessage.createdAt.toString())
+                    .set({ counter: message.counter++ }, { merge: true });
+                }
+              } else {
+                console.log('outside of range!');
+              }
+            }
           }
         }
       });
-
     this.unsubscribePendingLocation = listenToPendingLocation;
   }
 
@@ -115,7 +155,7 @@ export default class SingleConvo extends React.Component {
       }
       const userPrefs = this.props.navigation.state.params.userPrefs;
       if (userPrefs && userPrefs.location) {
-        locationPrefs = userPrefs.lcoation;
+        locationPrefs = userPrefs.location;
       }
     }
     this.setState({
@@ -165,7 +205,7 @@ export default class SingleConvo extends React.Component {
           this.state.ref
             .collection('location-check')
             .doc(createdAt.toString())
-            .set(newMessage);
+            .set({ newMessage, counter: 0 });
           this.state.ref.set({ firstMessage: newMessage }, { merge: true });
           db.collection('users')
             .doc(this.user.uid)
@@ -180,7 +220,7 @@ export default class SingleConvo extends React.Component {
       this.state.ref
         .collection('location-check')
         .doc(createdAt.toString())
-        .set(newMessage);
+        .set({ newMessage, counter: 0 });
       this.state.ref.set({ firstMessage: newMessage }, { merge: true });
     }
   }
