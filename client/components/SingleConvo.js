@@ -65,11 +65,11 @@ export default class SingleConvo extends React.Component {
     const ref = this.getRef(this.props.navigation.state.params.id);
     let doNotDisturbArr = [];
     if (friends.length === 1) {
-      const friendPrefs = this.props.navigation.state.params.friendPrefs[0];
+      const friendPrefs = this.props.navigation.state.params.friendPrefs;
       if (friendPrefs) {
-        for (let i = 0; i < friendPrefs.startTimes.length; i++) {
-          const start = timeToInt(friendPrefs.startTimes[i].time);
-          const end = timeToInt(friendPrefs.endTimes[i].time);
+        for (let i = 0; i < friendPrefs[0].startTimes.length; i++) {
+          const start = timeToInt(friendPrefs[0].startTimes[i].time);
+          const end = timeToInt(friendPrefs[0].endTimes[i].time);
           doNotDisturbArr.push([start, end]);
         }
       }
