@@ -114,6 +114,15 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  removeButton: {
+    borderRadius: 10,
+    width: 100,
+    marginRight: 10,
+    marginLeft: 30,
+    textAlign: 'center',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   noButton: {
     borderRadius: 10,
     width: 60,
