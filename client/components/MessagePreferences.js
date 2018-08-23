@@ -225,9 +225,9 @@ export default class MessagePreferences extends React.Component {
           .doc(docID)
           .delete();
       });
-      alert('Your message has been scheduled!');
-      this.props.navigation.navigate('ScheduledMessages');
     }
+    alert('Your message has been scheduled!');
+    this.props.navigation.navigate('ScheduledMessages');
   }
 
   render() {
