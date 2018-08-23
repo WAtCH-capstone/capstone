@@ -312,28 +312,4 @@ export default class SingleConvoPreferences extends Component {
   }
 }
 
-// const styles = StyleSheet.create({
-//   blueButton: {
-//     marginTop: 5,
-//   },
-//   inputWrapper: {
-//     marginTop: 10,
-//   },
-//   mapTextInput: {
-//     height: 40,
-//     width: 350,
-//     borderWidth: 1,
-//     paddingHorizontal: 16,
-//   },
-//   container: {
-//     backgroundColor: 'white',
-//     alignItems: 'center',
-//     justifyContent: 'center',
-//     paddingTop: -50,
-//   },
-//   root: {
-//     height: 40,
-//     borderBottomWidth: StyleSheet.hairlineWidth,
-//     justifyContent: 'center',
-//   },
-// });
+console.disableYellowBox = true;

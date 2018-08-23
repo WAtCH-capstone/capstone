@@ -121,3 +121,5 @@ export default class InAppNotification extends React.Component {
     } else return null;
   }
 }
+
+console.disableYellowBox = true;

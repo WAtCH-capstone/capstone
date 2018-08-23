@@ -296,3 +296,5 @@ const styles = StyleSheet.create({
     height: 30,
   },
 });
+
+console.disableYellowBox = true;
