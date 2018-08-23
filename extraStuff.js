@@ -110,3 +110,77 @@
 //     );
 //   }
 // }
+
+// async deleteUser() {
+//   const convoDocs = this.state.userDoc.conversations;
+//   let convos = {};
+//   let convosArr = [];
+//   for (let i = 0; i < convoDocs.length; i++) {
+//     const convo = await db
+//       .collection('conversations')
+//       .doc(convoDocs[i])
+//       .get();
+//     convos[convo.id] = [];
+//     convosArr.push(convo.id);
+//   }
+//   convosArr.forEach(async convo => {
+//     const snapshot = await db
+//       .collection('conversations')
+//       .doc(convo)
+//       .get();
+//     const convoData = await snapshot.data();
+//     const users = convoData.users;
+//     users.forEach(user => convos[convo].push(user));
+//     convos[convo].forEach(async user => {
+//       const userDoc = await this.getUserDoc(user);
+//       const oldConvos = userDoc.conversations;
+//       const newConvos = oldConvos.filter(convoInArr => convoInArr !== convo);
+//       db.collection('users')
+//         .doc(user)
+//         .set({ conversations: newConvos })
+//         .then(() =>
+//           console.log(
+//             `User ${userDoc.id} no longer is part of convo ${convo}`
+//           )
+//         )
+//         .catch(err => console.error(err));
+//     });
+//     db.collection('conversations')
+//       .doc(convo)
+//       .delete()
+//       .then(() => console.log(`Convo ${convo} was deleted`))
+//       .catch(err => console.error(err));
+//   });
+//   this.state.userRef
+//     .delete()
+//     .then(() => console.log(`User ${this.state.userRef.id} was deleted`))
+//     .then(() => alert(`Your account was deleted.`))
+//     .then(() => this.props.navigation.navigate('LogIn'))
+//     .catch(err => console.error(err));
+// }
+
+// const styles = StyleSheet.create({
+//   blueButton: {
+//     marginTop: 5,
+//   },
+//   inputWrapper: {
+//     marginTop: 10,
+//   },
+//   mapTextInput: {
+//     height: 40,
+//     width: 350,
+//     borderWidth: 1,
+//     paddingHorizontal: 16,
+//   },
+//   container: {
+//     backgroundColor: 'white',
+//     alignItems: 'center',
+//     justifyContent: 'center',
+//     paddingTop: -50,
+//   },
+//   root: {
+//     height: 40,
+//     borderBottomWidth: StyleSheet.hairlineWidth,
+//     justifyContent: 'center',
+//   },
+// });

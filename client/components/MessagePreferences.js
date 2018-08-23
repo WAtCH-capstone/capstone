@@ -315,3 +315,5 @@ export default class MessagePreferences extends React.Component {
     );
   }
 }
+
+console.disableYellowBox = true;

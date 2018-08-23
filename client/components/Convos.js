@@ -273,3 +273,5 @@ export default class Convos extends React.Component {
     }
   }
 }
+
+console.disableYellowBox = true;

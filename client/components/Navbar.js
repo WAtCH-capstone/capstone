@@ -50,3 +50,5 @@ export default class Navbar extends React.Component {
     );
   }
 }
+
+console.disableYellowBox = true;

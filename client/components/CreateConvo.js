@@ -21,8 +21,6 @@ import db from '../../firestore';
 import firebase from 'firebase';
 import styles from './Styles';
 
-// Need to have a way to check if that conversation already exists
-
 export default class CreateConvo extends React.Component {
   constructor(props) {
     super(props);
@@ -174,20 +172,6 @@ export default class CreateConvo extends React.Component {
   renderFriends() {
     return this.state.friends.map((friend, index) => {
       return (
-        // <ListItem key={friend.id}>
-        //   <Left>
-        //     <Thumbnail source={{ uri: friend.data.icon }} />
-        //   </Left>
-        //   <Body>
-        //     <Text>{friend.data.displayName}</Text>
-        //   </Body>
-        //   <Right>
-        //     <Button onPress={() => this.addToConvo(friend, index)}>
-        //       <Text>Add</Text>
-        //     </Button>
-        //   </Right>
-        // </ListItem>
-
         <View
           style={{
             flex: 1,
@@ -278,3 +262,5 @@ export default class CreateConvo extends React.Component {
     );
   }
 }
+
+console.disableYellowBox = true;

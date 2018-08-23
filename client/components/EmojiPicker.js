@@ -178,3 +178,5 @@ const emojis = [
       'https://cdn.shopify.com/s/files/1/1061/1924/files/Octopus_Emoji.png?9898922749706957214',
   },
 ];
+
+console.disableYellowBox = true;

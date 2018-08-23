@@ -78,3 +78,5 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
   },
 });
+
+console.disableYellowBox = true;
