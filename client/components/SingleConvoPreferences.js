@@ -183,7 +183,7 @@ export default class SingleConvoPreferences extends Component {
     return (
       <Container>
         <Content>
-          <List>
+          {/* <List>
             <ListItem style={{ marginTop: 20, marginBottom: 20 }}>
               <Left>
                 <Text style={styles.noneSmall1}>
@@ -197,7 +197,7 @@ export default class SingleConvoPreferences extends Component {
                 </TouchableOpacity>
               </Right>
             </ListItem>
-          </List>
+          </List> */}
           <Text style={styles.noneSmall1}>Do Not Disturb:</Text>
           <List>
             {this.renderTimes()}
@@ -254,7 +254,7 @@ export default class SingleConvoPreferences extends Component {
             <Text style={{ color: 'white' }}>Save preferences</Text>
           </Button>
           {/* this will be for location */}
-          <View style={styles.container}>
+          {/* <View style={styles.container}>
             <GoogleAutoComplete apiKey={key} debounce={500} minLength={0}>
               {({
                 handleTextChange,
@@ -274,7 +274,7 @@ export default class SingleConvoPreferences extends Component {
                   {isSearching && <ActivityIndicator />}
                   <ScrollView>
                     {/* {console.log('locationResults', locationResults)} */}
-                    {locationResults.map(el => (
+          {/* {locationResults.map(el => (
                       <TouchableOpacity
                         key={el.id}
                         style={styles.root}
@@ -305,7 +305,7 @@ export default class SingleConvoPreferences extends Component {
                 <Text style={{ color: 'white' }}>Submit</Text>
               </View>
             </Button>
-          </View>
+          </View> */}
         </Content>
       </Container>
     );
