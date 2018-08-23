@@ -122,7 +122,7 @@ export default class SignUp extends React.Component {
                 );
               }}
             >
-              <Text style={{ color: 'white' }}>Pick Your Avatar</Text>
+              <Text style={{ color: 'white' }}>Pick Your Icon</Text>
             </Button>
           )}
         </Form>
