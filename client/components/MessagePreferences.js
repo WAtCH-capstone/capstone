@@ -188,6 +188,8 @@ export default class MessagePreferences extends React.Component {
           currentLong: -74.0092, // fullstack coords for testing after 20 seconds!
         });
       }, 20000);
+      alert('Your message has been scheduled!');
+      this.props.navigation.navigate('ScheduledMessages');
     } else {
       let createdAt;
       const date = new Date(this.state.triggers.date);
@@ -225,9 +227,9 @@ export default class MessagePreferences extends React.Component {
           .doc(docID)
           .delete();
       });
+      alert('Your message has been scheduled!');
+      this.props.navigation.navigate('ScheduledMessages');
     }
-    alert('Your message has been scheduled!');
-    this.props.navigation.navigate('ScheduledMessages');
   }
 
   render() {
