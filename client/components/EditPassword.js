@@ -3,6 +3,7 @@ import { Container, Form, Item, Input, Label, Button } from 'native-base';
 import { Text } from 'react-native';
 const firebase = require('firebase');
 import db from '../../firestore';
+import styles from './Styles';
 
 export default class EditPassword extends React.Component {
   constructor() {

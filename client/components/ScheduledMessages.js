@@ -184,3 +184,5 @@ export default class ScheduledMesages extends React.Component {
     );
   }
 }
+
+console.disableYellowBox = true;

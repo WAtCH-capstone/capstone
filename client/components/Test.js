@@ -1,7 +1,7 @@
 import React from 'react';
 const geodist = require('geodist');
 
-class GeoLocator extends React.Component {
+export default class GeoLocator extends React.Component {
   constructor() {
     super();
     this.state = {
@@ -51,4 +51,4 @@ class GeoLocator extends React.Component {
   }
 }
 
-export default GeoLocator;
+console.disableYellowBox = true;

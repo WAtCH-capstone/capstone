@@ -102,3 +102,5 @@ export default class LogIn extends React.Component {
     );
   }
 }
+
+console.disableYellowBox = true;
